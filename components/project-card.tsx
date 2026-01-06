@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 interface ProjectCardProps {
   title: string;
@@ -42,12 +43,13 @@ export function ProjectCard({
         <CardContent>
           <div className="flex flex-wrap gap-2">
             {technologies.map((tech) => (
-              <span
+              <Badge
                 key={tech}
-                className="px-2 py-1 text-xs bg-secondary text-secondary-foreground rounded-md transition-colors duration-300 hover:bg-secondary/80"
+                variant="secondary"
+                className="transition-colors duration-300"
               >
                 {tech}
-              </span>
+              </Badge>
             ))}
           </div>
         </CardContent>
@@ -62,7 +64,7 @@ export function ProjectCard({
             </Button>
           )}
           {projectGithub && (
-            <Button asChild variant="outline" size="sm">
+            <Button asChild variant="default" size="sm">
               <Link href={projectGithub} target="_blank" rel="noopener noreferrer">
                 GitHub
               </Link>
