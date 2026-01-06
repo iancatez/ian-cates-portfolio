@@ -34,15 +34,15 @@ export function HeroSection() {
           variants={staggerItem}
           className="text-xl text-muted-foreground sm:text-2xl md:text-3xl"
         >
-          Full Stack Developer
+          Data Engineer
         </motion.p>
         
         <motion.p
           variants={staggerItem}
           className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg"
         >
-          Building beautiful and functional web experiences with modern
-          technologies
+          Building production data systems at enterprise scale. Turning messy data into 
+          reliable, actionable insights.
         </motion.p>
 
         <motion.div
@@ -61,12 +61,18 @@ export function HeroSection() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, repeat: Infinity, repeatType: "reverse", duration: 1.5 }}
+        transition={{ 
+          delay: 1, 
+          repeat: Infinity, 
+          repeatType: "reverse", 
+          duration: 1.5,
+          ease: "easeInOut"
+        }}
         className="absolute bottom-10 cursor-pointer"
         onClick={scrollToAbout}
         aria-label="Scroll to about section"
       >
-        <ChevronDown className="h-8 w-8 text-muted-foreground" />
+        <ChevronDown className="h-8 w-8 text-muted-foreground transition-colors duration-300 hover:text-primary" />
       </motion.div>
     </section>
   );

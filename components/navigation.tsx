@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useActiveSection } from "@/hooks/use-active-section";
+import { transitions } from "@/lib/animations";
 
 const navItems = [
   { href: "#home", label: "Home", id: "home" },
@@ -15,11 +16,26 @@ const navItems = [
 export function Navigation() {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const sectionIds = navItems.map((item) => item.id);
   const activeSection = useActiveSection(sectionIds);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 50);
+    
+    // Hide nav when scrolling down, show when scrolling up or at top
+    if (latest < 50) {
+      setIsVisible(true);
+    } else if (latest > lastScrollY && latest > 100) {
+      // Scrolling down
+      setIsVisible(false);
+    } else if (latest < lastScrollY) {
+      // Scrolling up
+      setIsVisible(true);
+    }
+    
+    setLastScrollY(latest);
   });
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -34,19 +50,26 @@ export function Navigation() {
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      animate={{ 
+        y: isVisible ? 0 : -100, 
+        opacity: isVisible ? 1 : 0 
+      }}
+      transition={transitions.medium}
       className={cn(
-        "sticky top-0 z-50 border-b transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 border-b transition-all",
         scrolled && "bg-background/80 backdrop-blur-sm shadow-sm"
       )}
+      style={{
+        backfaceVisibility: "hidden",
+        WebkitFontSmoothing: "antialiased",
+      }}
     >
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <a
             href="#home"
             onClick={(e) => handleClick(e, "#home")}
-            className="text-xl font-bold transition-colors hover:text-primary"
+            className="text-xl font-bold transition-colors duration-300 hover:text-primary"
           >
             Portfolio
           </a>
@@ -59,7 +82,7 @@ export function Navigation() {
                     href={item.href}
                     onClick={(e) => handleClick(e, item.href)}
                     className={cn(
-                      "text-sm font-medium transition-colors hover:text-foreground",
+                      "text-sm font-medium transition-colors duration-300 hover:text-foreground",
                       isActive
                         ? "text-foreground"
                         : "text-muted-foreground"

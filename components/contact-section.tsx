@@ -80,13 +80,14 @@ export function ContactSection() {
                     variants={staggerItem}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
                   >
                     <Button
                       variant="outline"
-                      className="w-full h-auto p-4 flex flex-col items-center gap-2 hover:bg-accent"
+                      className="w-full h-auto p-4 flex flex-col items-center gap-2 hover:bg-accent transition-colors duration-300"
                       aria-label={link.label}
                     >
-                      <Icon className="h-6 w-6" />
+                      <Icon className="h-6 w-6 transition-colors duration-300" />
                       <span>{link.name}</span>
                     </Button>
                   </motion.a>
