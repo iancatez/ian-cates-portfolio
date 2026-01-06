@@ -437,6 +437,9 @@ This file defines tasks that can be executed in parallel by Cursor agents. Each 
 
 ### Phase 4: Polish (Parallel after Phase 3)
 - Task Group 9: Polish & Optimization
+- Task Group 10: Styling & Color Scheme Enhancement (Completed)
+- Task Group 11: Custom Scrollbar Styling (Completed)
+- Task Group 12: Styling Consistency & UI Polish
 
 ---
 
@@ -503,30 +506,104 @@ This file defines tasks that can be executed in parallel by Cursor agents. Each 
 ---
 
 ## Task Group 11: Custom Scrollbar Styling
-**Status**: Pending  
+**Status**: Completed  
 **Dependencies**: None  
 **Can Run In Parallel**: Yes  
 **Estimated Time**: 15-20 minutes
 
 ### Tasks:
-1. **Style Scrollbar**
+1. **Style Scrollbar** ✅
    - Use CSS to customize scrollbar appearance
    - Match dark theme with soft green accents
    - Use ShadCN CSS variables for colors
    - Add smooth scrollbar styling for webkit browsers
    - Ensure scrollbar is visible but not distracting
 
-2. **Cross-Browser Support**
+2. **Cross-Browser Support** ✅
    - Style for webkit browsers (Chrome, Safari, Edge)
    - Add fallback for Firefox (scrollbar-width, scrollbar-color)
    - Ensure accessibility (scrollbar remains functional)
 
 **Acceptance Criteria**:
-- [ ] Scrollbar matches dark theme
-- [ ] Uses soft green accent colors
-- [ ] Smooth, modern appearance
-- [ ] Works in Chrome, Firefox, Safari, Edge
+- [x] Scrollbar matches dark theme
+- [x] Uses soft green accent colors
+- [x] Smooth, modern appearance
+- [x] Works in Chrome, Firefox, Safari, Edge
+- [x] Build succeeds
+
+---
+
+## Task Group 12: Styling Consistency & UI Polish
+**Status**: Pending  
+**Dependencies**: None  
+**Can Run In Parallel**: Yes  
+**Estimated Time**: 60-90 minutes
+
+### Tasks:
+1. **Fix ShadCN Component Blur Issues**
+   - Investigate blurry appearance in ShadCN components
+   - Likely causes: backdrop-blur conflicts, transform issues, or subpixel rendering
+   - Fix: Ensure proper `transform-style: preserve-3d` usage
+   - Fix: Remove conflicting backdrop-blur on components that don't need it
+   - Fix: Add `will-change` hints appropriately
+   - Fix: Ensure proper GPU acceleration without causing blur
+   - Test: All ShadCN components (Button, Card, etc.) render crisp
+
+2. **Standardize Styling Across Actions**
+   - Review all interactive elements (buttons, links, cards)
+   - Ensure consistent hover states across all components
+   - Standardize transition durations (use consistent timing)
+   - Ensure consistent shadow/glow effects
+   - Standardize border radius values
+   - Create utility classes or constants for common patterns
+   - Update: Button variants to have consistent styling
+   - Update: Card hover effects to match button hover patterns
+   - Update: Link styles to be consistent
+
+3. **Clean Up Framer Motion Animations**
+   - Audit all Framer Motion usage across components
+   - Ensure consistent animation patterns (use shared variants from `lib/animations.ts`)
+   - Remove duplicate animation definitions
+   - Standardize transition timings and easing
+   - Ensure all animations respect `prefers-reduced-motion`
+   - Fix: Any animations causing performance issues
+   - Optimize: Use `layoutId` where appropriate for shared element transitions
+   - Document: Animation patterns in code comments
+
+4. **Navigation Hide/Show on Scroll**
+   - Update: `components/navigation.tsx`
+   - Add: Hide navigation when scrolling down
+   - Add: Show navigation when scrolling up
+   - Add: Smooth slide animation (use Framer Motion)
+   - Add: Show navigation when at top of page
+   - Implementation: Use `useScroll` and `useMotionValueEvent` from Framer Motion
+   - Track scroll direction and position
+   - Animate: `y: -100` when hidden, `y: 0` when visible
+   - Ensure: Navigation remains accessible (consider mobile)
+
+5. **Add Headshot Photo Placeholder**
+   - Update: `components/about-section.tsx`
+   - Add: Headshot image placeholder in About section
+   - Layout: Place headshot alongside or above background card
+   - Use: Next.js `Image` component for optimization
+   - Add: Placeholder image in `public/` directory (or use placeholder service)
+   - Style: Rounded image with proper sizing
+   - Add: Fade-in animation when section enters viewport
+   - Responsive: Ensure image scales properly on mobile
+   - Add: Alt text for accessibility
+   - Consider: Adding border or shadow to make it stand out
+
+**Acceptance Criteria**:
+- [ ] ShadCN components render crisp without blur
+- [ ] All interactive elements have consistent styling
+- [ ] Framer Motion animations are clean and consistent
+- [ ] Navigation hides on scroll down, shows on scroll up
+- [ ] Headshot placeholder added to About section
+- [ ] All animations respect `prefers-reduced-motion`
+- [ ] No performance issues with animations
 - [ ] Build succeeds
+- [ ] No TypeScript errors
+- [ ] Responsive design works on all screen sizes
 
 ---
 
