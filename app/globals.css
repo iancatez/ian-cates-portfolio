@@ -2,64 +2,57 @@
 
 @layer base {
   :root {
-    /* Soft gray base colors */
+    /* Dark mode as default - Dark gray base */
+    --background: 0 0% 8%;
+    --foreground: 0 0% 92%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 92%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 92%;
+    
+    /* Neon glowing green for buttons */
+    --primary: 142 76% 55%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Soft green accents */
+    --secondary: 142 20% 18%;
+    --secondary-foreground: 0 0% 92%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 142 25% 20%;
+    --accent-foreground: 0 0% 92%;
+    
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    
+    /* Gray borders */
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 142 76% 55%;
+    --radius: 0.5rem;
+  }
+
+  .light {
+    /* Light mode (if needed in future) */
     --background: 0 0% 90%;
     --foreground: 0 0% 15%;
     --card: 0 0% 95%;
     --card-foreground: 0 0% 15%;
     --popover: 0 0% 95%;
     --popover-foreground: 0 0% 15%;
-    
-    /* Neon glowing green for primary buttons */
     --primary: 142 76% 50%;
     --primary-foreground: 0 0% 100%;
-    
-    /* Soft green accents */
     --secondary: 142 30% 92%;
     --secondary-foreground: 0 0% 15%;
     --muted: 0 0% 88%;
     --muted-foreground: 0 0% 45%;
     --accent: 142 40% 88%;
     --accent-foreground: 0 0% 15%;
-    
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    
-    /* Gray borders and inputs */
     --border: 0 0% 85%;
     --input: 0 0% 85%;
     --ring: 142 76% 50%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    /* Dark gray base */
-    --background: 0 0% 8%;
-    --foreground: 0 0% 95%;
-    --card: 0 0% 12%;
-    --card-foreground: 0 0% 95%;
-    --popover: 0 0% 12%;
-    --popover-foreground: 0 0% 95%;
-    
-    /* Neon glowing green for primary buttons (brighter in dark mode) */
-    --primary: 142 76% 55%;
-    --primary-foreground: 0 0% 100%;
-    
-    /* Soft green accents for dark mode */
-    --secondary: 142 20% 18%;
-    --secondary-foreground: 0 0% 95%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
-    --accent: 142 25% 20%;
-    --accent-foreground: 0 0% 95%;
-    
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    
-    /* Gray borders for dark mode */
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 142 76% 55%;
   }
 }
 
