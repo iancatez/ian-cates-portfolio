@@ -465,6 +465,71 @@ This file defines tasks that can be executed in parallel by Cursor agents. Each 
 
 ---
 
+---
+
+## Task Group 10: Styling & Color Scheme Enhancement
+**Status**: Completed  
+**Dependencies**: None  
+**Can Run In Parallel**: Yes  
+**Estimated Time**: 30-45 minutes
+
+### Tasks:
+1. **Update Color Scheme** ✅
+   - Gray base colors for backgrounds and text
+   - Soft green accents for secondary elements
+   - Neon glowing green for primary buttons
+   - Ensure good contrast for accessibility
+
+2. **Add Neon Glow Effect** ✅
+   - Add CSS box-shadow glow effect to primary buttons
+   - Enhance glow on hover for interactive feedback
+   - Use HSL color values for the neon green glow
+
+3. **Test Color Accessibility** ✅
+   - Verify contrast ratios meet WCAG standards
+   - Test in both light and dark modes
+   - Ensure readability across all sections
+
+**Acceptance Criteria**:
+- [x] Gray base color scheme implemented
+- [x] Soft green accents applied
+- [x] Neon glowing green buttons with hover effects
+- [x] Good contrast for accessibility
+- [x] Consistent color usage throughout
+- [x] Build succeeds
+
+---
+
+---
+
+## Task Group 11: Custom Scrollbar Styling
+**Status**: Pending  
+**Dependencies**: None  
+**Can Run In Parallel**: Yes  
+**Estimated Time**: 15-20 minutes
+
+### Tasks:
+1. **Style Scrollbar**
+   - Use CSS to customize scrollbar appearance
+   - Match dark theme with soft green accents
+   - Use ShadCN CSS variables for colors
+   - Add smooth scrollbar styling for webkit browsers
+   - Ensure scrollbar is visible but not distracting
+
+2. **Cross-Browser Support**
+   - Style for webkit browsers (Chrome, Safari, Edge)
+   - Add fallback for Firefox (scrollbar-width, scrollbar-color)
+   - Ensure accessibility (scrollbar remains functional)
+
+**Acceptance Criteria**:
+- [ ] Scrollbar matches dark theme
+- [ ] Uses soft green accent colors
+- [ ] Smooth, modern appearance
+- [ ] Works in Chrome, Firefox, Safari, Edge
+- [ ] Build succeeds
+
+---
+
 **Last Updated**: [Date]
 **Current Status**: Ready for agent execution
 
