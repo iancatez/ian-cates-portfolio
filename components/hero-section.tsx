@@ -34,15 +34,15 @@ export function HeroSection() {
           variants={staggerItem}
           className="text-xl text-muted-foreground sm:text-2xl md:text-3xl"
         >
-          Full Stack Developer
+          Data Engineer
         </motion.p>
         
         <motion.p
           variants={staggerItem}
           className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg"
         >
-          Building beautiful and functional web experiences with modern
-          technologies
+          Building production data systems at enterprise scale. Turning messy data into 
+          reliable, actionable insights.
         </motion.p>
 
         <motion.div
