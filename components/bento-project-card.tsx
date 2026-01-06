@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Github, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/lib/data";
 
@@ -43,7 +44,6 @@ export function BentoProjectCard({
       {/* Gradient overlay on hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       
-      {/* ShadCN CardHeader - p-6 default, reduced bottom padding */}
       <CardHeader className="relative z-10 p-4 pb-2">
         {isLarge && (
           <Badge variant="secondary" className="w-fit text-[10px] mb-1">
@@ -63,7 +63,6 @@ export function BentoProjectCard({
         </CardDescription>
       </CardHeader>
       
-      {/* ShadCN CardContent - consistent padding */}
       {technologies.length > 0 && (
         <CardContent className="relative z-10 p-4 pt-0 pb-2">
           <div className="flex flex-wrap gap-1.5">
@@ -85,19 +84,20 @@ export function BentoProjectCard({
         </CardContent>
       )}
       
-      {/* ShadCN CardFooter - consistent padding, pushed to bottom */}
       {hasFooter && (
         <CardFooter className="relative z-10 p-4 pt-2 mt-auto gap-2">
           {liveUrl && (
-            <Button asChild variant="default" size="sm" className="h-7 text-xs px-3">
+            <Button asChild size="sm" className="h-7 text-xs px-3">
               <Link href={liveUrl} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="h-3 w-3 mr-1" />
                 View
               </Link>
             </Button>
           )}
           {githubUrl && (
-            <Button asChild variant="outline" size="sm" className="h-7 text-xs px-3">
+            <Button asChild size="sm" neonColor="#6e7681" className="h-7 text-xs px-3">
               <Link href={githubUrl} target="_blank" rel="noopener noreferrer">
+                <Github className="h-3 w-3 mr-1" />
                 GitHub
               </Link>
             </Button>
