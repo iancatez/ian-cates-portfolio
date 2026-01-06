@@ -10,8 +10,8 @@
     --popover: 0 0% 10%;
     --popover-foreground: 0 0% 98%;
     
-    /* Neon glowing green for buttons */
-    --primary: 142 76% 55%;
+    /* Soft green for buttons */
+    --primary: 142 40% 45%;
     --primary-foreground: 0 0% 100%;
     
     /* Soft green accents */
@@ -131,5 +131,21 @@
   * {
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--muted)) hsl(var(--background));
+  }
+
+  /* Cinematic neon button base styles - glow persistence means never fully dark */
+  .neon-button {
+    --neon-intensity: 1;
+    --neon-color: hsl(142 40% 45%);
+    --neon-glow-color: hsl(142 40% 45% / var(--glow-opacity, 0.7));
+    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+  }
+
+  .neon-button.neon-active {
+    background-color: hsl(142 40% 45% / var(--neon-intensity));
+    box-shadow: 
+      0 0 calc(15px * var(--neon-intensity)) hsl(142 40% 45% / calc(0.7 * var(--neon-intensity))),
+      0 0 calc(30px * var(--neon-intensity)) hsl(142 40% 45% / calc(0.5 * var(--neon-intensity))),
+      0 0 calc(45px * var(--neon-intensity)) hsl(142 40% 45% / calc(0.3 * var(--neon-intensity)));
   }
 }
