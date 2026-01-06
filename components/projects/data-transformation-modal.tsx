@@ -110,7 +110,7 @@ export function DataTransformationModal({ open, onOpenChange }: DataTransformati
           {/* Overview Tab */}
           <TabsContent value="overview" className="flex-1 overflow-auto mt-4">
             <div className="space-y-6">
-              <DataFlowDiagram />
+              
               
               {/* Stats summary */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 px-2">
@@ -134,6 +134,9 @@ export function DataTransformationModal({ open, onOpenChange }: DataTransformati
                     </Card>
                   </motion.div>
                 ))}
+              </div>
+              <div className="p-2">
+                <DataFlowDiagram />
               </div>
             </div>
           </TabsContent>
