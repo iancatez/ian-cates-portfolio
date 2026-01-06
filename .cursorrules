@@ -468,3 +468,97 @@ public/                # Static assets
 - **TypeScript Handbook**: https://www.typescriptlang.org/docs/
 - **React Docs**: https://react.dev
 
+## Git Workflow - Branch Per Task (MANDATORY)
+
+**CRITICAL**: Each task group from `AGENT_TASKS.md` MUST be completed on a separate branch with its own commit and pull request.
+
+### Workflow Requirements
+
+1. **Before Starting Any Task Group**:
+   - ✅ Checkout master/main: `git checkout master && git pull origin master`
+   - ✅ Create new branch: `git checkout -b task-group-[number]-[description]`
+   - ✅ Use branch naming: `task-group-1-core-animation-setup` format
+
+2. **During Task Group Work**:
+   - ✅ Complete all tasks in the group
+   - ✅ Test: `npm run build` must succeed
+   - ✅ No TypeScript errors
+   - ✅ Follow all coding standards
+
+3. **After Completing Task Group**:
+   - ✅ Stage changes: `git add -A`
+   - ✅ Commit with conventional format: `feat: Task Group [N] - [Description]`
+   - ✅ Push branch: `git push -u origin task-group-[number]-[description]`
+   - ✅ Create Pull Request (via GitHub CLI or web interface)
+   - ✅ DO NOT merge your own PR - wait for review/approval
+
+4. **Starting Next Task Group**:
+   - ✅ **CRITICAL**: Ensure previous PRs are merged into master before starting new work
+   - ✅ Return to master: `git checkout master && git pull origin master`
+   - ✅ Verify master has all merged changes
+   - ✅ Create new branch for next task group
+   - ⚠️ **Exception**: If a dependency branch isn't merged yet, you can merge it into your new branch, but note this in the PR description
+
+### Branch Naming Convention
+- Format: `task-group-[number]-[kebab-case-description]`
+- Examples:
+  - `task-group-1-core-animation-setup`
+  - `task-group-2-navigation-enhancement`
+  - `task-group-7-mouse-interaction-system`
+
+### Commit Message Format
+```
+feat: Task Group [Number] - [Short Description]
+
+- [Key change 1]
+- [Key change 2]
+- [Key change 3]
+```
+
+### NEVER
+- ❌ Commit directly to master/main
+- ❌ Combine multiple task groups in one branch
+- ❌ Skip creating a PR
+- ❌ Start new task group on same branch
+
+### Automation
+- Use `scripts/create-task-branch.ps1` (Windows) or `scripts/create-task-branch.sh` (Unix)
+- See `WORKFLOW.md` for detailed workflow documentation
+
+**This workflow is MANDATORY and must be followed for every task group.**
+
+## Task Management Rules
+
+### Adding New Tasks
+- **If a request is made that isn't on the task list**: It MUST be added to `AGENT_TASKS.md` as a new task group
+- **Before starting work**: Check if the task exists in `AGENT_TASKS.md`
+- **If task doesn't exist**: Create a new task group entry with:
+  - Task group number (next available)
+  - Description
+  - Dependencies
+  - Estimated time
+  - Acceptance criteria
+- **Then follow the branch-per-task workflow** for the new task
+
+### Bug Fix Workflow (MANDATORY)
+- **ALL bug fixes MUST be done on a separate branch with a PR**
+- **Never fix bugs directly on master/main**
+- **Workflow for bug fixes**:
+  1. Create branch: `git checkout -b fix/[brief-description]`
+  2. Fix the bug
+  3. Test: `npm run build` must succeed
+  4. Commit: `git commit -m "fix: [description of bug fix]"`
+  5. Push: `git push -u origin fix/[brief-description]`
+  6. Create PR with description of the bug and fix
+- **Bug fix branches**: Use `fix/` prefix instead of `task-group-`
+- **Examples**:
+  - `fix/project-card-prop-mismatch`
+  - `fix/footer-year-update`
+  - `fix/navigation-active-state`
+
+### Task List Maintenance
+- Keep `AGENT_TASKS.md` updated with all planned work
+- Mark completed tasks with status updates
+- Add new tasks when requested
+- Document dependencies between tasks
+
