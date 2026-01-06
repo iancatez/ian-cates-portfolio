@@ -11,7 +11,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-transparent border border-[hsl(142_40%_45%)] text-[hsl(142_40%_45%)]",
+        default: "bg-transparent border",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:shadow-[0_0_15px_hsl(0_62%_30%_/_0.7),0_0_30px_hsl(0_62%_30%_/_0.5)] transition-all",
         outline:
@@ -35,10 +35,100 @@ const buttonVariants = cva(
   }
 )
 
+// Default neon color (green)
+const DEFAULT_NEON_COLOR = "142 40% 45%"
+
+// Parse color input to HSL format for consistent glow calculation
+// Supports: HSL string, hex, or returns default
+function parseColorToHSL(color: string | undefined): string {
+  if (!color) return DEFAULT_NEON_COLOR
+  
+  // Already HSL format (e.g., "142 40% 45%" or "142, 40%, 45%")
+  if (color.match(/^\d+[\s,]+\d+%[\s,]+\d+%$/)) {
+    return color.replace(/,/g, ' ').trim()
+  }
+  
+  // HSL with hsl() wrapper
+  if (color.startsWith('hsl(')) {
+    const match = color.match(/hsl\((\d+)[\s,]+(\d+)%[\s,]+(\d+)%\)/)
+    if (match) return `${match[1]} ${match[2]}% ${match[3]}%`
+  }
+  
+  // Hex color - convert to HSL
+  if (color.startsWith('#')) {
+    const hsl = hexToHSL(color)
+    if (hsl) return hsl
+  }
+  
+  // CSS variable reference (e.g., "var(--primary)")
+  if (color.startsWith('var(')) {
+    // Can't parse CSS variables at runtime, use default
+    return DEFAULT_NEON_COLOR
+  }
+  
+  return DEFAULT_NEON_COLOR
+}
+
+// Check if an HSL color is "light" (lightness > 60%)
+function isLightColor(hslColor: string): boolean {
+  const match = hslColor.match(/(\d+)\s+(\d+)%\s+(\d+)%/)
+  if (!match) return false
+  const lightness = parseInt(match[3], 10)
+  return lightness > 60
+}
+
+// Convert hex to HSL string
+function hexToHSL(hex: string): string | null {
+  // Remove # if present
+  hex = hex.replace('#', '')
+  
+  // Parse hex values
+  let r: number, g: number, b: number
+  if (hex.length === 3) {
+    r = parseInt(hex[0] + hex[0], 16) / 255
+    g = parseInt(hex[1] + hex[1], 16) / 255
+    b = parseInt(hex[2] + hex[2], 16) / 255
+  } else if (hex.length === 6) {
+    r = parseInt(hex.slice(0, 2), 16) / 255
+    g = parseInt(hex.slice(2, 4), 16) / 255
+    b = parseInt(hex.slice(4, 6), 16) / 255
+  } else {
+    return null
+  }
+  
+  const max = Math.max(r, g, b)
+  const min = Math.min(r, g, b)
+  const l = (max + min) / 2
+  
+  if (max === min) {
+    return `0 0% ${Math.round(l * 100)}%`
+  }
+  
+  const d = max - min
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+  
+  let h: number
+  switch (max) {
+    case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break
+    case g: h = ((b - r) / d + 2) / 6; break
+    case b: h = ((r - g) / d + 4) / 6; break
+    default: h = 0
+  }
+  
+  return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`
+}
+
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  /** 
+   * Custom neon color for the button glow effect.
+   * Accepts: HSL values (e.g., "142 40% 45%"), hex codes (e.g., "#4ade80"), 
+   * or hsl() format (e.g., "hsl(142, 40%, 45%)")
+   * Only applies to the default variant.
+   */
+  neonColor?: string
 }
 
 // Intensity levels for realistic neon flicker (never fully dark due to glow persistence)
@@ -109,23 +199,21 @@ function generateStartupSequence(): { intensity: number; duration: number }[] {
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, neonColor, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
     const [intensity, setIntensity] = React.useState(0)
     const [isHovered, setIsHovered] = React.useState(false)
     const [isStartingUp, setIsStartingUp] = React.useState(false)
-    const animationRef = React.useRef<number | null>(null)
     const timeoutsRef = React.useRef<NodeJS.Timeout[]>([])
     const isActiveRef = React.useRef(false)
+    
+    // Parse the neon color to HSL format
+    const hslColor = React.useMemo(() => parseColorToHSL(neonColor), [neonColor])
     
     // Clear all pending timeouts
     const clearAllTimeouts = React.useCallback(() => {
       timeoutsRef.current.forEach(clearTimeout)
       timeoutsRef.current = []
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current)
-        animationRef.current = null
-      }
     }, [])
 
     // Execute a flicker sequence
@@ -135,7 +223,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ) => {
       let totalDelay = 0
       
-      sequence.forEach((step, index) => {
+      sequence.forEach((step) => {
         const timeout = setTimeout(() => {
           if (isActiveRef.current) {
             setIntensity(step.intensity)
@@ -219,12 +307,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       }
     }, [clearAllTimeouts])
 
-    // Calculate styles based on intensity
+    // Check if this is a light color (needs dark text when lit)
+    const isLight = React.useMemo(() => isLightColor(hslColor), [hslColor])
+    
+    // Calculate styles based on intensity and color
     const neonStyles = React.useMemo(() => {
       if (!isHovered && intensity === 0) {
         return {
+          borderColor: `hsl(${hslColor})`,
           backgroundColor: 'transparent',
-          color: 'hsl(142 40% 45%)',
+          color: `hsl(${hslColor})`,
           boxShadow: '0 0 0px transparent',
           transition: 'all 0.5s ease-out',
         }
@@ -238,17 +330,22 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       const glowSize2 = 30 * i
       const glowSize3 = 45 * i
       
+      // For light colors (like white), use dark text when lit
+      // For dark colors, use white text when lit
+      const litTextColor = isLight ? 'black' : 'white'
+      
       return {
-        backgroundColor: `hsl(142 40% 45% / ${i})`,
-        color: i > 0.5 ? 'white' : 'hsl(142 40% 45%)',
+        borderColor: `hsl(${hslColor})`,
+        backgroundColor: `hsl(${hslColor} / ${i})`,
+        color: i > 0.5 ? litTextColor : `hsl(${hslColor})`,
         boxShadow: `
-          0 0 ${glowSize1}px hsl(142 40% 45% / ${glowOpacity1}),
-          0 0 ${glowSize2}px hsl(142 40% 45% / ${glowOpacity2}),
-          0 0 ${glowSize3}px hsl(142 40% 45% / ${glowOpacity3})
+          0 0 ${glowSize1}px hsl(${hslColor} / ${glowOpacity1}),
+          0 0 ${glowSize2}px hsl(${hslColor} / ${glowOpacity2}),
+          0 0 ${glowSize3}px hsl(${hslColor} / ${glowOpacity3})
         `,
         transition: isStartingUp ? 'none' : 'color 0.1s ease',
       }
-    }, [intensity, isHovered, isStartingUp])
+    }, [intensity, isHovered, isStartingUp, hslColor, isLight])
 
     // Only apply neon effect to default variant
     const isDefaultVariant = variant === 'default' || variant === undefined
