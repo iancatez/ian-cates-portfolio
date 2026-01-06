@@ -57,10 +57,9 @@ export const skills: Skill[] = [
 export const projects: Project[] = [
   {
     id: "1",
-    title: "Project One",
-    description: "My flagship project showcasing end-to-end data engineering. Built production pipelines processing millions of records daily with real-time monitoring and automated alerting.",
-    technologies: ["Apache Spark", "AWS", "Python", "Terraform"],
-    liveUrl: "#",
+    title: "Cost Data Lakehouse",
+    description: "Enterprise cost data pipeline normalizing 20+ vendor sources to FOCUS v1.2 specification. Features automated cost allocation, schema unification, and real-time anomaly detection.",
+    technologies: ["AWS Athena", "Glue", "Python", "dbt", "Terraform"],
     githubUrl: "#",
     featured: true,
     bentoSize: "large",
