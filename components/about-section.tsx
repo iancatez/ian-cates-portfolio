@@ -2,11 +2,12 @@
 
 import { AnimatedSection } from "@/components/animated-section";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 import { motion } from "framer-motion";
 import { skills } from "@/lib/data";
 import type { Skill } from "@/lib/data";
-import Image from "next/image";
 
 const skillCategories = {
   frontend: "Frontend",
@@ -56,27 +57,42 @@ export function AboutSection() {
           viewport={{ once: true, amount: 0.2 }}
           className="flex-shrink-0 mx-auto md:mx-0"
         >
-          <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-primary/20 shadow-lg bg-muted">
-            <Image
-              src="https://via.placeholder.com/256x256/1a1a1a/4ade80?text=IC"
-              alt="Ian Cates - Full Stack Developer"
-              fill
+          <Avatar className="w-48 h-48 md:w-64 md:h-64 border border-border shadow-lg ring-1 ring-primary/10 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:ring-primary/20">
+            <AvatarImage
+              src="/profile_pic.jpg"
+              alt="Ian Cates - Data Engineer"
               className="object-cover"
-              sizes="(max-width: 768px) 192px, 256px"
-              priority
             />
-          </div>
+            <AvatarFallback>IC</AvatarFallback>
+          </Avatar>
         </motion.div>
 
         <Card className="flex-1">
           <CardHeader>
             <CardTitle>Background</CardTitle>
-            <CardDescription>My journey in development</CardDescription>
+            <CardDescription>My journey in data engineering</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-muted-foreground">
-              Add your background information here. Describe your experience,
-              education, and what drives you as a developer.
+              Data Engineer with 4+ years of experience building, developing, and automating production data systems 
+              at enterprise scale. Since 2021, I've specialized in designing end-to-end pipelines, automating manual 
+              workflows, and delivering dashboards that drive business decisions.
+            </p>
+            <p className="text-muted-foreground">
+              I've built comprehensive end-to-end data pipelines leveraging Apache Spark for distributed processing, 
+              AWS Lambda for serverless compute, AWS SageMaker for ML model deployment, and AWS Glue for ETL workflows. 
+              My pipelines integrate with data lakehouses using S3, query engines like AWS Athena and Apache Hive, 
+              and data warehouses including AWS Redshift. These systems deliver insights through automated reporting 
+              and ML-driven anomaly detection.
+            </p>
+            <p className="text-muted-foreground">
+              I'm comfortable working across AWS, Azure, and GCP with a focus on turning messy data into reliable, 
+              actionable reporting. My work spans from building React dashboards to deploying ML models, always 
+              with an eye toward automation, scalability, and efficiency.
+            </p>
+            <p className="text-muted-foreground text-sm pt-2">
+              <strong>Education:</strong> B.S. in Cybersecurity from Thomas College (2021) | 
+              AWS Certified Data Engineer (2024) | AWS Certified DevOps Engineer Professional (2025)
             </p>
           </CardContent>
         </Card>
@@ -102,12 +118,13 @@ export function AboutSection() {
                   <CardContent>
                     <div className="flex flex-wrap gap-2">
                       {categorySkills.map((skill) => (
-                        <span
+                        <Badge
                           key={skill.name}
-                          className="px-3 py-1 text-sm bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition-colors duration-300"
+                          variant="secondary"
+                          className="transition-colors duration-300"
                         >
                           {skill.name}
-                        </span>
+                        </Badge>
                       ))}
                     </div>
                   </CardContent>
