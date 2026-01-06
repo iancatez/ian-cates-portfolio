@@ -106,13 +106,13 @@ export const rawVendorData: RawVendorData[] = [
   },
 ];
 
-// Transformation pipeline steps
+// Transformation pipeline steps - icon names map to Lucide icons
 export const transformationSteps: TransformationStep[] = [
   {
     id: 1,
     title: "Data Ingestion",
     description: "Collect raw cost and usage data from 20+ vendor APIs and file exports",
-    icon: "📥",
+    icon: "download",
     details: [
       "Scheduled API pulls from vendor billing systems",
       "S3 event-driven ingestion for file-based exports",
@@ -124,7 +124,7 @@ export const transformationSteps: TransformationStep[] = [
     id: 2,
     title: "Schema Mapping",
     description: "Map vendor-specific columns to FOCUS v1.2 standard schema",
-    icon: "🗺️",
+    icon: "map",
     details: [
       "Vendor-specific transformation rules in SQL/dbt",
       "Column name normalization (e.g., cost → EffectiveCost)",
@@ -136,7 +136,7 @@ export const transformationSteps: TransformationStep[] = [
     id: 3,
     title: "Data Enrichment",
     description: "Enhance records with organizational metadata and cost allocation tags",
-    icon: "✨",
+    icon: "sparkles",
     details: [
       "Join with division/team mapping tables",
       "Apply cost center and GL code assignments",
@@ -148,7 +148,7 @@ export const transformationSteps: TransformationStep[] = [
     id: 4,
     title: "Cost Redistribution",
     description: "Redistribute shared and untagged costs to valid business divisions",
-    icon: "⚖️",
+    icon: "scale",
     details: [
       "Identify 'unknown' and 'corporate' tagged costs",
       "Calculate proportional weights by division",
@@ -160,7 +160,7 @@ export const transformationSteps: TransformationStep[] = [
     id: 5,
     title: "Schema Unification",
     description: "UNION ALL vendor views into single queryable dataset",
-    icon: "🔗",
+    icon: "git-merge",
     details: [
       "All vendors output identical 65-column schema",
       "UNION ALL creates unified cost view",

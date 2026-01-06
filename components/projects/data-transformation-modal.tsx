@@ -30,7 +30,29 @@ import {
   type FocusColumn,
 } from "@/lib/project-data/focus-schema";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Check, Database, Layers, Code2 } from "lucide-react";
+import { 
+  ArrowRight, 
+  ArrowDown,
+  Check, 
+  Database, 
+  Layers, 
+  Code2,
+  Download,
+  Map,
+  Sparkles,
+  Scale,
+  GitMerge,
+  type LucideIcon
+} from "lucide-react";
+
+// Map icon names to Lucide components
+const iconMap: Record<string, LucideIcon> = {
+  download: Download,
+  map: Map,
+  sparkles: Sparkles,
+  scale: Scale,
+  "git-merge": GitMerge,
+};
 
 interface DataTransformationModalProps {
   open: boolean;
@@ -50,7 +72,6 @@ const categoryColors: Record<FocusColumn["category"], string> = {
 };
 
 export function DataTransformationModal({ open, onOpenChange }: DataTransformationModalProps) {
-  const [activeStep, setActiveStep] = useState<number>(0);
   const [selectedVendor, setSelectedVendor] = useState<number>(0);
 
   return (
@@ -89,7 +110,7 @@ export function DataTransformationModal({ open, onOpenChange }: DataTransformati
           {/* Overview Tab */}
           <TabsContent value="overview" className="flex-1 overflow-auto mt-4">
             <div className="space-y-6">
-              <DataFlowDiagram activeStep={activeStep} onStepClick={setActiveStep} />
+              <DataFlowDiagram />
               
               {/* Stats summary */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 px-2">
@@ -201,45 +222,99 @@ export function DataTransformationModal({ open, onOpenChange }: DataTransformati
 
           {/* Transform Tab */}
           <TabsContent value="transform" className="flex-1 overflow-auto mt-4">
-            <div className="space-y-3">
-              {transformationSteps.map((step, index) => (
-                <motion.div
-                  key={step.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Card className="overflow-hidden">
-                    <CardHeader className="pb-2 bg-muted/30">
-                      <div className="flex items-center gap-3">
-                        <span className="text-2xl">{step.icon}</span>
-                        <div className="flex-1">
-                          <CardTitle className="text-base flex items-center gap-2">
-                            <span className="text-xs text-muted-foreground font-normal">
-                              Step {step.id}
+            <div className="space-y-6">
+              {/* Visual Pipeline Diagram */}
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">Transformation Pipeline</CardTitle>
+                  <CardDescription className="text-xs">
+                    Five-stage ETL process converting raw vendor data to standardized FOCUS schema
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between gap-1 py-4">
+                    {transformationSteps.map((step, index) => {
+                      const IconComponent = iconMap[step.icon] || Database;
+                      return (
+                        <div key={step.id} className="flex items-center">
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: index * 0.1 }}
+                            className="flex flex-col items-center"
+                          >
+                            <div className={cn(
+                              "w-12 h-12 rounded-xl flex items-center justify-center",
+                              "bg-primary/10 border-2 border-primary/30"
+                            )}>
+                              <IconComponent className="w-6 h-6 text-primary" />
+                            </div>
+                            <span className="text-[10px] font-medium mt-2 text-center max-w-16">
+                              {step.title.split(" ")[0]}
                             </span>
-                            {step.title}
-                          </CardTitle>
-                          <CardDescription className="text-xs">{step.description}</CardDescription>
+                          </motion.div>
+                          {index < transformationSteps.length - 1 && (
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.3 + index * 0.1 }}
+                            >
+                              <ArrowRight className="w-5 h-5 text-muted-foreground/50 mx-1" />
+                            </motion.div>
+                          )}
                         </div>
-                        {index < transformationSteps.length - 1 && (
-                          <ArrowRight className="w-5 h-5 text-muted-foreground" />
-                        )}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="pt-3">
-                      <ul className="space-y-1.5">
-                        {step.details.map((detail, i) => (
-                          <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
-                            <Check className="w-3 h-3 text-primary mt-0.5 shrink-0" />
-                            {detail}
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Detailed Step Cards */}
+              <div className="space-y-3">
+                {transformationSteps.map((step, index) => {
+                  const IconComponent = iconMap[step.icon] || Database;
+                  return (
+                    <motion.div
+                      key={step.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 + index * 0.1 }}
+                    >
+                      <Card className="overflow-hidden">
+                        <CardHeader className="pb-2 bg-muted/30">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                              <IconComponent className="w-5 h-5 text-primary" />
+                            </div>
+                            <div className="flex-1">
+                              <CardTitle className="text-sm flex items-center gap-2">
+                                <span className="text-xs text-muted-foreground font-normal px-1.5 py-0.5 bg-muted rounded">
+                                  Step {step.id}
+                                </span>
+                                {step.title}
+                              </CardTitle>
+                              <CardDescription className="text-xs">{step.description}</CardDescription>
+                            </div>
+                            {index < transformationSteps.length - 1 && (
+                              <ArrowDown className="w-4 h-4 text-muted-foreground/50" />
+                            )}
+                          </div>
+                        </CardHeader>
+                        <CardContent className="pt-3">
+                          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                            {step.details.map((detail, i) => (
+                              <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
+                                <Check className="w-3 h-3 text-primary mt-0.5 shrink-0" />
+                                {detail}
+                              </li>
+                            ))}
+                          </ul>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
+              </div>
             </div>
           </TabsContent>
 

@@ -5,173 +5,261 @@ import { cn } from "@/lib/utils";
 import { 
   Database, 
   ArrowRight, 
+  ArrowDown,
   Layers, 
   Sparkles,
   Scale,
   GitMerge,
   Cloud,
   BarChart3,
-  Cpu
+  Cpu,
+  Download,
+  Map,
+  Server,
+  HardDrive,
+  FileJson,
+  Users,
+  Building2,
+  PieChart,
+  Table2,
+  Workflow
 } from "lucide-react";
 
 interface DataFlowDiagramProps {
-  activeStep?: number;
-  onStepClick?: (step: number) => void;
+  className?: string;
 }
 
-const vendors = [
-  { name: "Cloud Provider A", icon: Cloud, color: "#FF9900" },
-  { name: "Monitoring B", icon: BarChart3, color: "#632CA6" },
-  { name: "Integration C", icon: GitMerge, color: "#00A2E0" },
-  { name: "AI/ML Service D", icon: Cpu, color: "#D97706" },
-];
-
-const pipelineStages = [
-  { id: 1, name: "Ingest", icon: Database, description: "Raw Data Landing" },
-  { id: 2, name: "Map", icon: Layers, description: "Schema Mapping" },
-  { id: 3, name: "Enrich", icon: Sparkles, description: "Add Metadata" },
-  { id: 4, name: "Redistribute", icon: Scale, description: "Cost Allocation" },
-  { id: 5, name: "Unify", icon: GitMerge, description: "UNION ALL" },
-];
-
-export function DataFlowDiagram({ activeStep = 0, onStepClick }: DataFlowDiagramProps) {
+// Comprehensive architecture diagram showing full data pipeline
+export function DataFlowDiagram({ className }: DataFlowDiagramProps) {
   return (
-    <div className="relative w-full py-8">
-      {/* Main flow container */}
-      <div className="flex flex-col gap-8">
-        {/* Vendor Sources Row */}
-        <div className="flex justify-center gap-3 px-4">
-          {vendors.map((vendor, index) => (
-            <motion.div
-              key={vendor.name}
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.4 }}
-              className="flex flex-col items-center gap-2"
-            >
-              <div 
-                className="w-14 h-14 rounded-lg flex items-center justify-center shadow-lg"
-                style={{ backgroundColor: `${vendor.color}20`, border: `2px solid ${vendor.color}` }}
-              >
-                <vendor.icon className="w-6 h-6" style={{ color: vendor.color }} />
-              </div>
-              <span className="text-[10px] text-muted-foreground text-center max-w-16 leading-tight">
-                {vendor.name}
-              </span>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Connecting arrows from vendors */}
-        <div className="flex justify-center">
-          <motion.div
-            initial={{ scaleY: 0 }}
-            animate={{ scaleY: 1 }}
-            transition={{ delay: 0.4, duration: 0.3 }}
-            className="flex flex-col items-center gap-1"
-          >
-            <div className="w-px h-8 bg-gradient-to-b from-muted-foreground/50 to-primary/50" />
-            <ArrowRight className="w-4 h-4 text-primary/50 rotate-90" />
-          </motion.div>
-        </div>
-
-        {/* Pipeline Stages Row */}
-        <div className="flex justify-center items-center gap-2 px-4 overflow-x-auto">
-          {pipelineStages.map((stage, index) => (
-            <motion.div
-              key={stage.id}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5 + index * 0.1, duration: 0.3 }}
-              className="flex items-center"
-            >
-              <button
-                onClick={() => onStepClick?.(stage.id)}
-                className={cn(
-                  "flex flex-col items-center gap-2 p-3 rounded-xl transition-all duration-300",
-                  "hover:bg-primary/10 cursor-pointer",
-                  activeStep === stage.id && "bg-primary/20 ring-2 ring-primary/50"
-                )}
-              >
-                <div className={cn(
-                  "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300",
-                  activeStep === stage.id 
-                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30" 
-                    : "bg-muted text-muted-foreground"
-                )}>
-                  <stage.icon className="w-5 h-5" />
-                </div>
-                <div className="text-center">
-                  <div className={cn(
-                    "text-xs font-medium transition-colors",
-                    activeStep === stage.id ? "text-primary" : "text-foreground"
-                  )}>
-                    {stage.name}
-                  </div>
-                  <div className="text-[10px] text-muted-foreground max-w-20 leading-tight">
-                    {stage.description}
-                  </div>
-                </div>
-              </button>
-
-              {/* Arrow between stages */}
-              {index < pipelineStages.length - 1 && (
-                <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 + index * 0.1 }}
-                >
-                  <ArrowRight className="w-4 h-4 text-muted-foreground/50 mx-1" />
-                </motion.div>
-              )}
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Connecting arrow to output */}
-        <div className="flex justify-center">
-          <motion.div
-            initial={{ scaleY: 0 }}
-            animate={{ scaleY: 1 }}
-            transition={{ delay: 1, duration: 0.3 }}
-            className="flex flex-col items-center gap-1"
-          >
-            <div className="w-px h-8 bg-gradient-to-b from-primary/50 to-green-500/50" />
-            <ArrowRight className="w-4 h-4 text-green-500/70 rotate-90" />
-          </motion.div>
-        </div>
-
-        {/* Unified Output */}
+    <div className={cn("relative w-full", className)}>
+      {/* Full Architecture Diagram */}
+      <div className="space-y-4">
+        
+        {/* Layer 1: Data Sources */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.1, duration: 0.4 }}
+          transition={{ duration: 0.5 }}
+          className="relative"
+        >
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2 text-center font-medium">
+            Data Sources
+          </div>
+          <div className="flex justify-center gap-2 flex-wrap">
+            {[
+              { name: "Cloud Provider", icon: Cloud, color: "#FF9900" },
+              { name: "Monitoring", icon: BarChart3, color: "#632CA6" },
+              { name: "Integration", icon: Workflow, color: "#00A2E0" },
+              { name: "AI/ML", icon: Cpu, color: "#D97706" },
+              { name: "+16 more", icon: Server, color: "#6B7280" },
+            ].map((source, i) => (
+              <motion.div
+                key={source.name}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1 + i * 0.05 }}
+                className="flex flex-col items-center"
+              >
+                <div 
+                  className="w-10 h-10 rounded-lg flex items-center justify-center border-2"
+                  style={{ borderColor: source.color, backgroundColor: `${source.color}15` }}
+                >
+                  <source.icon className="w-5 h-5" style={{ color: source.color }} />
+                </div>
+                <span className="text-[9px] text-muted-foreground mt-1 text-center max-w-12 leading-tight">
+                  {source.name}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Connector */}
+        <div className="flex justify-center">
+          <motion.div
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ delay: 0.4 }}
+            className="flex flex-col items-center"
+          >
+            <div className="w-px h-6 bg-gradient-to-b from-muted-foreground/30 to-blue-500/50" />
+            <ArrowDown className="w-4 h-4 text-blue-500/50" />
+          </motion.div>
+        </div>
+
+        {/* Layer 2: Ingestion & Landing Zone */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
           className="flex justify-center"
         >
-          <div className="relative">
-            {/* Glow effect */}
-            <div className="absolute inset-0 bg-green-500/20 blur-xl rounded-full" />
-            
-            <div className="relative flex flex-col items-center gap-2 p-6 rounded-2xl bg-gradient-to-br from-green-500/10 to-primary/10 border-2 border-green-500/30">
-              <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
-                <Database className="w-8 h-8 text-green-500" />
+          <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-3 max-w-md w-full">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                  <Download className="w-4 h-4 text-blue-400" />
+                </div>
+                <div>
+                  <div className="text-xs font-medium text-blue-400">Ingestion Layer</div>
+                  <div className="text-[10px] text-muted-foreground">APIs, S3 Events, Scheduled Jobs</div>
+                </div>
               </div>
-              <div className="text-center">
-                <div className="text-sm font-semibold text-green-500">FOCUS v1.2</div>
-                <div className="text-xs text-muted-foreground">Unified Cost View</div>
-                <div className="text-[10px] text-muted-foreground mt-1">65 Columns • 20+ Vendors</div>
+              <ArrowRight className="w-4 h-4 text-muted-foreground/50" />
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                  <HardDrive className="w-4 h-4 text-blue-400" />
+                </div>
+                <div>
+                  <div className="text-xs font-medium text-blue-400">Landing Zone</div>
+                  <div className="text-[10px] text-muted-foreground">S3 / Parquet Format</div>
+                </div>
               </div>
             </div>
           </div>
         </motion.div>
-      </div>
 
-      {/* Background decoration */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 left-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-0 w-32 h-32 bg-green-500/5 rounded-full blur-3xl" />
+        {/* Connector */}
+        <div className="flex justify-center">
+          <motion.div
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ delay: 0.6 }}
+            className="flex flex-col items-center"
+          >
+            <div className="w-px h-6 bg-gradient-to-b from-blue-500/50 to-purple-500/50" />
+            <ArrowDown className="w-4 h-4 text-purple-500/50" />
+          </motion.div>
+        </div>
+
+        {/* Layer 3: Transformation Pipeline */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="flex justify-center"
+        >
+          <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-3 max-w-lg w-full">
+            <div className="text-[10px] uppercase tracking-wider text-purple-400 mb-2 text-center font-medium">
+              ETL Transformation Pipeline
+            </div>
+            <div className="flex items-center justify-center gap-1">
+              {[
+                { icon: Map, label: "Schema Map", color: "text-purple-400" },
+                { icon: Sparkles, label: "Enrich", color: "text-purple-400" },
+                { icon: Scale, label: "Allocate", color: "text-purple-400" },
+                { icon: GitMerge, label: "Unify", color: "text-purple-400" },
+              ].map((step, i) => (
+                <div key={step.label} className="flex items-center">
+                  <div className="flex flex-col items-center px-2">
+                    <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center">
+                      <step.icon className={cn("w-4 h-4", step.color)} />
+                    </div>
+                    <span className="text-[9px] text-muted-foreground mt-1">{step.label}</span>
+                  </div>
+                  {i < 3 && <ArrowRight className="w-3 h-3 text-purple-500/30" />}
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Connector */}
+        <div className="flex justify-center">
+          <motion.div
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ delay: 0.8 }}
+            className="flex flex-col items-center"
+          >
+            <div className="w-px h-6 bg-gradient-to-b from-purple-500/50 to-green-500/50" />
+            <ArrowDown className="w-4 h-4 text-green-500/50" />
+          </motion.div>
+        </div>
+
+        {/* Layer 4: Unified Output */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9 }}
+          className="flex justify-center"
+        >
+          <div className="relative">
+            <div className="absolute inset-0 bg-green-500/10 blur-xl rounded-2xl" />
+            <div className="relative bg-green-500/10 border-2 border-green-500/40 rounded-xl p-4 max-w-md w-full">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+                  <Database className="w-6 h-6 text-green-400" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-sm font-semibold text-green-400">FOCUS v1.2 Unified View</div>
+                  <div className="text-[10px] text-muted-foreground">65 Standardized Columns • All Vendors</div>
+                </div>
+                <div className="flex flex-col items-end gap-0.5">
+                  <div className="flex items-center gap-1">
+                    <FileJson className="w-3 h-3 text-green-400" />
+                    <span className="text-[10px] text-green-400">Athena</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Table2 className="w-3 h-3 text-green-400" />
+                    <span className="text-[10px] text-green-400">Redshift</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Connector */}
+        <div className="flex justify-center">
+          <motion.div
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ delay: 1.0 }}
+            className="flex flex-col items-center"
+          >
+            <div className="w-px h-6 bg-gradient-to-b from-green-500/50 to-cyan-500/50" />
+            <ArrowDown className="w-4 h-4 text-cyan-500/50" />
+          </motion.div>
+        </div>
+
+        {/* Layer 5: Consumers */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.1 }}
+        >
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2 text-center font-medium">
+            Consumers
+          </div>
+          <div className="flex justify-center gap-4">
+            {[
+              { name: "BI Dashboards", icon: PieChart, color: "#06B6D4" },
+              { name: "Finance Teams", icon: Building2, color: "#06B6D4" },
+              { name: "Cost Anomaly Detection", icon: BarChart3, color: "#06B6D4" },
+            ].map((consumer, i) => (
+              <motion.div
+                key={consumer.name}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.2 + i * 0.1 }}
+                className="flex flex-col items-center"
+              >
+                <div 
+                  className="w-10 h-10 rounded-lg flex items-center justify-center border-2"
+                  style={{ borderColor: consumer.color, backgroundColor: `${consumer.color}15` }}
+                >
+                  <consumer.icon className="w-5 h-5" style={{ color: consumer.color }} />
+                </div>
+                <span className="text-[9px] text-muted-foreground mt-1 text-center max-w-16 leading-tight">
+                  {consumer.name}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </div>
   );
 }
-
