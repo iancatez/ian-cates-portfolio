@@ -33,7 +33,7 @@ export function ProjectCard({
   const projectLink = liveUrl || link;
   const projectGithub = githubUrl || github;
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
@@ -44,7 +44,7 @@ export function ProjectCard({
             {technologies.map((tech) => (
               <span
                 key={tech}
-                className="px-2 py-1 text-xs bg-secondary text-secondary-foreground rounded-md"
+                className="px-2 py-1 text-xs bg-secondary text-secondary-foreground rounded-md transition-colors duration-300 hover:bg-secondary/80"
               >
                 {tech}
               </span>

@@ -79,8 +79,14 @@ export function MouseReactiveCard({
         rotateX,
         rotateY,
         transformStyle: "preserve-3d",
+        backfaceVisibility: "hidden",
+        perspective: "1000px",
       }}
-      className={cn("transition-transform duration-200", className)}
+      className={cn(
+        "transition-transform duration-200",
+        "will-change-transform",
+        className
+      )}
       whileHover={{ scale: 1.02 }}
     >
       {children}

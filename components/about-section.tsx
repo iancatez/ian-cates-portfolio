@@ -6,6 +6,7 @@ import { staggerContainer, staggerItem } from "@/lib/animations";
 import { motion } from "framer-motion";
 import { skills } from "@/lib/data";
 import type { Skill } from "@/lib/data";
+import Image from "next/image";
 
 const skillCategories = {
   frontend: "Frontend",
@@ -39,15 +40,35 @@ export function AboutSection() {
           <motion.h2 variants={staggerItem} className="text-4xl md:text-5xl font-bold">
             About Me
           </motion.h2>
-          <motion.p
-            variants={staggerItem}
-            className="text-xl text-muted-foreground max-w-2xl mx-auto"
-          >
-            Learn more about my background and experience
-          </motion.p>
+        <motion.p
+          variants={staggerItem}
+          className="text-xl text-muted-foreground max-w-2xl mx-auto"
+        >
+          Learn more about my background and experience
+        </motion.p>
+      </motion.div>
+
+      <div className="flex flex-col md:flex-row gap-8 items-start">
+        <motion.div
+          variants={staggerItem}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          className="flex-shrink-0 mx-auto md:mx-0"
+        >
+          <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-primary/20 shadow-lg bg-muted">
+            <Image
+              src="https://via.placeholder.com/256x256/1a1a1a/4ade80?text=IC"
+              alt="Ian Cates - Full Stack Developer"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 192px, 256px"
+              priority
+            />
+          </div>
         </motion.div>
 
-        <Card>
+        <Card className="flex-1">
           <CardHeader>
             <CardTitle>Background</CardTitle>
             <CardDescription>My journey in development</CardDescription>
@@ -59,6 +80,7 @@ export function AboutSection() {
             </p>
           </CardContent>
         </Card>
+      </div>
 
         <div className="space-y-6">
           <h3 className="text-2xl font-semibold">Skills</h3>
@@ -71,7 +93,7 @@ export function AboutSection() {
           >
             {Object.entries(skillsByCategory).map(([category, categorySkills]) => (
               <motion.div key={category} variants={staggerItem}>
-                <Card className="h-full hover:shadow-lg transition-shadow">
+                <Card className="h-full hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 hover:scale-[1.02]">
                   <CardHeader>
                     <CardTitle className="text-lg">
                       {skillCategories[category as keyof typeof skillCategories] || category}
@@ -82,7 +104,7 @@ export function AboutSection() {
                       {categorySkills.map((skill) => (
                         <span
                           key={skill.name}
-                          className="px-3 py-1 text-sm bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition-colors"
+                          className="px-3 py-1 text-sm bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition-colors duration-300"
                         >
                           {skill.name}
                         </span>
