@@ -52,7 +52,7 @@ export function HeroSection() {
           <Button asChild size="lg">
             <Link href="#projects">View Projects</Link>
           </Button>
-          <Button asChild variant="outline" size="lg">
+          <Button asChild size="lg" neonColor="#3b82f6">
             <Link href="#about">About Me</Link>
           </Button>
         </motion.div>
