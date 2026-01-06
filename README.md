@@ -1,4 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ian Cates Portfolio
+
+A modern, single-page portfolio website built with Next.js, ShadCN UI, and Tailwind CSS.
+
+## Tech Stack
+
+- **Next.js 16.1.1** - React framework with App Router
+- **ShadCN UI** - Component library (MUST use exclusively - see rules below)
+- **Tailwind CSS v4** - Utility-first CSS framework
+- **TypeScript** - Type safety
+- **Framer Motion** - Animations (planned)
+
+## Component Library Rules
+
+**IMPORTANT**: This project strictly uses **ShadCN UI components only**. 
+
+- ✅ Always use ShadCN components from `@/components/ui/`
+- ✅ Install new components: `npx shadcn@latest add [component-name]`
+- ✅ Customize installed ShadCN components as needed
+- ❌ Never create custom UI components that replicate ShadCN functionality
+- ❌ Never build buttons, cards, inputs, etc. from scratch
+
+See [ShadCN Documentation](https://ui.shadcn.com/docs/components) for available components.
 
 ## Getting Started
 
