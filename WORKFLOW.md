@@ -16,11 +16,18 @@ Each task group from `AGENT_TASKS.md` must be completed on a **separate branch**
 git checkout master
 git pull origin master
 
+# IMPORTANT: Verify all previous PRs are merged
+# If you have unmerged branches, wait for them to be merged first
+# OR merge them into your new branch if they're dependencies
+
 # Create a new branch for the task group
 git checkout -b task-group-[number]-[short-description]
 
 # Example:
 git checkout -b task-group-1-core-animation-setup
+
+# If you need changes from an unmerged branch:
+# git merge [branch-name] (only if that branch's PR isn't merged yet)
 ```
 
 ### 2. Complete the Task Group
@@ -131,13 +138,59 @@ When creating a PR, include:
 
 See `scripts/create-task-branch.sh` for an automated script to create branches.
 
+## Bug Fix Workflow
+
+### When Fixing Bugs
+
+**CRITICAL**: All bug fixes MUST be done on a separate branch with a PR, just like task groups.
+
+```bash
+# Create bug fix branch
+git checkout master
+git pull origin master
+git checkout -b fix/[brief-description]
+
+# Example:
+git checkout -b fix/project-card-prop-mismatch
+git checkout -b fix/footer-year-update
+```
+
+### Bug Fix Commit Format
+
+```bash
+git commit -m "fix: [Description of bug and fix]
+
+- [What was broken]
+- [How it was fixed]
+- [Testing done]"
+```
+
+### Bug Fix PR Template
+
+```markdown
+## Bug Fix: [Brief Description]
+
+### Problem
+- [Describe the bug]
+
+### Solution
+- [Describe the fix]
+
+### Testing
+- [x] Build succeeds
+- [x] Bug is fixed
+- [x] No regressions introduced
+```
+
 ## Important Rules
 
 1. **NEVER commit directly to master/main** - Always use a branch
 2. **One task group = One branch = One PR**
-3. **Wait for PR approval** before starting next task group (if dependencies exist)
-4. **Keep branches focused** - Only include changes for that specific task group
-5. **Test before committing** - Ensure build succeeds and no errors
+3. **One bug fix = One branch = One PR**
+4. **Wait for PR approval** before starting next task group (if dependencies exist)
+5. **Keep branches focused** - Only include changes for that specific task group/bug
+6. **Test before committing** - Ensure build succeeds and no errors
+7. **Add new tasks to AGENT_TASKS.md** if they're not already listed
 
 ## Current Status
 

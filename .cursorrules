@@ -493,9 +493,11 @@ public/                # Static assets
    - ✅ DO NOT merge your own PR - wait for review/approval
 
 4. **Starting Next Task Group**:
-   - ✅ Ensure previous PR is merged (or approved if dependencies allow)
+   - ✅ **CRITICAL**: Ensure previous PRs are merged into master before starting new work
    - ✅ Return to master: `git checkout master && git pull origin master`
+   - ✅ Verify master has all merged changes
    - ✅ Create new branch for next task group
+   - ⚠️ **Exception**: If a dependency branch isn't merged yet, you can merge it into your new branch, but note this in the PR description
 
 ### Branch Naming Convention
 - Format: `task-group-[number]-[kebab-case-description]`
@@ -524,4 +526,39 @@ feat: Task Group [Number] - [Short Description]
 - See `WORKFLOW.md` for detailed workflow documentation
 
 **This workflow is MANDATORY and must be followed for every task group.**
+
+## Task Management Rules
+
+### Adding New Tasks
+- **If a request is made that isn't on the task list**: It MUST be added to `AGENT_TASKS.md` as a new task group
+- **Before starting work**: Check if the task exists in `AGENT_TASKS.md`
+- **If task doesn't exist**: Create a new task group entry with:
+  - Task group number (next available)
+  - Description
+  - Dependencies
+  - Estimated time
+  - Acceptance criteria
+- **Then follow the branch-per-task workflow** for the new task
+
+### Bug Fix Workflow (MANDATORY)
+- **ALL bug fixes MUST be done on a separate branch with a PR**
+- **Never fix bugs directly on master/main**
+- **Workflow for bug fixes**:
+  1. Create branch: `git checkout -b fix/[brief-description]`
+  2. Fix the bug
+  3. Test: `npm run build` must succeed
+  4. Commit: `git commit -m "fix: [description of bug fix]"`
+  5. Push: `git push -u origin fix/[brief-description]`
+  6. Create PR with description of the bug and fix
+- **Bug fix branches**: Use `fix/` prefix instead of `task-group-`
+- **Examples**:
+  - `fix/project-card-prop-mismatch`
+  - `fix/footer-year-update`
+  - `fix/navigation-active-state`
+
+### Task List Maintenance
+- Keep `AGENT_TASKS.md` updated with all planned work
+- Mark completed tasks with status updates
+- Add new tasks when requested
+- Document dependencies between tasks
 
