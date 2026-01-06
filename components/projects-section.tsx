@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { AnimatedSection } from "@/components/animated-section";
 import { BentoProjectCard } from "@/components/bento-project-card";
+import { DataTransformationModal } from "@/components/projects/data-transformation-modal";
 import { projects } from "@/lib/data";
 import { motion } from "framer-motion";
 import { staggerContainer, staggerItem } from "@/lib/animations";
@@ -111,58 +113,73 @@ const containerVariants = {
 
 export function ProjectsSection() {
   const selectedVariants = animationVariants[ANIMATION_STYLE];
+  const [isProject1ModalOpen, setIsProject1ModalOpen] = useState(false);
   
   return (
-    <AnimatedSection id="projects" className="container mx-auto px-4 py-16">
-      <div className="max-w-5xl mx-auto space-y-8">
-        {/* Header */}
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          className="text-center space-y-3"
-        >
-          <motion.h2 
-            variants={staggerItem} 
-            className="text-3xl md:text-4xl font-bold"
+    <>
+      <AnimatedSection id="projects" className="container mx-auto px-4 py-16">
+        <div className="max-w-5xl mx-auto space-y-8">
+          {/* Header */}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            className="text-center space-y-3"
           >
-            Projects
-          </motion.h2>
-          <motion.p
-            variants={staggerItem}
-            className="text-lg text-muted-foreground max-w-xl mx-auto"
-          >
-            A collection of my work and side projects
-          </motion.p>
-        </motion.div>
-
-        {/* Organic Bento Grid - explicit positioning for asymmetric look */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.05 }}
-          className="grid gap-4"
-          style={{
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gridTemplateRows: "180px 160px 180px 180px",
-          }}
-        >
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              custom={index}
-              variants={selectedVariants}
-              style={{
-                gridArea: project.gridArea,
-              }}
+            <motion.h2 
+              variants={staggerItem} 
+              className="text-3xl md:text-4xl font-bold"
             >
-              <BentoProjectCard {...project} className="h-full" />
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-    </AnimatedSection>
+              Projects
+            </motion.h2>
+            <motion.p
+              variants={staggerItem}
+              className="text-lg text-muted-foreground max-w-xl mx-auto"
+            >
+              A collection of my work and side projects
+            </motion.p>
+          </motion.div>
+
+          {/* Organic Bento Grid - explicit positioning for asymmetric look */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.05 }}
+            className="grid gap-4"
+            style={{
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gridTemplateRows: "180px 160px 180px 180px",
+            }}
+          >
+            {projects.map((project, index) => (
+              <motion.div
+                key={project.id}
+                custom={index}
+                variants={selectedVariants}
+                style={{
+                  gridArea: project.gridArea,
+                }}
+              >
+                <BentoProjectCard 
+                  {...project} 
+                  className="h-full"
+                  // Project 1 has an interactive demo modal
+                  hasInteractiveDemo={project.id === "1"}
+                  onInteractiveClick={project.id === "1" ? () => setIsProject1ModalOpen(true) : undefined}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </AnimatedSection>
+
+      {/* Project 1 Interactive Modal */}
+      <DataTransformationModal 
+        open={isProject1ModalOpen} 
+        onOpenChange={setIsProject1ModalOpen} 
+      />
+    </>
   );
 }

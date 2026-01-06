@@ -11,12 +11,16 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Github, ExternalLink } from "lucide-react";
+import { Github, ExternalLink, Expand } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/lib/data";
 
 interface BentoProjectCardProps extends Project {
   className?: string;
+  /** If true, clicking the card opens an interactive modal */
+  hasInteractiveDemo?: boolean;
+  /** Click handler for interactive demo */
+  onInteractiveClick?: () => void;
 }
 
 export function BentoProjectCard({
@@ -27,8 +31,10 @@ export function BentoProjectCard({
   githubUrl,
   bentoSize = "normal",
   className,
+  hasInteractiveDemo,
+  onInteractiveClick,
 }: BentoProjectCardProps) {
-  const hasFooter = liveUrl || githubUrl;
+  const hasFooter = liveUrl || githubUrl || hasInteractiveDemo;
   const isLarge = bentoSize === "large";
   
   return (
@@ -86,7 +92,18 @@ export function BentoProjectCard({
       
       {hasFooter && (
         <CardFooter className="relative z-10 p-4 pt-2 mt-auto gap-2">
-          {liveUrl && (
+          {hasInteractiveDemo && (
+            <Button 
+              size="sm" 
+              className="h-7 text-xs px-3"
+              onClick={onInteractiveClick}
+              neonColor="#3b82f6"
+            >
+              <Expand className="h-3 w-3 mr-1" />
+              Explore
+            </Button>
+          )}
+          {liveUrl && !hasInteractiveDemo && (
             <Button asChild size="sm" className="h-7 text-xs px-3">
               <Link href={liveUrl} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="h-3 w-3 mr-1" />

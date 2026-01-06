@@ -148,4 +148,102 @@
       0 0 calc(30px * var(--neon-intensity)) hsl(142 40% 45% / calc(0.5 * var(--neon-intensity))),
       0 0 calc(45px * var(--neon-intensity)) hsl(142 40% 45% / calc(0.3 * var(--neon-intensity)));
   }
+
+  /* React Flow overrides for dark mode */
+  .react-flow {
+    background: transparent !important;
+  }
+  
+  .react-flow__node {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  
+  .react-flow__node-default,
+  .react-flow__node-input,
+  .react-flow__node-output,
+  .react-flow__node-group {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .react-flow__edge-path {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .react-flow__edge.animated path {
+    stroke-dasharray: 5;
+    animation: dashdraw 0.5s linear infinite;
+  }
+
+  @keyframes dashdraw {
+    from { stroke-dashoffset: 10; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  .react-flow__attribution {
+    display: none !important;
+  }
+
+  /* Ensure edges are visible */
+  .react-flow__edges {
+    z-index: 5 !important;
+    pointer-events: none;
+  }
+
+  .react-flow__edge-path {
+    fill: none !important;
+    stroke-opacity: 1 !important;
+  }
+
+  .react-flow__edge {
+    pointer-events: visibleStroke;
+  }
+
+  /* Make sure nodes don't cover edges completely */
+  .react-flow__nodes {
+    z-index: 4 !important;
+  }
+
+  /* React Flow Controls styling for dark mode */
+  .react-flow__controls {
+    background: rgba(0, 0, 0, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .react-flow__controls-button {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    width: 28px !important;
+    height: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease !important;
+  }
+
+  .react-flow__controls-button:last-child {
+    border-bottom: none !important;
+  }
+
+  .react-flow__controls-button:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .react-flow__controls-button svg {
+    fill: rgba(255, 255, 255, 0.8) !important;
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .react-flow__controls-button:hover svg {
+    fill: white !important;
+  }
 }
