@@ -13,6 +13,9 @@ interface ProjectCardProps {
   title: string;
   description: string;
   technologies?: string[];
+  liveUrl?: string;
+  githubUrl?: string;
+  // Legacy prop names for backward compatibility
   link?: string;
   github?: string;
 }
@@ -21,9 +24,14 @@ export function ProjectCard({
   title,
   description,
   technologies = [],
-  link,
-  github,
+  liveUrl,
+  githubUrl,
+  link, // Legacy prop
+  github, // Legacy prop
 }: ProjectCardProps) {
+  // Use new prop names if available, fall back to legacy names
+  const projectLink = liveUrl || link;
+  const projectGithub = githubUrl || github;
   return (
     <Card className="flex flex-col">
       <CardHeader>
@@ -44,18 +52,18 @@ export function ProjectCard({
           </div>
         </CardContent>
       )}
-      {(link || github) && (
+      {(projectLink || projectGithub) && (
         <CardFooter className="mt-auto gap-2">
-          {link && (
+          {projectLink && (
             <Button asChild variant="default" size="sm">
-              <Link href={link} target="_blank" rel="noopener noreferrer">
+              <Link href={projectLink} target="_blank" rel="noopener noreferrer">
                 View Project
               </Link>
             </Button>
           )}
-          {github && (
+          {projectGithub && (
             <Button asChild variant="outline" size="sm">
-              <Link href={github} target="_blank" rel="noopener noreferrer">
+              <Link href={projectGithub} target="_blank" rel="noopener noreferrer">
                 GitHub
               </Link>
             </Button>
