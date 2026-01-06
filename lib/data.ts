@@ -14,6 +14,10 @@ export interface Project {
   liveUrl?: string;
   githubUrl?: string;
   featured?: boolean;
+  /** Bento grid size for styling */
+  bentoSize?: "large" | "tall" | "wide" | "normal";
+  /** CSS Grid area: "row-start / col-start / row-end / col-end" */
+  gridArea?: string;
 }
 
 // Example skills data - replace with your actual skills
@@ -46,51 +50,87 @@ export const skills: Skill[] = [
  *   featured?: true,                     // Optional: Featured project flag
  * }
  */
+/**
+ * Bento Grid with explicit positioning for organic layout
+ * Using gridArea for precise placement that looks random
+ */
 export const projects: Project[] = [
   {
     id: "1",
     title: "Project One",
-    description: "A brief description of your first project. Explain what it does and what technologies you used.",
-    technologies: ["React", "TypeScript", "Next.js"],
+    description: "My flagship project showcasing end-to-end data engineering. Built production pipelines processing millions of records daily with real-time monitoring and automated alerting.",
+    technologies: ["Apache Spark", "AWS", "Python", "Terraform"],
     liveUrl: "#",
     githubUrl: "#",
     featured: true,
+    bentoSize: "large",
+    gridArea: "1 / 1 / 3 / 3", // row-start / col-start / row-end / col-end
   },
   {
     id: "2",
     title: "Project Two",
-    description: "A brief description of your second project. Explain what it does and what technologies you used.",
-    technologies: ["Node.js", "Express", "MongoDB"],
+    description: "Automated ETL workflows with data quality.",
+    technologies: ["Airflow", "dbt", "Snowflake"],
     liveUrl: "#",
     githubUrl: "#",
-    featured: true,
+    featured: false,
+    bentoSize: "normal",
+    gridArea: "1 / 3 / 2 / 4",
   },
   {
     id: "3",
     title: "Project Three",
-    description: "A brief description of your third project. Explain what it does and what technologies you used.",
-    technologies: ["Python", "Django", "PostgreSQL"],
+    description: "Real-time streaming analytics solution with event-driven architecture.",
+    technologies: ["Kafka", "Flink", "Redis"],
     liveUrl: "#",
     githubUrl: "#",
     featured: false,
+    bentoSize: "tall",
+    gridArea: "2 / 3 / 4 / 4",
   },
   {
     id: "4",
     title: "Project Four",
-    description: "A brief description of your fourth project. Explain what it does and what technologies you used.",
-    technologies: ["Python", "Django", "PostgreSQL"],
+    description: "ML pipeline automation.",
+    technologies: ["SageMaker", "MLflow"],
     liveUrl: "#",
     githubUrl: "#",
     featured: false,
+    bentoSize: "normal",
+    gridArea: "3 / 1 / 4 / 2",
   },
   {
     id: "5",
     title: "Project Five",
-    description: "A brief description of your fifth project. Explain what it does and what technologies you used.",
-    technologies: ["Python", "Django", "PostgreSQL"],
+    description: "Cloud-native data lakehouse with cost optimization and governance.",
+    technologies: ["Glue", "Athena", "Lake Formation"],
     liveUrl: "#",
     githubUrl: "#",
     featured: false,
+    bentoSize: "normal",
+    gridArea: "3 / 2 / 4 / 3",
+  },
+  {
+    id: "6",
+    title: "Project Six",
+    description: "Infrastructure as code for reproducible cloud environments and CI/CD pipelines.",
+    technologies: ["Terraform", "CDK", "GitHub Actions"],
+    liveUrl: "#",
+    githubUrl: "#",
+    featured: false,
+    bentoSize: "wide",
+    gridArea: "4 / 1 / 5 / 3",
+  },
+  {
+    id: "7",
+    title: "Project Seven",
+    description: "Monitoring stack.",
+    technologies: ["Datadog", "Grafana"],
+    liveUrl: "#",
+    githubUrl: "#",
+    featured: false,
+    bentoSize: "normal",
+    gridArea: "4 / 3 / 5 / 4",
   },
 ];
 
