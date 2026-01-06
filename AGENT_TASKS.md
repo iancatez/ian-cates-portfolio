@@ -8,6 +8,12 @@ This file defines tasks that can be executed in parallel by Cursor agents. Each 
 2. **Parallel Execution**: Tasks in the same group or with no dependencies can run simultaneously
 3. **File Conflicts**: Agents should coordinate on shared files (use file-level locks or sequential updates)
 4. **Testing**: Each task group should verify its changes don't break the build
+5. **Git Workflow (MANDATORY)**: Each task group MUST be completed on a separate branch with its own commit and PR
+   - Create branch: `git checkout -b task-group-[number]-[description]`
+   - Commit: `git commit -m "feat: Task Group [N] - [Description]"`
+   - Push: `git push -u origin task-group-[number]-[description]`
+   - Create PR: Use GitHub CLI or web interface
+   - See `WORKFLOW.md` for complete workflow details
 
 ---
 
