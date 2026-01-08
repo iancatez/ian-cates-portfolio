@@ -446,6 +446,11 @@ This file defines tasks that can be executed in parallel by Cursor agents. Each 
 - Feature #14: Explore Button Cursor Interaction
 - Feature #15: Improved Animation Trigger Timing
 
+### Phase 6: Project Content Updates (Parallel)
+- Feature #16: Project 2 - AWS QuickSight Asset Backup & Restore Tool
+- Feature #17: Project 3 - Natural Disaster Event Alerting System
+- Feature #18: Project 4 - CloudWatch Log Monitoring & Aggregation System
+
 ---
 
 ## Notes for Agents
@@ -745,6 +750,119 @@ This file defines tasks that can be executed in parallel by Cursor agents. Each 
 - [x] Build succeeds
 - [x] No TypeScript errors
 - [x] No performance regressions
+
+---
+
+## Feature #16: Project 2 - AWS QuickSight Asset Backup & Restore Tool
+**Feature #**: 16
+**Status**: Pending
+**Dependencies**: None
+**Can Run In Parallel**: Yes
+**Estimated Time**: 30-45 minutes
+
+### Requirements:
+- Update Project 2 in the portfolio to showcase an AWS QuickSight asset backup and restore tool
+- The project should demonstrate ability to backup and restore QuickSight dashboards, analyses, datasets, and data sources
+- Include relevant technical details about AWS SDK usage, asset serialization, and restore workflows
+- Update project card content, description, and any demo/interactive elements
+
+### Tasks:
+1. **Update project data**
+   - Modify `lib/data.ts` to update Project 2 details
+   - Update title, description, and tech stack
+   - Add relevant tags (AWS, QuickSight, Backup, Python/TypeScript)
+
+2. **Create project description content**
+   - Write compelling description highlighting the tool's capabilities
+   - Include key features: asset export, version control, cross-account restore
+   - Mention supported asset types (dashboards, analyses, datasets, data sources)
+
+3. **Update visual elements**
+   - Update project card imagery/icons if applicable
+   - Ensure tech stack badges are accurate
+
+**Acceptance Criteria**:
+- [ ] Project 2 displays AWS QuickSight backup/restore tool information
+- [ ] Description clearly explains the tool's purpose and capabilities
+- [ ] Tech stack is accurate (AWS, QuickSight, SDK)
+- [ ] Project card renders correctly in bento grid
+- [ ] Build succeeds
+
+---
+
+## Feature #17: Project 3 - Natural Disaster Event Alerting System
+**Feature #**: 17
+**Status**: Pending
+**Dependencies**: None
+**Can Run In Parallel**: Yes
+**Estimated Time**: 30-45 minutes
+
+### Requirements:
+- Update Project 3 to showcase a Natural Disaster Event Alerting system
+- The system uses Haversine algorithm to calculate point collision/proximity for geographic alerting
+- Should demonstrate geospatial data processing and real-time alerting capabilities
+- Include technical details about the Haversine formula implementation and alerting logic
+
+### Tasks:
+1. **Update project data**
+   - Modify `lib/data.ts` to update Project 3 details
+   - Update title, description, and tech stack
+   - Add relevant tags (Geospatial, Haversine, Alerting, Real-time)
+
+2. **Create project description content**
+   - Write description explaining the disaster alerting system
+   - Highlight Haversine algorithm usage for geographic distance calculations
+   - Explain point collision detection for proximity-based alerts
+   - Mention data sources (earthquake feeds, weather APIs, etc.)
+
+3. **Update visual elements**
+   - Update project card imagery/icons if applicable
+   - Consider geographic/map-related visual elements
+
+**Acceptance Criteria**:
+- [ ] Project 3 displays Natural Disaster Alerting system information
+- [ ] Description explains Haversine algorithm and point collision logic
+- [ ] Geospatial/alerting capabilities are clearly communicated
+- [ ] Tech stack is accurate
+- [ ] Build succeeds
+
+---
+
+## Feature #18: Project 4 - CloudWatch Log Monitoring & Aggregation System
+**Feature #**: 18
+**Status**: Pending
+**Dependencies**: None
+**Can Run In Parallel**: Yes
+**Estimated Time**: 30-45 minutes
+
+### Requirements:
+- Update Project 4 to showcase a real-time AWS CloudWatch log monitoring and aggregation system
+- Architecture: CloudWatch Logs + CloudWatch Metric Namespaces → Firehose → S3 → Athena/Redshift
+- Should demonstrate log streaming, transformation, storage, and queryable analytics
+- Include technical details about the data pipeline and querying capabilities
+
+### Tasks:
+1. **Update project data**
+   - Modify `lib/data.ts` to update Project 4 details
+   - Update title, description, and tech stack
+   - Add relevant tags (AWS, CloudWatch, Firehose, S3, Athena, Redshift, Real-time)
+
+2. **Create project description content**
+   - Write description explaining the log aggregation pipeline
+   - Detail the data flow: CloudWatch → Firehose → S3 → Query Layer
+   - Highlight real-time streaming and metric namespace support
+   - Explain analytics capabilities with Athena/Redshift
+
+3. **Update visual elements**
+   - Update project card imagery/icons if applicable
+   - Consider data pipeline/flow diagram visual elements
+
+**Acceptance Criteria**:
+- [ ] Project 4 displays CloudWatch log monitoring system information
+- [ ] Architecture (CloudWatch → Firehose → S3 → Athena/Redshift) is clearly explained
+- [ ] Real-time streaming and aggregation capabilities are highlighted
+- [ ] Tech stack accurately reflects AWS services used
+- [ ] Build succeeds
 
 ---
 
