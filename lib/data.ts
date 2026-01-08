@@ -57,10 +57,9 @@ export const skills: Skill[] = [
 export const projects: Project[] = [
   {
     id: "1",
-    title: "Cost Data Lakehouse",
-    description: "Enterprise cost data pipeline normalizing 20+ vendor sources to FOCUS v1.2 specification. Features automated cost allocation, schema unification, and real-time anomaly detection.",
-    technologies: ["AWS Athena", "Glue", "Python", "dbt", "Terraform"],
-    githubUrl: "#",
+    title: "FinOps Data Lakehouse",
+    description: "Enterprise cost data pipeline normalizing 20+ vendor sources to FOCUS v1.2 schema specification. Features automated cost allocation, schema unification, and real-time anomaly detection.",
+    technologies: ["AWS Athena", "Glue", "Python", "dbt", "Terraform", "Spark"],
     featured: true,
     bentoSize: "large",
     gridArea: "1 / 1 / 3 / 3", // row-start / col-start / row-end / col-end
@@ -124,7 +123,7 @@ export const projects: Project[] = [
     id: "7",
     title: "Project Seven",
     description: "Monitoring stack.",
-    technologies: ["Datadog", "Grafana"],
+    technologies: ["CloudWatch", "Grafana","DataDog"],
     liveUrl: "#",
     githubUrl: "#",
     featured: false,
