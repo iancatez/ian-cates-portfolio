@@ -1,0 +1,82 @@
+---
+description: Feature tracking, planning process, and work breakdown structure.
+globs: *.md
+---
+# Feature Tracking & Planning Standards
+
+## 1. Feature Set Organization
+
+Features must be organized into logical **Task Groups** in `AGENT_TASKS.md`. This structure ensures modular development and clear dependency management.
+
+### Task Group Structure
+Each task group MUST include:
+- **Header**: `## Task Group [N]: [Name]`
+- **Metadata Block**:
+  - `Status`: Pending | In Progress | Completed | Blocked
+  - `Dependencies`: List of required Task Groups or "None"
+  - `Can Run In Parallel`: Yes/No (and conditions)
+  - `Estimated Time`: Time estimate in minutes/hours
+- **Tasks List**: Numbered list of specific, actionable items
+- **Acceptance Criteria**: Checklist of requirements for completion
+
+### Example
+```markdown
+## Task Group 1: Core Animation Setup
+**Status**: Pending
+**Dependencies**: None
+**Can Run In Parallel**: Yes
+**Estimated Time**: 30-45 minutes
+
+### Tasks:
+1. **Install Framer Motion**
+   - Run: `npm install framer-motion`
+   - Verify: Check package.json
+
+**Acceptance Criteria**:
+- [ ] Framer Motion installed
+- [ ] Build succeeds
+```
+
+## 2. Planning Process
+
+Before starting any new major feature or refactor:
+
+1.  **Check `AGENT_TASKS.md`**: Verify if the work is already defined.
+2.  **Define New Task Group**: If not defined, create a new Task Group following the structure above.
+3.  **Identify Dependencies**: Clearly state what must be done before this work can start.
+4.  **Estimate Effort**: Provide a realistic time estimate.
+5.  **Review**: Ensure the new group fits logically into the Execution Order Summary.
+
+## 3. Progress Tracking
+
+- **Status Updates**: Update the `Status` field in `AGENT_TASKS.md` as work progresses.
+- **Checklists**: Mark acceptance criteria as completed `[x]` only when verified.
+- **Current Status**: Keep the "Current Status" section at the bottom of `AGENT_TASKS.md` updated with the high-level state of the project.
+
+## 4. Execution Order Summary
+
+Maintain a high-level `Execution Order Summary` in `AGENT_TASKS.md` to visualize the critical path and parallel tracks.
+
+### Structure
+```markdown
+## Execution Order Summary
+
+### Phase 1: Foundation (Parallel)
+- Task Group 1: [Name]
+
+### Phase 2: Components (Sequential after Phase 1)
+- Task Group 2: [Name]
+```
+
+## 5. Branching Strategy Integration
+
+- **One Branch Per Task Group**: As defined in `git-workflow.mdc`, create a dedicated branch for each Task Group.
+- **Naming**: `task-group-[number]-[kebab-case-name]`
+- **Completion**: A Task Group is complete only when its branch is merged.
+
+## 6. Anti-Patterns (What NOT to do)
+
+- **Do NOT** start work without a defined Task Group.
+- **Do NOT** modify multiple Task Groups in a single branch.
+- **Do NOT** leave `AGENT_TASKS.md` outdated. Update it as you go.
+- **Do NOT** create vague tasks like "Fix bugs". Be specific about *which* bugs.

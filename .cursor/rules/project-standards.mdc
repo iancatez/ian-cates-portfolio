@@ -1,0 +1,59 @@
+---
+description: File organization, naming conventions, and quality standards.
+globs: *
+---
+# Project Standards & Organization
+
+## File Organization
+
+### Directory Structure
+```
+app/                    # Next.js App Router pages
+  layout.tsx           # Root layout
+  page.tsx             # Home page
+  [route]/             # Route pages
+components/            # React components
+  ui/                  # ShadCN components (don't edit directly)
+  [name].tsx           # Custom components
+lib/                   # Utilities and helpers
+  utils.ts             # Utility functions (cn, etc.)
+  [name].ts            # Other utilities
+hooks/                 # Custom React hooks
+  use-[name].ts        # Hook files
+types/                 # TypeScript type definitions
+  index.ts             # Shared types
+public/                # Static assets
+```
+
+### Naming Conventions
+- **Components**: PascalCase (`ProjectCard.tsx`)
+- **Hooks**: camelCase with `use` prefix (`useProjects.ts`)
+- **Utilities**: camelCase (`formatDate.ts`)
+- **Types**: PascalCase (`Project.ts`, `UserData.ts`)
+- **Constants**: UPPER_SNAKE_CASE (`API_BASE_URL`)
+
+## Code Quality Standards
+
+### Error Handling
+- **Handle errors gracefully** - never let errors crash the app
+- **Provide user-friendly error messages**
+- **Log errors** for debugging (but not sensitive data)
+- **Use error boundaries** for React errors
+
+### Testing Considerations
+- **Write testable code** - pure functions when possible
+- **Use descriptive variable and function names**
+- **Add comments** for complex logic, not obvious code
+- **Keep functions pure** when possible
+
+### Documentation
+- **Document complex functions** with JSDoc comments
+- **Explain "why" not "what"** in comments
+- **Keep README updated** with setup instructions
+- **Document component props** with TypeScript interfaces
+
+### Git Practices
+- **Write clear commit messages** - use conventional commits format
+- **Keep commits focused** - one logical change per commit
+- **Review code** before committing
+- **Test before committing** - ensure build succeeds

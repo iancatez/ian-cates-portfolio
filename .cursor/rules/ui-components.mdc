@@ -1,0 +1,88 @@
+---
+description: ShadCN UI usage, custom component guidelines, and styling rules.
+globs: components/**/*.tsx, app/**/*.tsx
+---
+# UI Components
+
+## Component Library: ShadCN UI Only
+
+**CRITICAL**: This project MUST use ShadCN UI components exclusively. Do NOT create custom UI components that replicate ShadCN functionality.
+
+### ShadCN Component Usage Rules
+
+1. **Always use ShadCN components** from `@/components/ui/` for UI elements:
+   - Buttons: Use `Button` from `@/components/ui/button`
+   - Cards: Use `Card`, `CardHeader`, `CardContent`, etc. from `@/components/ui/card`
+   - Forms: Use ShadCN form components (install if needed)
+   - Dialogs, Modals, Dropdowns: Install and use ShadCN versions
+   - Any other UI element: Check ShadCN docs first, install if available
+
+2. **Installing New ShadCN Components**:
+   - **MCP Usage**: Use the ShadCN MCP server to search for and install components.
+   - **Preservation**: **CRITICAL**: Never replace, overwrite, or reinstall existing ShadCN components or sub-components when installing new ones. Always check existence first.
+   - Use: `npx shadcn@latest add [component-name]`
+   - Check available components at: https://ui.shadcn.com/docs/components
+   - Never create custom versions of components that exist in ShadCN
+
+3. **Custom Components**:
+   - Only create custom components for:
+     - Business logic components (e.g., `ProjectCard`, `HeroSection`)
+     - Layout components (e.g., `Navigation`, `Footer`)
+     - Compositions of ShadCN components
+   - Custom components MUST use ShadCN components internally
+   - Never recreate ShadCN functionality (buttons, cards, inputs, etc.)
+
+4. **Styling Rules**:
+   - Use Tailwind CSS utility classes for styling
+   - Use ShadCN's `cn()` utility from `@/lib/utils` for conditional classes
+   - Follow ShadCN's design patterns and spacing
+   - Use ShadCN CSS variables for colors (defined in `globals.css`)
+
+5. **When ShadCN Doesn't Have a Component**:
+   - First: Check if a similar component exists that can be customized
+   - Second: Check ShadCN community examples or variants
+   - Last Resort: Create minimal custom component using ShadCN primitives
+   - Always document why a custom component was needed
+
+## Before Creating Any UI Component
+
+1. **Check ShadCN first**: https://ui.shadcn.com/docs/components
+2. **Search existing components**: Check if we already have it
+3. **Install from ShadCN**: Use `npx shadcn@latest add [component]` (Preserving existing ones)
+4. **Customize ShadCN**: Modify the installed component if needed (it's in your codebase)
+5. **Compose with ShadCN**: Build complex components using ShadCN primitives
+
+## Examples
+
+✅ **GOOD**: Using ShadCN Button
+```tsx
+import { Button } from "@/components/ui/button"
+
+<Button variant="outline" size="lg">Click me</Button>
+```
+
+✅ **GOOD**: Custom component using ShadCN
+```tsx
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+
+export function ProjectCard({ title, description }) {
+  return (
+    <Card>
+      <CardContent>
+        <h3>{title}</h3>
+        <p>{description}</p>
+        <Button>View Project</Button>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+❌ **BAD**: Creating custom button
+```tsx
+// DON'T DO THIS - Use ShadCN Button instead
+export function CustomButton() {
+  return <button className="...">Click</button>
+}
+```

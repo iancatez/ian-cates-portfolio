@@ -1,0 +1,83 @@
+---
+description: Performance optimizations, animations, and accessibility requirements.
+globs: **/*.tsx
+---
+# Performance & Accessibility
+
+## Animation Guidelines
+
+- **Use Framer Motion** for animations
+- **Keep animations subtle and performant** - target 60fps
+- **Respect `prefers-reduced-motion`** media query
+- **Use GPU-accelerated properties**: `transform` and `opacity`
+- **Avoid animating `width`, `height`, `top`, `left`** - use `transform` instead
+- **Debounce mouse event handlers** for performance
+- **Use `will-change` sparingly** - only for elements that will animate
+
+### Animation Examples
+```tsx
+// ✅ GOOD: GPU-accelerated animation
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.3 }}
+>
+
+// ❌ BAD: Animating layout properties
+// Don't animate width/height directly
+```
+
+## Performance Best Practices
+
+### Code Splitting
+- **Use dynamic imports** for heavy components
+- **Lazy load routes** when appropriate
+- **Split large bundles** automatically with Next.js
+
+### Optimization
+- **Optimize images** with `next/image`
+- **Minimize bundle size** - check what's being imported
+- **Use React.memo** for expensive components that re-render often
+- **Avoid unnecessary re-renders** - check dependencies in hooks
+- **Profile before optimizing** - measure first
+
+### Loading States
+- **Always show loading states** for async operations
+- **Use Suspense boundaries** for better UX
+- **Implement skeleton screens** for better perceived performance
+
+## Accessibility Best Practices
+
+### Semantic HTML
+- **Use proper HTML elements**: `<nav>`, `<main>`, `<section>`, `<article>`, etc.
+- **Use heading hierarchy** correctly (h1 → h2 → h3)
+- **Provide alt text** for all images
+- **Use ARIA labels** when semantic HTML isn't sufficient
+
+### Keyboard Navigation
+- **Ensure all interactive elements** are keyboard accessible
+- **Visible focus indicators** for keyboard navigation
+- **Logical tab order** throughout the page
+- **Skip links** for main content
+
+### Screen Readers
+- **Use descriptive link text** - avoid "click here"
+- **Provide form labels** for all inputs
+- **Announce dynamic content** with ARIA live regions
+- **Test with screen readers**
+
+### Examples
+```tsx
+// ✅ GOOD: Accessible button
+<Button aria-label="Close dialog" onClick={handleClose}>
+  <XIcon aria-hidden="true" />
+</Button>
+
+// ✅ GOOD: Proper heading structure
+<main>
+  <h1>Page Title</h1>
+  <section>
+    <h2>Section Title</h2>
+  </section>
+</main>
+```

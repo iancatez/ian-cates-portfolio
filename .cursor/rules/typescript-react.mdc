@@ -1,0 +1,102 @@
+---
+description: TypeScript usage, React patterns, hooks, and state management rules.
+globs: **/*.ts, **/*.tsx
+---
+# TypeScript & React Best Practices
+
+## TypeScript Best Practices
+
+### Type Safety
+- **Always type function parameters and return types**
+- **Use explicit types for props interfaces**
+- **Avoid `any` type** - use `unknown` if type is truly unknown, then narrow it
+- **Use type inference** only when types are obvious from context
+- **Define interfaces for component props** - use `interface` for extensible types, `type` for unions/intersections
+
+### Component Props
+```tsx
+// ✅ GOOD: Explicit interface
+interface ButtonProps {
+  label: string;
+  onClick: () => void;
+  variant?: 'primary' | 'secondary';
+  disabled?: boolean;
+}
+
+export function Button({ label, onClick, variant = 'primary', disabled = false }: ButtonProps) {
+  // ...
+}
+
+// ❌ BAD: No types
+export function Button(props) {
+  // ...
+}
+```
+
+### Type Definitions
+- **Use `interface` for object shapes** that might be extended
+- **Use `type` for unions, intersections, and computed types**
+- **Export types/interfaces** that are used across files
+- **Use `Readonly<>` or `as const`** for immutable data
+- **Use utility types**: `Partial<>`, `Pick<>`, `Omit<>`, `Required<>`
+
+## React Best Practices
+
+### Component Design
+- **Keep components small and focused** - single responsibility
+- **Use composition** over prop drilling
+- **Extract custom hooks** for reusable logic
+- **Memoize expensive computations** with `useMemo`
+- **Use `useCallback`** for functions passed as props
+
+### State Management
+- **Lift state up** only when necessary
+- **Use local state** when possible
+- **Consider Context** for deeply nested prop passing
+- **Avoid premature optimization** - profile first
+
+### Hooks Rules
+- **Only call hooks at the top level** - not in loops/conditions
+- **Custom hooks must start with `use`**
+- **Return consistent values** from custom hooks
+- **Handle cleanup** in `useEffect` when needed
+
+### Examples
+```tsx
+// ✅ GOOD: Custom hook
+function useProjects() {
+  const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
+  
+  useEffect(() => {
+    fetchProjects().then(setProjects).finally(() => setLoading(false))
+  }, [])
+  
+  return { projects, loading }
+}
+
+// ✅ GOOD: Memoized expensive computation
+const sortedProjects = useMemo(
+  () => projects.sort((a, b) => a.title.localeCompare(b.title)),
+  [projects]
+)
+```
+
+## Code Style
+
+- **TypeScript**: Strict mode enabled, always type props and functions
+- **Components**: Use functional components with TypeScript
+- **File Naming**: PascalCase for components (e.g., `ProjectCard.tsx`), kebab-case for utilities
+- **Imports**: Use path aliases (`@/components`, `@/lib`, etc.)
+- **Import Order**: External → Internal, grouped by type
+- **Formatting**: Follow existing code style, use consistent indentation (2 spaces)
+
+### Import Organization
+```tsx
+// ✅ GOOD: Organized imports
+import { type Metadata } from "next"              // External, types
+import { useState, useEffect } from "react"       // External, hooks
+import { Button } from "@/components/ui/button"   // Internal, components
+import { cn } from "@/lib/utils"                  // Internal, utilities
+import type { Project } from "@/types"            // Internal, types
+```
