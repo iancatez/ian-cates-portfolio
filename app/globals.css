@@ -246,4 +246,31 @@
   .react-flow__controls-button:hover svg {
     fill: white !important;
   }
+
+  /* Custom neon cursor - hide default cursor on hover-capable devices */
+  @media (hover: hover) {
+    * {
+      cursor: none !important;
+    }
+    
+    a, button, [role="button"], input, textarea, select, [tabindex]:not([tabindex="-1"]) {
+      cursor: none !important;
+    }
+  }
+
+  /* Neon top bar glow reflection */
+  .neon-top-bar-reflection {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(
+      to bottom,
+      hsl(142 40% 45% / 0.1) 0%,
+      transparent 100%
+    );
+    pointer-events: none;
+    z-index: 40;
+  }
 }
