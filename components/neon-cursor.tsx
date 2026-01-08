@@ -1,70 +1,91 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
 
 // Default neon color (green)
 const DEFAULT_NEON_COLOR = "142 40% 45%"
 
+interface Point {
+  x: number
+  y: number
+  timestamp: number
+}
+
 interface NeonCursorProps {
-  className?: string
   /** HSL color values (e.g., "142 40% 45%") */
   neonColor?: string
-  /** Size of the glow effect in pixels */
-  size?: number
+  /** How long the trail lasts in milliseconds */
+  trailDuration?: number
+  /** Maximum number of trail points */
+  maxTrailPoints?: number
 }
 
 export function NeonCursor({ 
-  className, 
   neonColor = DEFAULT_NEON_COLOR,
-  size = 40
+  trailDuration = 400,
+  maxTrailPoints = 50
 }: NeonCursorProps) {
   const [position, setPosition] = React.useState({ x: -100, y: -100 })
+  const [trail, setTrail] = React.useState<Point[]>([])
   const [isVisible, setIsVisible] = React.useState(false)
   const [isMounted, setIsMounted] = React.useState(false)
   const [isClicking, setIsClicking] = React.useState(false)
   
-  const glowRef = React.useRef({ x: -100, y: -100 })
+  const lastPositionRef = React.useRef({ x: -100, y: -100 })
   const animationRef = React.useRef<number | null>(null)
 
-  // Smooth glow animation using requestAnimationFrame
+  // Update trail and fade old points
   React.useEffect(() => {
     if (!isMounted) return
 
-    const animateGlow = () => {
-      const dx = position.x - glowRef.current.x
-      const dy = position.y - glowRef.current.y
+    const updateTrail = () => {
+      const now = Date.now()
       
-      // Smooth easing - glow follows cursor with slight delay
-      glowRef.current.x += dx * 0.2
-      glowRef.current.y += dy * 0.2
+      setTrail(prevTrail => {
+        // Remove old points
+        const filteredTrail = prevTrail.filter(
+          point => now - point.timestamp < trailDuration
+        )
+        return filteredTrail
+      })
       
-      // Force re-render by updating a ref-based position
-      const glowElement = document.getElementById('neon-glow-effect')
-      if (glowElement) {
-        glowElement.style.left = `${glowRef.current.x - size / 2}px`
-        glowElement.style.top = `${glowRef.current.y - size / 2}px`
-      }
-      
-      animationRef.current = requestAnimationFrame(animateGlow)
+      animationRef.current = requestAnimationFrame(updateTrail)
     }
 
-    animationRef.current = requestAnimationFrame(animateGlow)
+    animationRef.current = requestAnimationFrame(updateTrail)
 
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
       }
     }
-  }, [position, isMounted, size])
+  }, [isMounted, trailDuration])
 
   // Track mouse position
   React.useEffect(() => {
     setIsMounted(true)
     
     const handleMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY })
+      const newPos = { x: e.clientX, y: e.clientY }
+      setPosition(newPos)
       setIsVisible(true)
+      
+      // Only add to trail if moved enough distance (prevents clustering)
+      const dx = newPos.x - lastPositionRef.current.x
+      const dy = newPos.y - lastPositionRef.current.y
+      const distance = Math.sqrt(dx * dx + dy * dy)
+      
+      if (distance > 3) {
+        lastPositionRef.current = newPos
+        setTrail(prev => {
+          const newTrail = [...prev, { ...newPos, timestamp: Date.now() }]
+          // Limit trail length
+          if (newTrail.length > maxTrailPoints) {
+            return newTrail.slice(-maxTrailPoints)
+          }
+          return newTrail
+        })
+      }
     }
 
     const handleMouseLeave = () => {
@@ -101,42 +122,94 @@ export function NeonCursor({
       document.removeEventListener('mousedown', handleMouseDown)
       document.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [])
+  }, [maxTrailPoints])
 
   // Don't render on server or on touch devices
   if (!isMounted) {
     return null
   }
 
-  const glowSize = isClicking ? size * 1.3 : size
-
-  const glowStyle: React.CSSProperties = {
-    position: 'fixed',
-    left: position.x - glowSize / 2,
-    top: position.y - glowSize / 2,
-    width: glowSize,
-    height: glowSize,
-    borderRadius: '50%',
-    background: `radial-gradient(circle, hsl(${neonColor} / 0.3) 0%, hsl(${neonColor} / 0.1) 40%, transparent 70%)`,
-    boxShadow: `
-      0 0 ${glowSize * 0.5}px hsl(${neonColor} / 0.4),
-      0 0 ${glowSize}px hsl(${neonColor} / 0.2),
-      0 0 ${glowSize * 1.5}px hsl(${neonColor} / 0.1)
-    `,
-    pointerEvents: 'none',
-    zIndex: 9998,
-    opacity: isVisible ? 1 : 0,
-    transform: `scale(${isClicking ? 1.2 : 1})`,
-    transition: 'opacity 0.3s ease, transform 0.15s ease',
-    mixBlendMode: 'screen',
-  }
+  const cursorSize = isClicking ? 10 : 12
+  const now = Date.now()
 
   return (
-    <div 
-      id="neon-glow-effect"
-      className={cn("neon-cursor-glow", className)}
-      style={glowStyle}
-      aria-hidden="true"
-    />
+    <>
+      {/* Neon trail - rendered as SVG for smooth lines */}
+      <svg
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          pointerEvents: 'none',
+          zIndex: 9997,
+          opacity: isVisible ? 1 : 0,
+          transition: 'opacity 0.2s ease',
+        }}
+        aria-hidden="true"
+      >
+        <defs>
+          {/* Glow filter for neon effect */}
+          <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3" result="blur1" />
+            <feGaussianBlur stdDeviation="6" result="blur2" />
+            <feGaussianBlur stdDeviation="12" result="blur3" />
+            <feMerge>
+              <feMergeNode in="blur3" />
+              <feMergeNode in="blur2" />
+              <feMergeNode in="blur1" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        
+        {/* Draw trail segments */}
+        {trail.length > 1 && (
+          <g filter="url(#neon-glow)">
+            {trail.map((point, index) => {
+              if (index === 0) return null
+              const prevPoint = trail[index - 1]
+              const age = now - point.timestamp
+              const opacity = Math.max(0, 1 - age / trailDuration)
+              const strokeWidth = 2 + (1 - age / trailDuration) * 2
+              
+              return (
+                <line
+                  key={`${point.timestamp}-${index}`}
+                  x1={prevPoint.x}
+                  y1={prevPoint.y}
+                  x2={point.x}
+                  y2={point.y}
+                  stroke={`hsl(${neonColor} / ${opacity})`}
+                  strokeWidth={strokeWidth}
+                  strokeLinecap="round"
+                />
+              )
+            })}
+          </g>
+        )}
+      </svg>
+
+      {/* Custom cursor - bold white dot */}
+      <div
+        style={{
+          position: 'fixed',
+          left: position.x - cursorSize / 2,
+          top: position.y - cursorSize / 2,
+          width: cursorSize,
+          height: cursorSize,
+          borderRadius: '50%',
+          backgroundColor: '#ffffff',
+          boxShadow: '0 0 2px rgba(0,0,0,0.5)',
+          pointerEvents: 'none',
+          zIndex: 9999,
+          opacity: isVisible ? 1 : 0,
+          transform: `scale(${isClicking ? 0.8 : 1})`,
+          transition: 'opacity 0.2s ease, transform 0.1s ease',
+        }}
+        aria-hidden="true"
+      />
+    </>
   )
 }
