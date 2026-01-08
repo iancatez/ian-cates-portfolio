@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { NeonGlowWrapper } from "@/components/neon-glow-wrapper";
 import { staggerContainer, staggerItem } from "@/lib/animations";
+import { ANIMATION_TRIGGER_CONFIG } from "@/lib/animation-config";
 import { motion } from "framer-motion";
 import { skills } from "@/lib/data";
 import type { Skill } from "@/lib/data";
@@ -32,30 +33,46 @@ export function AboutSection() {
   return (
     <AnimatedSection id="about" className="container mx-auto px-4 py-20">
       <div className="max-w-4xl mx-auto space-y-12">
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          className="text-center space-y-4"
-        >
-          <motion.h2 variants={staggerItem} className="text-4xl md:text-5xl font-bold">
+        {/* Header - each element animates independently */}
+        <div className="text-center space-y-4">
+          <motion.h2 
+            variants={staggerItem}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ 
+              once: false, // Enable reverse animations when scrolling past
+              amount: 0.1, // Appear at 10% visibility
+              margin: "0px", // No margin - stay visible longer
+            }}
+            className="text-4xl md:text-5xl font-bold"
+          >
             About Me
           </motion.h2>
-        <motion.p
-          variants={staggerItem}
-          className="text-xl text-muted-foreground max-w-2xl mx-auto"
-        >
-          Learn more about my background and experience
-        </motion.p>
-      </motion.div>
+          <motion.p
+            variants={staggerItem}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ 
+              once: false, // Enable reverse animations when scrolling past
+              amount: 0.1, // Appear at 10% visibility
+              margin: "0px", // No margin - stay visible longer
+            }}
+            className="text-xl text-muted-foreground max-w-2xl mx-auto"
+          >
+            Learn more about my background and experience
+          </motion.p>
+        </div>
 
       <div className="flex flex-col md:flex-row gap-8 items-start">
         <motion.div
           variants={staggerItem}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ 
+            once: false, // Enable reverse animations when scrolling past
+            amount: 0.1, // Appear at 10% visibility
+            margin: "0px", // No margin - stay visible longer
+          }}
           className="flex-shrink-0 mx-auto md:mx-0"
         >
           {/* Neon border wrapper with flickering effect */}
@@ -71,7 +88,18 @@ export function AboutSection() {
           </NeonGlowWrapper>
         </motion.div>
 
-        <Card className="flex-1" alwaysGlow>
+        <motion.div
+          variants={staggerItem}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ 
+            once: false, // Enable reverse animations when scrolling past
+            amount: 0.1, // Appear at 10% visibility
+            margin: "0px", // No margin - stay visible longer
+          }}
+          className="flex-1"
+        >
+        <Card className="h-full" alwaysGlow>
           <CardHeader>
             <CardTitle>Background</CardTitle>
             <CardDescription>My journey in data engineering</CardDescription>
@@ -100,13 +128,37 @@ export function AboutSection() {
             </p>
           </CardContent>
         </Card>
+        </motion.div>
       </div>
 
         <div className="space-y-6">
-          <h3 className="text-2xl font-semibold">Skills</h3>
+          <motion.h3 
+            variants={staggerItem}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ 
+              once: false, // Enable reverse animations when scrolling past
+              amount: 0.1, // Appear at 10% visibility
+              margin: "0px", // No margin - stay visible longer
+            }}
+            className="text-2xl font-semibold"
+          >
+            Skills
+          </motion.h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Object.entries(skillsByCategory).map(([category, categorySkills]) => (
-              <Card key={category} className="h-full">
+              <motion.div
+                key={category}
+                variants={staggerItem}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ 
+                  once: false, // Enable reverse animations when scrolling past
+                  amount: 0.1, // Appear at 10% visibility
+                  margin: "0px", // No margin - stay visible longer
+                }}
+              >
+                <Card className="h-full">
                 <CardHeader>
                   <CardTitle className="text-lg">
                     {skillCategories[category as keyof typeof skillCategories] || category}
@@ -122,6 +174,7 @@ export function AboutSection() {
                   </div>
                 </CardContent>
               </Card>
+              </motion.div>
             ))}
           </div>
         </div>
