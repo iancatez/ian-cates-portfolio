@@ -71,7 +71,7 @@ export function AboutSection() {
           </NeonGlowWrapper>
         </motion.div>
 
-        <Card className="flex-1">
+        <Card className="flex-1" alwaysGlow>
           <CardHeader>
             <CardTitle>Background</CardTitle>
             <CardDescription>My journey in data engineering</CardDescription>
