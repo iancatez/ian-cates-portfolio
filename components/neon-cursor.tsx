@@ -20,10 +20,37 @@ interface NeonCursorProps {
   maxTrailPoints?: number
 }
 
+// Generate smooth curve path through points using Catmull-Rom spline
+function generateSmoothPath(points: Point[]): string {
+  if (points.length < 2) return ""
+  if (points.length === 2) {
+    return `M ${points[0].x} ${points[0].y} L ${points[1].x} ${points[1].y}`
+  }
+
+  let path = `M ${points[0].x} ${points[0].y}`
+
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[Math.max(0, i - 1)]
+    const p1 = points[i]
+    const p2 = points[i + 1]
+    const p3 = points[Math.min(points.length - 1, i + 2)]
+
+    // Catmull-Rom to Bezier conversion
+    const cp1x = p1.x + (p2.x - p0.x) / 6
+    const cp1y = p1.y + (p2.y - p0.y) / 6
+    const cp2x = p2.x - (p3.x - p1.x) / 6
+    const cp2y = p2.y - (p3.y - p1.y) / 6
+
+    path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`
+  }
+
+  return path
+}
+
 export function NeonCursor({ 
   neonColor = DEFAULT_NEON_COLOR,
-  trailDuration = 400,
-  maxTrailPoints = 50
+  trailDuration = 500,
+  maxTrailPoints = 80
 }: NeonCursorProps) {
   const [position, setPosition] = React.useState({ x: -100, y: -100 })
   const [trail, setTrail] = React.useState<Point[]>([])
@@ -75,7 +102,7 @@ export function NeonCursor({
       const dy = newPos.y - lastPositionRef.current.y
       const distance = Math.sqrt(dx * dx + dy * dy)
       
-      if (distance > 3) {
+      if (distance > 5) {
         lastPositionRef.current = newPos
         setTrail(prev => {
           const newTrail = [...prev, { ...newPos, timestamp: Date.now() }]
@@ -130,11 +157,11 @@ export function NeonCursor({
   }
 
   const cursorSize = isClicking ? 10 : 12
-  const now = Date.now()
+  const smoothPath = generateSmoothPath(trail)
 
   return (
     <>
-      {/* Neon trail - rendered as SVG for smooth lines */}
+      {/* Neon trail - rendered as SVG for smooth curves */}
       <svg
         style={{
           position: 'fixed',
@@ -152,9 +179,9 @@ export function NeonCursor({
         <defs>
           {/* Glow filter for neon effect */}
           <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3" result="blur1" />
-            <feGaussianBlur stdDeviation="6" result="blur2" />
-            <feGaussianBlur stdDeviation="12" result="blur3" />
+            <feGaussianBlur stdDeviation="2" result="blur1" />
+            <feGaussianBlur stdDeviation="4" result="blur2" />
+            <feGaussianBlur stdDeviation="8" result="blur3" />
             <feMerge>
               <feMergeNode in="blur3" />
               <feMergeNode in="blur2" />
@@ -162,32 +189,29 @@ export function NeonCursor({
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+          
+          {/* Gradient for fading trail */}
+          <linearGradient id="trail-gradient" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor={`hsl(${neonColor})`} stopOpacity="0" />
+            <stop offset="30%" stopColor={`hsl(${neonColor})`} stopOpacity="0.6" />
+            <stop offset="100%" stopColor={`hsl(${neonColor})`} stopOpacity="1" />
+          </linearGradient>
         </defs>
         
-        {/* Draw trail segments */}
+        {/* Smooth trail path */}
         {trail.length > 1 && (
-          <g filter="url(#neon-glow)">
-            {trail.map((point, index) => {
-              if (index === 0) return null
-              const prevPoint = trail[index - 1]
-              const age = now - point.timestamp
-              const opacity = Math.max(0, 1 - age / trailDuration)
-              const strokeWidth = 2 + (1 - age / trailDuration) * 2
-              
-              return (
-                <line
-                  key={`${point.timestamp}-${index}`}
-                  x1={prevPoint.x}
-                  y1={prevPoint.y}
-                  x2={point.x}
-                  y2={point.y}
-                  stroke={`hsl(${neonColor} / ${opacity})`}
-                  strokeWidth={strokeWidth}
-                  strokeLinecap="round"
-                />
-              )
-            })}
-          </g>
+          <path
+            d={smoothPath}
+            fill="none"
+            stroke={`hsl(${neonColor})`}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            filter="url(#neon-glow)"
+            style={{
+              opacity: 0.9,
+            }}
+          />
         )}
       </svg>
 
