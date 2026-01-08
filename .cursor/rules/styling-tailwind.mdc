@@ -1,0 +1,54 @@
+---
+description: Tailwind CSS classes, organization, and responsive design rules.
+globs: **/*.tsx, globals.css
+---
+# Tailwind CSS Best Practices
+
+### Class Organization
+- **Order classes logically**: Layout → Spacing → Typography → Colors → Effects
+- **Use consistent spacing scale**: Stick to Tailwind's spacing scale (0.5, 1, 1.5, 2, 3, 4, 6, 8, etc.)
+- **Group related classes** with comments if needed for readability
+
+### Responsive Design
+- **Mobile-first approach**: Base styles for mobile, then add breakpoints
+- **Use responsive prefixes**: `sm:`, `md:`, `lg:`, `xl:`, `2xl:`
+- **Test on multiple screen sizes** before committing
+
+### Class Naming and Reusability
+- **Prefer utility classes** over custom CSS
+- **Use `cn()` utility** for conditional classes (from `@/lib/utils`)
+- **Extract repeated patterns** into components, not CSS classes
+- **Avoid arbitrary values** unless necessary: prefer `w-64` over `w-[256px]`
+
+### Performance
+- **Avoid dynamic class construction** in render - use `cn()` instead
+- **Use `@apply` sparingly** - only for repeated patterns in CSS files
+- **Purge unused classes** - Tailwind does this automatically in production
+- **Prefer composition** over long class strings
+
+### ShadCN Integration
+- **Use ShadCN CSS variables** for colors: `bg-background`, `text-foreground`, etc.
+- **Follow ShadCN spacing patterns** when customizing components
+- **Use semantic color names**: `bg-primary`, `text-muted-foreground`, etc.
+
+### Examples
+```tsx
+// ✅ GOOD: Organized, responsive, using cn()
+import { cn } from "@/lib/utils"
+
+<div className={cn(
+  "flex flex-col gap-4",           // Layout
+  "p-6 md:p-8",                    // Spacing (responsive)
+  "bg-card text-card-foreground",   // Colors (ShadCN variables)
+  "rounded-lg shadow-sm",          // Effects
+  className                         // Allow override
+)}>
+
+// ❌ BAD: Disorganized, no responsive, hardcoded values
+<div className="bg-white text-black p-[24px] rounded-[8px] flex flex-col gap-[16px]">
+```
+
+### Dark Mode
+- **Use ShadCN color variables** which handle dark mode automatically
+- **Test dark mode** appearance
+- **Respect user preference** - don't force dark/light mode

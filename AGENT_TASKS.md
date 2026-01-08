@@ -441,6 +441,11 @@ This file defines tasks that can be executed in parallel by Cursor agents. Each 
 - Task Group 11: Custom Scrollbar Styling (Completed)
 - Task Group 12: Styling Consistency & UI Polish
 
+### Phase 5: UX Enhancements (Parallel)
+- Feature #13: Hero Button Transition Enhancement
+- Feature #14: Explore Button Cursor Interaction
+- Feature #15: Improved Animation Trigger Timing
+
 ---
 
 ## Notes for Agents
@@ -604,6 +609,142 @@ This file defines tasks that can be executed in parallel by Cursor agents. Each 
 - [ ] Build succeeds
 - [ ] No TypeScript errors
 - [ ] Responsive design works on all screen sizes
+
+---
+
+## Feature #13: Hero Button Transition Enhancement
+**Feature #**: 13
+**Status**: Pending
+**Dependencies**: None
+**Can Run In Parallel**: Yes
+**Estimated Time**: 30-45 minutes
+
+### Requirements:
+- Hero section buttons ("View Projects" and "About Me") must have smooth, polished transitions when clicked/selected
+- Transitions should feel responsive and provide clear visual feedback
+- No jarring or abrupt state changes
+- Transitions should work consistently across all button variants in the Hero section
+- Transitions must respect `prefers-reduced-motion` accessibility preference
+
+### Tasks:
+1. **Analyze current button transition behavior**
+   - Review `components/hero-section.tsx` button implementation
+   - Identify current transition gaps or issues
+   - Document desired transition behavior
+
+2. **Enhance button transitions**
+   - Add smooth state transitions for active/focus states
+   - Implement click feedback animations using Framer Motion
+   - Ensure transitions respect `prefers-reduced-motion`
+   - Test transitions on different interaction states (hover, click, focus)
+
+3. **Polish transition timing**
+   - Fine-tune transition durations for optimal feel
+   - Ensure transitions are consistent between both Hero buttons
+   - Verify transitions work with existing neon glow effects
+
+**Acceptance Criteria**:
+- [ ] Hero buttons have smooth, polished transitions
+- [ ] Visual feedback is clear on all interaction states
+- [ ] No jarring or abrupt state changes
+- [ ] Transitions respect accessibility preferences
+- [ ] Consistent behavior across both buttons
+- [ ] Build succeeds
+- [ ] No TypeScript errors
+
+---
+
+## Feature #14: Explore Button Cursor Interaction
+**Feature #**: 14
+**Status**: Pending
+**Dependencies**: None (but requires custom cursor feature flag to be enabled for full effect)
+**Can Run In Parallel**: Yes
+**Estimated Time**: 20-30 minutes
+
+### Requirements:
+- The "Explore" button in project cards (`BentoProjectCard`) must change cursor appearance appropriately on hover
+- When custom cursor is enabled: Cursor should indicate interactivity (e.g., pointer state or visual feedback)
+- When custom cursor is disabled: Standard browser pointer cursor should appear
+- Cursor change should be immediate and clear
+- Must work consistently across all project cards with "Explore" buttons
+
+### Tasks:
+1. **Review current Explore button implementation**
+   - Check `components/bento-project-card.tsx` Explore button
+   - Verify current cursor behavior
+   - Check if custom cursor feature flag affects behavior
+
+2. **Implement appropriate cursor feedback**
+   - Add cursor style changes on hover for Explore button
+   - Ensure compatibility with custom cursor feature flag
+   - Add visual feedback that indicates button is interactive
+   - Test with both cursor modes (custom enabled/disabled)
+
+3. **Verify consistency**
+   - Ensure all Explore buttons behave the same way
+   - Test across different project cards
+   - Verify accessibility (keyboard navigation still works)
+
+**Acceptance Criteria**:
+- [ ] Explore button shows appropriate cursor on hover
+- [ ] Works correctly with custom cursor feature flag enabled
+- [ ] Works correctly with custom cursor feature flag disabled
+- [ ] Cursor change is immediate and clear
+- [ ] Consistent behavior across all project cards
+- [ ] Keyboard navigation still functional
+- [ ] Build succeeds
+- [ ] No TypeScript errors
+
+---
+
+## Feature #15: Improved Animation Trigger Timing
+**Feature #**: 15
+**Status**: Pending
+**Dependencies**: None
+**Can Run In Parallel**: Yes
+**Estimated Time**: 45-60 minutes
+
+### Requirements:
+- Page components should trigger their animations when they are closer to the middle/center of the viewport, not just when entering the viewport
+- Animation triggers should feel more intentional and less premature
+- Components should be more visible (closer to center) before animating
+- This applies to all scroll-triggered animations across the site (About section, Projects section, etc.)
+- Animation timing should feel natural and not rushed
+
+### Tasks:
+1. **Review current animation trigger logic**
+   - Check `hooks/use-scroll-animation.ts` implementation
+   - Review `components/animated-section.tsx` usage
+   - Identify current `amount` and `threshold` values
+   - Document current trigger behavior
+
+2. **Update animation trigger thresholds**
+   - Modify `useInView` configuration to require elements be closer to viewport center
+   - Adjust `amount` parameter to require more visibility before triggering
+   - Consider using `margin` option to create a "trigger zone" closer to center
+   - Test different threshold values for optimal feel
+
+3. **Update components using scroll animations**
+   - Review and update `components/about-section.tsx` if needed
+   - Review and update `components/projects-section.tsx` if needed
+   - Ensure all animated sections use the improved trigger logic
+   - Test animation timing feels natural
+
+4. **Create reusable animation trigger configuration**
+   - Consider creating a shared configuration for consistent trigger behavior
+   - Document the new trigger thresholds
+   - Ensure configuration respects `prefers-reduced-motion`
+
+**Acceptance Criteria**:
+- [ ] Animations trigger when components are closer to viewport center
+- [ ] Animations feel more intentional and less premature
+- [ ] All scroll-triggered animations use improved timing
+- [ ] Animation timing feels natural across all sections
+- [ ] Configuration is reusable and consistent
+- [ ] Respects accessibility preferences
+- [ ] Build succeeds
+- [ ] No TypeScript errors
+- [ ] No performance regressions
 
 ---
 
