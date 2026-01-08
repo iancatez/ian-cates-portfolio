@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
+import { NeonTopBar } from "@/components/neon-top-bar";
+import { FluidCursor } from "@/components/fluid-cursor";
+// import { NeonCursor } from "@/components/neon-cursor"; // Sidelined for now
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,8 +31,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-background text-foreground`}
       >
-        <Navigation />
-        <main className="flex-1 bg-background">{children}</main>
+        <NeonTopBar />
+        <FluidCursor />
+        {/* Semi-transparent overlay - sandwiches fluid between solid bg and content */}
+        <div 
+          className="fixed inset-0 z-[5] pointer-events-none bg-background/90"
+          aria-hidden="true"
+        />
+        <main className="flex-1 relative z-10">{children}</main>
         <Footer />
       </body>
     </html>

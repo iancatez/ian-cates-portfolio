@@ -34,7 +34,7 @@ export function ProjectCard({
   const projectLink = liveUrl || link;
   const projectGithub = githubUrl || github;
   return (
-    <Card className="flex flex-col hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
+    <Card className="flex flex-col">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

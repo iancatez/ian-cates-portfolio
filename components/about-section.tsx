@@ -4,6 +4,7 @@ import { AnimatedSection } from "@/components/animated-section";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { NeonGlowWrapper } from "@/components/neon-glow-wrapper";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 import { motion } from "framer-motion";
 import { skills } from "@/lib/data";
@@ -57,17 +58,20 @@ export function AboutSection() {
           viewport={{ once: true, amount: 0.2 }}
           className="flex-shrink-0 mx-auto md:mx-0"
         >
-          <Avatar className="w-48 h-48 md:w-64 md:h-64 border border-border shadow-lg ring-1 ring-primary/10 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:ring-primary/20">
-            <AvatarImage
-              src="/profile_pic.jpg"
-              alt="Ian Cates - Data Engineer"
-              className="object-cover"
-            />
-            <AvatarFallback>IC</AvatarFallback>
-          </Avatar>
+          {/* Neon border wrapper with flickering effect */}
+          <NeonGlowWrapper borderWidth={1} rounded>
+            <Avatar className="w-48 h-48 md:w-64 md:h-64">
+              <AvatarImage
+                src="/profile_pic.jpg"
+                alt="Ian Cates - Data Engineer"
+                className="object-cover"
+              />
+              <AvatarFallback>IC</AvatarFallback>
+            </Avatar>
+          </NeonGlowWrapper>
         </motion.div>
 
-        <Card className="flex-1">
+        <Card className="flex-1" alwaysGlow>
           <CardHeader>
             <CardTitle>Background</CardTitle>
             <CardDescription>My journey in data engineering</CardDescription>
@@ -100,38 +104,26 @@ export function AboutSection() {
 
         <div className="space-y-6">
           <h3 className="text-2xl font-semibold">Skills</h3>
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Object.entries(skillsByCategory).map(([category, categorySkills]) => (
-              <motion.div key={category} variants={staggerItem}>
-                <Card className="h-full hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 hover:scale-[1.02]">
-                  <CardHeader>
-                    <CardTitle className="text-lg">
-                      {skillCategories[category as keyof typeof skillCategories] || category}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                      {categorySkills.map((skill) => (
-                        <Badge
-                          key={skill.name}
-                          variant="secondary"
-                          className="transition-colors duration-300"
-                        >
-                          {skill.name}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+              <Card key={category} className="h-full">
+                <CardHeader>
+                  <CardTitle className="text-lg">
+                    {skillCategories[category as keyof typeof skillCategories] || category}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {categorySkills.map((skill) => (
+                      <Badge key={skill.name} variant="secondary">
+                        {skill.name}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
     </AnimatedSection>
