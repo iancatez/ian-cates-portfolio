@@ -5,6 +5,7 @@ import { motion, useScroll, useMotionValueEvent, type Variants } from "framer-mo
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { prefersReducedMotion } from "@/lib/animation-config";
+import { featureFlags } from "@/lib/feature-flags";
 
 // Intensity levels for realistic neon flicker
 const INTENSITY_LEVELS = {
@@ -229,8 +230,13 @@ export function HeroSection() {
     headingTimeoutsRef.current.push(timeout);
   }, [executeHeadingSequence]);
 
-  // Start heading neon effect on mount (before chevron)
+  // Start heading neon effect on mount (before chevron) - only if feature flag is enabled
   useEffect(() => {
+    // Skip if neon effect is disabled
+    if (!featureFlags.enableHeroNeonName) {
+      return;
+    }
+
     if (reducedMotion) {
       // Skip animations for reduced motion preference
       setHeadingIntensity(INTENSITY_LEVELS.full);
@@ -302,8 +308,13 @@ export function HeroSection() {
     scrollToSection("about");
   }, [scrollToSection]);
 
-  // Compute heading glow styles based on intensity
+  // Compute heading glow styles based on intensity (only when feature flag is enabled)
   const headingGlowStyles = useMemo(() => {
+    // If neon effect is disabled, return no glow styles
+    if (!featureFlags.enableHeroNeonName) {
+      return {};
+    }
+
     if (reducedMotion) {
       // Simple static glow for reduced motion
       return {
@@ -344,10 +355,12 @@ export function HeroSection() {
         animate="visible"
         className="max-w-4xl space-y-6"
       >
-        {/* Name heading with neon glow effect */}
+        {/* Name heading - with neon glow effect when feature flag is enabled */}
         <motion.h1
           variants={reducedMotion ? undefined : nameHeadingVariant}
-          className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl text-primary"
+          className={`text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl ${
+            featureFlags.enableHeroNeonName ? 'text-primary' : 'text-foreground'
+          }`}
           style={headingGlowStyles}
         >
           Ian Cates
