@@ -11,6 +11,8 @@ const Card = React.forwardRef<
     className={cn(
       "rounded-lg border bg-card text-card-foreground shadow-sm",
       "transform-gpu",
+      "transition-all duration-300 ease-out",
+      "hover:border-primary/50 hover:shadow-[0_0_15px_hsl(var(--primary)/0.3),0_0_30px_hsl(var(--primary)/0.15)]",
       className
     )}
     style={{
