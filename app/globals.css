@@ -266,17 +266,6 @@
     fill: white !important;
   }
 
-  /* Custom neon cursor - hide default cursor on hover-capable devices */
-  @media (hover: hover) {
-    * {
-      cursor: none !important;
-    }
-    
-    a, button, [role="button"], input, textarea, select, [tabindex]:not([tabindex="-1"]) {
-      cursor: none !important;
-    }
-  }
-
   /* Neon top bar glow reflection */
   .neon-top-bar-reflection {
     position: fixed;
@@ -291,5 +280,12 @@
     );
     pointer-events: none;
     z-index: 40;
+  }
+}
+
+/* Hide default cursor - must be outside layers for highest priority */
+@media (hover: hover) {
+  html, body, * {
+    cursor: none !important;
   }
 }
