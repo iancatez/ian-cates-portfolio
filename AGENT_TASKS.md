@@ -443,8 +443,9 @@ This file defines tasks that can be executed in parallel by Cursor agents. Each 
 
 ### Phase 5: UX Enhancements (Parallel)
 - Feature #13: Hero Button Transition Enhancement
-- Feature #14: Explore Button Cursor Interaction
-- Feature #15: Improved Animation Trigger Timing
+- Feature #14: Explore Button Cursor Interaction (Completed)
+- Feature #15: Improved Animation Trigger Timing (Completed)
+- Feature #20: Hero Section Text Animation
 
 ### Phase 6: Project Content Updates (Parallel)
 - Feature #16: Project 2 - AWS QuickSight Asset Backup & Restore Tool
@@ -934,6 +935,55 @@ This file defines tasks that can be executed in parallel by Cursor agents. Each 
 - [ ] TypeScript types are properly defined
 - [ ] Build succeeds
 - [ ] No performance issues with animations
+
+---
+
+## Feature #20: Hero Section Text Animation
+**Feature #**: 20
+**Status**: Pending
+**Dependencies**: None
+**Can Run In Parallel**: Yes
+**Estimated Time**: 45-60 minutes
+
+### Requirements:
+- Hero section text elements must animate in when entering the viewport (on page load)
+- Text elements to animate: "Ian Cates" (heading), "Data Engineer" (subtitle), description paragraph
+- Animation style should match the site's neon aesthetic (glow effects, flicker, smooth reveals)
+- Animations should be staggered for visual impact (heading first, then subtitle, then description)
+- Must respect `prefers-reduced-motion` accessibility preference
+- Animations should feel polished and professional, not distracting
+
+### Tasks:
+1. **Review current hero section implementation**
+   - Analyze `components/hero-section.tsx` current structure
+   - Identify existing animations and how to enhance them
+   - Plan animation sequence and timing
+
+2. **Implement text reveal animations**
+   - Add scroll-triggered or entrance animations for each text element
+   - Create staggered timing (heading → subtitle → description → buttons)
+   - Use Framer Motion variants for consistent animation patterns
+
+3. **Add neon glow effects to text**
+   - Apply neon glow styling to "Ian Cates" heading on reveal
+   - Consider subtle flicker effect similar to NeonTopBar
+   - Ensure glow colors match the site's primary color scheme
+
+4. **Polish and accessibility**
+   - Ensure smooth, non-jarring animations
+   - Implement reduced motion fallback
+   - Test timing and duration for optimal UX
+   - Verify no layout shift during animations
+
+**Acceptance Criteria**:
+- [ ] "Ian Cates" heading animates in with neon glow effect
+- [ ] "Data Engineer" subtitle animates in after heading
+- [ ] Description text animates in with staggered timing
+- [ ] Animations respect `prefers-reduced-motion`
+- [ ] Animations feel polished and match site aesthetic
+- [ ] No layout shift or janky animations
+- [ ] Build succeeds
+- [ ] No TypeScript errors
 
 ---
 
