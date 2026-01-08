@@ -23,8 +23,8 @@ const animationVariants = {
       opacity: 1,
       y: 0,
       transition: {
-        delay: i * 0.02, // Reduced from 0.1 to 0.02 - much faster
-        duration: 0.4,
+        delay: i * 0.06,
+        duration: 0.6,
         ease: [0.25, 0.46, 0.45, 0.94] as const,
       },
     }),
@@ -33,13 +33,13 @@ const animationVariants = {
   scatter: {
     hidden: (i: number) => {
       const directions = [
-        { x: -80, y: -40 },
-        { x: 80, y: -60 },
-        { x: -60, y: 40 },
-        { x: 60, y: 60 },
-        { x: 0, y: -80 },
-        { x: -40, y: 0 },
-        { x: 40, y: -20 },
+        { x: -80, y: -40 },  // 0 - Project 1
+        { x: 80, y: -60 },   // 1 - Project 2
+        { x: -60, y: 40 },   // 2 - Project 3
+        { x: -80, y: 0 },    // 3 - Project 4 (moves in from LEFT)
+        { x: 80, y: 0 },     // 4 - Project 5 (moves in from RIGHT)
+        { x: -40, y: 40 },   // 5 - Project 6
+        { x: 40, y: 40 },    // 6 - Project 7
       ];
       const dir = directions[i % directions.length];
       return { opacity: 0, x: dir.x, y: dir.y, scale: 0.85 };
@@ -50,8 +50,8 @@ const animationVariants = {
       y: 0,
       scale: 1,
       transition: {
-        delay: i * 0.02, // Reduced from 0.08 to 0.02 - much faster, minimal delay
-        duration: 0.4, // Slightly faster animation
+        delay: i * 0.06,
+        duration: 0.6,
         ease: [0.34, 1.56, 0.64, 1] as const,
       },
     }),
@@ -64,8 +64,8 @@ const animationVariants = {
       scale: 1,
       rotate: 0,
       transition: {
-        delay: i * 0.02, // Reduced from 0.12 to 0.02
-        duration: 0.4,
+        delay: i * 0.06,
+        duration: 0.6,
         ease: [0.22, 1, 0.36, 1] as const,
       },
     }),
@@ -78,8 +78,8 @@ const animationVariants = {
       x: 0,
       y: 0,
       transition: {
-        delay: i * 0.02, // Reduced from 0.15 to 0.02
-        duration: 0.4,
+        delay: i * 0.06,
+        duration: 0.6,
         ease: "easeOut" as const,
       },
     }),
@@ -91,10 +91,10 @@ const animationVariants = {
       opacity: 1,
       scale: 1,
       transition: {
-        delay: i * 0.02, // Reduced from 0.1 to 0.02
-        duration: 0.4,
+        delay: i * 0.06,
+        duration: 0.6,
         type: "spring" as const,
-        stiffness: 200,
+        stiffness: 150,
         damping: 15,
       },
     }),
