@@ -57,14 +57,17 @@ export function AboutSection() {
           viewport={{ once: true, amount: 0.2 }}
           className="flex-shrink-0 mx-auto md:mx-0"
         >
-          <Avatar className="w-48 h-48 md:w-64 md:h-64 border border-border shadow-lg ring-1 ring-primary/10 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:ring-primary/20">
-            <AvatarImage
-              src="/profile_pic.jpg"
-              alt="Ian Cates - Data Engineer"
-              className="object-cover"
-            />
-            <AvatarFallback>IC</AvatarFallback>
-          </Avatar>
+          {/* Neon border wrapper */}
+          <div className="relative p-1 rounded-full bg-gradient-to-r from-primary via-primary/80 to-primary shadow-[0_0_15px_hsl(142_40%_45%/0.5),0_0_30px_hsl(142_40%_45%/0.3),0_0_45px_hsl(142_40%_45%/0.2)] hover:shadow-[0_0_20px_hsl(142_40%_45%/0.7),0_0_40px_hsl(142_40%_45%/0.5),0_0_60px_hsl(142_40%_45%/0.3)] transition-shadow duration-500">
+            <Avatar className="w-48 h-48 md:w-64 md:h-64 border-2 border-background">
+              <AvatarImage
+                src="/profile_pic.jpg"
+                alt="Ian Cates - Data Engineer"
+                className="object-cover"
+              />
+              <AvatarFallback>IC</AvatarFallback>
+            </Avatar>
+          </div>
         </motion.div>
 
         <Card className="flex-1">
