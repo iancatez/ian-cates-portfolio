@@ -106,15 +106,11 @@ export function HeroSection() {
   const [showChevron, setShowChevron] = useState(true);
   const [chevronIntensity, setChevronIntensity] = useState(0);
   const [headingIntensity, setHeadingIntensity] = useState(0);
-  const [isHeadingReady, setIsHeadingReady] = useState(false);
-  const [sweepPosition, setSweepPosition] = useState(-100); // -100% to start off-screen left
   const { scrollY } = useScroll();
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
   const headingTimeoutsRef = useRef<NodeJS.Timeout[]>([]);
-  const sweepTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isActiveRef = useRef(false);
   const isHeadingActiveRef = useRef(false);
-  const isSweepActiveRef = useRef(false);
   
   // Check for reduced motion preference
   const reducedMotion = useMemo(() => {
@@ -233,64 +229,11 @@ export function HeroSection() {
     headingTimeoutsRef.current.push(timeout);
   }, [executeHeadingSequence]);
 
-  // Animate sweep across the heading
-  const animateSweep = useCallback(() => {
-    if (!isSweepActiveRef.current || reducedMotion) return;
-    
-    // Start from left (-100%)
-    setSweepPosition(-100);
-    
-    // Animate to right (200%) over ~1.2 seconds
-    const duration = 1200;
-    const startTime = Date.now();
-    const startPos = -100;
-    const endPos = 200;
-    
-    const animate = () => {
-      if (!isSweepActiveRef.current) return;
-      
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      
-      // Ease-in-out curve for smooth sweep
-      const easeProgress = progress < 0.5
-        ? 2 * progress * progress
-        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-      
-      const currentPos = startPos + (endPos - startPos) * easeProgress;
-      setSweepPosition(currentPos);
-      
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        // Schedule next sweep
-        scheduleNextSweep();
-      }
-    };
-    
-    requestAnimationFrame(animate);
-  }, [reducedMotion]);
-
-  // Schedule the next sweep with random delay
-  const scheduleNextSweep = useCallback(() => {
-    if (!isSweepActiveRef.current || reducedMotion) return;
-    
-    // Random delay between sweeps: 5-10 seconds
-    const delay = 5000 + Math.random() * 5000;
-    
-    sweepTimeoutRef.current = setTimeout(() => {
-      if (isSweepActiveRef.current) {
-        animateSweep();
-      }
-    }, delay);
-  }, [animateSweep, reducedMotion]);
-
   // Start heading neon effect on mount (before chevron)
   useEffect(() => {
     if (reducedMotion) {
       // Skip animations for reduced motion preference
       setHeadingIntensity(INTENSITY_LEVELS.full);
-      setIsHeadingReady(true);
       return;
     }
 
@@ -301,7 +244,6 @@ export function HeroSection() {
       const startupSequence = generateStartupSequence();
       executeHeadingSequence(startupSequence, () => {
         setHeadingIntensity(INTENSITY_LEVELS.full);
-        setIsHeadingReady(true);
         scheduleNextHeadingFlicker();
       });
     }, 400); // Start shortly after initial fade-in begins
@@ -337,28 +279,6 @@ export function HeroSection() {
       clearAllTimeouts();
     };
   }, [executeSequence, scheduleNextFlicker, clearAllTimeouts, reducedMotion]);
-
-  // Start sweep animation after heading is ready
-  useEffect(() => {
-    if (reducedMotion || !isHeadingReady) return;
-
-    isSweepActiveRef.current = true;
-    
-    // First sweep after heading startup completes (2 seconds after ready)
-    const initialDelay = setTimeout(() => {
-      if (isSweepActiveRef.current) {
-        animateSweep();
-      }
-    }, 2000);
-
-    return () => {
-      clearTimeout(initialDelay);
-      isSweepActiveRef.current = false;
-      if (sweepTimeoutRef.current) {
-        clearTimeout(sweepTimeoutRef.current);
-      }
-    };
-  }, [isHeadingReady, animateSweep, reducedMotion]);
 
   // Hide chevron when scrolled past ~20% of viewport height
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -424,41 +344,14 @@ export function HeroSection() {
         animate="visible"
         className="max-w-4xl space-y-6"
       >
-        {/* Name heading with neon glow effect and sweep animation */}
-        <motion.div
+        {/* Name heading with neon glow effect */}
+        <motion.h1
           variants={reducedMotion ? undefined : nameHeadingVariant}
-          className="relative inline-block"
+          className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl text-primary"
+          style={headingGlowStyles}
         >
-          <h1
-            className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl text-primary"
-            style={headingGlowStyles}
-          >
-            Ian Cates
-          </h1>
-          {/* Sweep highlight overlay */}
-          {!reducedMotion && (
-            <div
-              className="absolute inset-0 pointer-events-none overflow-hidden"
-              aria-hidden="true"
-            >
-              <div
-                className="absolute inset-y-0 w-[30%]"
-                style={{
-                  left: `${sweepPosition}%`,
-                  background: `linear-gradient(
-                    90deg,
-                    transparent 0%,
-                    hsl(var(--primary) / 0.1) 20%,
-                    hsl(var(--primary) / 0.4) 50%,
-                    hsl(var(--primary) / 0.1) 80%,
-                    transparent 100%
-                  )`,
-                  filter: 'blur(8px)',
-                }}
-              />
-            </div>
-          )}
-        </motion.div>
+          Ian Cates
+        </motion.h1>
         
         {/* Subtitle with staggered reveal */}
         <motion.p
