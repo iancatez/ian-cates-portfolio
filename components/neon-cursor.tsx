@@ -35,11 +35,12 @@ function generateSmoothPath(points: Point[]): string {
     const p2 = points[i + 1]
     const p3 = points[Math.min(points.length - 1, i + 2)]
 
-    // Catmull-Rom to Bezier conversion
-    const cp1x = p1.x + (p2.x - p0.x) / 6
-    const cp1y = p1.y + (p2.y - p0.y) / 6
-    const cp2x = p2.x - (p3.x - p1.x) / 6
-    const cp2y = p2.y - (p3.y - p1.y) / 6
+    // Catmull-Rom to Bezier conversion with tension adjustment
+    const tension = 4 // Higher = smoother curves
+    const cp1x = p1.x + (p2.x - p0.x) / tension
+    const cp1y = p1.y + (p2.y - p0.y) / tension
+    const cp2x = p2.x - (p3.x - p1.x) / tension
+    const cp2y = p2.y - (p3.y - p1.y) / tension
 
     path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`
   }
@@ -49,8 +50,8 @@ function generateSmoothPath(points: Point[]): string {
 
 export function NeonCursor({ 
   neonColor = DEFAULT_NEON_COLOR,
-  trailDuration = 500,
-  maxTrailPoints = 80
+  trailDuration = 600,
+  maxTrailPoints = 60
 }: NeonCursorProps) {
   const [position, setPosition] = React.useState({ x: -100, y: -100 })
   const [trail, setTrail] = React.useState<Point[]>([])
@@ -58,61 +59,86 @@ export function NeonCursor({
   const [isMounted, setIsMounted] = React.useState(false)
   const [isClicking, setIsClicking] = React.useState(false)
   
-  const lastPositionRef = React.useRef({ x: -100, y: -100 })
+  // Refs for smoothing
+  const smoothedPositionRef = React.useRef({ x: -100, y: -100 })
+  const lastTrailPositionRef = React.useRef({ x: -100, y: -100 })
+  const lastTrailTimeRef = React.useRef(0)
+  const rawPositionRef = React.useRef({ x: -100, y: -100 })
   const animationRef = React.useRef<number | null>(null)
 
-  // Update trail and fade old points
+  // Smoothing factor (0-1, lower = smoother but more lag)
+  const smoothingFactor = 0.3
+  // Minimum distance between trail points
+  const minDistance = 12
+  // Minimum time between trail points (ms)
+  const minInterval = 16
+
+  // Animation loop for smoothing and trail updates
   React.useEffect(() => {
     if (!isMounted) return
 
-    const updateTrail = () => {
+    const animate = () => {
       const now = Date.now()
       
-      setTrail(prevTrail => {
-        // Remove old points
-        const filteredTrail = prevTrail.filter(
-          point => now - point.timestamp < trailDuration
-        )
-        return filteredTrail
-      })
-      
-      animationRef.current = requestAnimationFrame(updateTrail)
-    }
-
-    animationRef.current = requestAnimationFrame(updateTrail)
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current)
+      // Exponential smoothing of cursor position
+      smoothedPositionRef.current = {
+        x: smoothedPositionRef.current.x + (rawPositionRef.current.x - smoothedPositionRef.current.x) * smoothingFactor,
+        y: smoothedPositionRef.current.y + (rawPositionRef.current.y - smoothedPositionRef.current.y) * smoothingFactor,
       }
-    }
-  }, [isMounted, trailDuration])
-
-  // Track mouse position
-  React.useEffect(() => {
-    setIsMounted(true)
-    
-    const handleMouseMove = (e: MouseEvent) => {
-      const newPos = { x: e.clientX, y: e.clientY }
-      setPosition(newPos)
-      setIsVisible(true)
       
-      // Only add to trail if moved enough distance (prevents clustering)
-      const dx = newPos.x - lastPositionRef.current.x
-      const dy = newPos.y - lastPositionRef.current.y
+      // Update displayed cursor position
+      setPosition({ ...smoothedPositionRef.current })
+      
+      // Check if we should add a new trail point
+      const dx = smoothedPositionRef.current.x - lastTrailPositionRef.current.x
+      const dy = smoothedPositionRef.current.y - lastTrailPositionRef.current.y
       const distance = Math.sqrt(dx * dx + dy * dy)
+      const timeSinceLastPoint = now - lastTrailTimeRef.current
       
-      if (distance > 5) {
-        lastPositionRef.current = newPos
+      if (distance > minDistance && timeSinceLastPoint > minInterval) {
+        lastTrailPositionRef.current = { ...smoothedPositionRef.current }
+        lastTrailTimeRef.current = now
+        
         setTrail(prev => {
-          const newTrail = [...prev, { ...newPos, timestamp: Date.now() }]
-          // Limit trail length
+          const newTrail = [...prev, { 
+            x: smoothedPositionRef.current.x, 
+            y: smoothedPositionRef.current.y, 
+            timestamp: now 
+          }]
           if (newTrail.length > maxTrailPoints) {
             return newTrail.slice(-maxTrailPoints)
           }
           return newTrail
         })
       }
+      
+      // Remove old trail points
+      setTrail(prevTrail => {
+        const filteredTrail = prevTrail.filter(
+          point => now - point.timestamp < trailDuration
+        )
+        return filteredTrail
+      })
+      
+      animationRef.current = requestAnimationFrame(animate)
+    }
+
+    animationRef.current = requestAnimationFrame(animate)
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
+  }, [isMounted, trailDuration, maxTrailPoints])
+
+  // Track raw mouse position
+  React.useEffect(() => {
+    setIsMounted(true)
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      rawPositionRef.current = { x: e.clientX, y: e.clientY }
+      setIsVisible(true)
     }
 
     const handleMouseLeave = () => {
@@ -149,7 +175,7 @@ export function NeonCursor({
       document.removeEventListener('mousedown', handleMouseDown)
       document.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [maxTrailPoints])
+  }, [])
 
   // Don't render on server or on touch devices
   if (!isMounted) {
@@ -189,13 +215,6 @@ export function NeonCursor({
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
-          
-          {/* Gradient for fading trail */}
-          <linearGradient id="trail-gradient" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor={`hsl(${neonColor})`} stopOpacity="0" />
-            <stop offset="30%" stopColor={`hsl(${neonColor})`} stopOpacity="0.6" />
-            <stop offset="100%" stopColor={`hsl(${neonColor})`} stopOpacity="1" />
-          </linearGradient>
         </defs>
         
         {/* Smooth trail path */}
