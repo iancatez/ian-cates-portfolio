@@ -29,8 +29,8 @@ export const staggerContainer: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
+      staggerChildren: 0.15,
+      delayChildren: 0.15,
     },
   },
 };
@@ -41,7 +41,7 @@ export const staggerItem: Variants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.5,
+      duration: 0.7,
       ease: "easeOut",
     },
   },
@@ -51,12 +51,12 @@ export const staggerItem: Variants = {
  * Common transition configurations
  */
 export const transitions = {
-  fast: { duration: 0.2, ease: "easeOut" },
-  medium: { duration: 0.3, ease: "easeOut" },
-  slow: { duration: 0.5, ease: "easeOut" },
+  fast: { duration: 0.3, ease: "easeOut" },
+  medium: { duration: 0.5, ease: "easeOut" },
+  slow: { duration: 0.7, ease: "easeOut" },
   spring: {
     type: "spring",
-    stiffness: 100,
+    stiffness: 80,
     damping: 15,
   },
 } as const;
@@ -73,7 +73,7 @@ export const scrollAnimation: Variants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.6,
+      duration: 0.8,
       ease: "easeOut",
     },
   },
