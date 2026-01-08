@@ -10,52 +10,53 @@ interface NeonCursorProps {
   className?: string
   /** HSL color values (e.g., "142 40% 45%") */
   neonColor?: string
-  /** Size of the cursor glow in pixels */
+  /** Size of the glow effect in pixels */
   size?: number
-  /** Whether to show the trailing effect */
-  showTrail?: boolean
 }
 
 export function NeonCursor({ 
   className, 
   neonColor = DEFAULT_NEON_COLOR,
-  size = 20,
-  showTrail = true
+  size = 40
 }: NeonCursorProps) {
   const [position, setPosition] = React.useState({ x: -100, y: -100 })
-  const [trailPosition, setTrailPosition] = React.useState({ x: -100, y: -100 })
   const [isVisible, setIsVisible] = React.useState(false)
   const [isMounted, setIsMounted] = React.useState(false)
   const [isClicking, setIsClicking] = React.useState(false)
   
-  const trailRef = React.useRef({ x: -100, y: -100 })
+  const glowRef = React.useRef({ x: -100, y: -100 })
   const animationRef = React.useRef<number | null>(null)
 
-  // Smooth trail animation using requestAnimationFrame
+  // Smooth glow animation using requestAnimationFrame
   React.useEffect(() => {
     if (!isMounted) return
 
-    const animateTrail = () => {
-      const dx = position.x - trailRef.current.x
-      const dy = position.y - trailRef.current.y
+    const animateGlow = () => {
+      const dx = position.x - glowRef.current.x
+      const dy = position.y - glowRef.current.y
       
-      // Smooth easing - trail follows with delay
-      trailRef.current.x += dx * 0.15
-      trailRef.current.y += dy * 0.15
+      // Smooth easing - glow follows cursor with slight delay
+      glowRef.current.x += dx * 0.2
+      glowRef.current.y += dy * 0.2
       
-      setTrailPosition({ x: trailRef.current.x, y: trailRef.current.y })
+      // Force re-render by updating a ref-based position
+      const glowElement = document.getElementById('neon-glow-effect')
+      if (glowElement) {
+        glowElement.style.left = `${glowRef.current.x - size / 2}px`
+        glowElement.style.top = `${glowRef.current.y - size / 2}px`
+      }
       
-      animationRef.current = requestAnimationFrame(animateTrail)
+      animationRef.current = requestAnimationFrame(animateGlow)
     }
 
-    animationRef.current = requestAnimationFrame(animateTrail)
+    animationRef.current = requestAnimationFrame(animateGlow)
 
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
       }
     }
-  }, [position, isMounted])
+  }, [position, isMounted, size])
 
   // Track mouse position
   React.useEffect(() => {
@@ -107,68 +108,35 @@ export function NeonCursor({
     return null
   }
 
-  const cursorSize = isClicking ? size * 0.8 : size
-  const trailSize = size * 1.5
+  const glowSize = isClicking ? size * 1.3 : size
 
-  const cursorStyle: React.CSSProperties = {
+  const glowStyle: React.CSSProperties = {
     position: 'fixed',
-    left: position.x - cursorSize / 2,
-    top: position.y - cursorSize / 2,
-    width: cursorSize,
-    height: cursorSize,
+    left: position.x - glowSize / 2,
+    top: position.y - glowSize / 2,
+    width: glowSize,
+    height: glowSize,
     borderRadius: '50%',
-    backgroundColor: `hsl(${neonColor} / 0.8)`,
+    background: `radial-gradient(circle, hsl(${neonColor} / 0.3) 0%, hsl(${neonColor} / 0.1) 40%, transparent 70%)`,
     boxShadow: `
-      0 0 ${cursorSize * 0.5}px hsl(${neonColor} / 0.8),
-      0 0 ${cursorSize}px hsl(${neonColor} / 0.6),
-      0 0 ${cursorSize * 1.5}px hsl(${neonColor} / 0.4),
-      0 0 ${cursorSize * 2}px hsl(${neonColor} / 0.2)
-    `,
-    pointerEvents: 'none',
-    zIndex: 9999,
-    opacity: isVisible ? 1 : 0,
-    transform: `scale(${isClicking ? 0.8 : 1})`,
-    transition: 'opacity 0.3s ease, transform 0.1s ease, width 0.1s ease, height 0.1s ease',
-    mixBlendMode: 'screen',
-  }
-
-  const trailStyle: React.CSSProperties = {
-    position: 'fixed',
-    left: trailPosition.x - trailSize / 2,
-    top: trailPosition.y - trailSize / 2,
-    width: trailSize,
-    height: trailSize,
-    borderRadius: '50%',
-    border: `1px solid hsl(${neonColor} / 0.4)`,
-    backgroundColor: 'transparent',
-    boxShadow: `
-      0 0 ${trailSize * 0.3}px hsl(${neonColor} / 0.2),
-      inset 0 0 ${trailSize * 0.3}px hsl(${neonColor} / 0.1)
+      0 0 ${glowSize * 0.5}px hsl(${neonColor} / 0.4),
+      0 0 ${glowSize}px hsl(${neonColor} / 0.2),
+      0 0 ${glowSize * 1.5}px hsl(${neonColor} / 0.1)
     `,
     pointerEvents: 'none',
     zIndex: 9998,
     opacity: isVisible ? 1 : 0,
-    transition: 'opacity 0.3s ease',
+    transform: `scale(${isClicking ? 1.2 : 1})`,
+    transition: 'opacity 0.3s ease, transform 0.15s ease',
+    mixBlendMode: 'screen',
   }
 
   return (
-    <>
-      {/* Trail ring */}
-      {showTrail && (
-        <div 
-          className={cn("neon-cursor-trail", className)}
-          style={trailStyle}
-          aria-hidden="true"
-        />
-      )}
-      
-      {/* Main cursor dot */}
-      <div 
-        className={cn("neon-cursor", className)}
-        style={cursorStyle}
-        aria-hidden="true"
-      />
-    </>
+    <div 
+      id="neon-glow-effect"
+      className={cn("neon-cursor-glow", className)}
+      style={glowStyle}
+      aria-hidden="true"
+    />
   )
 }
-
