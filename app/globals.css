@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: hsl(142 40% 45%);
+}
+
 @layer base {
   :root {
     /* Dark mode as default - Very dark gray base */
@@ -136,17 +140,32 @@
   /* Cinematic neon button base styles - glow persistence means never fully dark */
   .neon-button {
     --neon-intensity: 1;
-    --neon-color: hsl(142 40% 45%);
-    --neon-glow-color: hsl(142 40% 45% / var(--glow-opacity, 0.7));
+    --neon-color: var(--color-primary);
+    --neon-glow-color: hsl(var(--primary) / var(--glow-opacity, 0.7));
     transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
   }
 
   .neon-button.neon-active {
-    background-color: hsl(142 40% 45% / var(--neon-intensity));
+    background-color: hsl(var(--primary) / var(--neon-intensity));
     box-shadow: 
-      0 0 calc(15px * var(--neon-intensity)) hsl(142 40% 45% / calc(0.7 * var(--neon-intensity))),
-      0 0 calc(30px * var(--neon-intensity)) hsl(142 40% 45% / calc(0.5 * var(--neon-intensity))),
-      0 0 calc(45px * var(--neon-intensity)) hsl(142 40% 45% / calc(0.3 * var(--neon-intensity)));
+      0 0 calc(15px * var(--neon-intensity)) hsl(var(--primary) / calc(0.7 * var(--neon-intensity))),
+      0 0 calc(30px * var(--neon-intensity)) hsl(var(--primary) / calc(0.5 * var(--neon-intensity))),
+      0 0 calc(45px * var(--neon-intensity)) hsl(var(--primary) / calc(0.3 * var(--neon-intensity)));
+  }
+
+  /* Neon glow effect for borders/containers */
+  .neon-glow {
+    box-shadow: 
+      0 0 15px hsl(var(--primary) / 0.5),
+      0 0 30px hsl(var(--primary) / 0.3),
+      0 0 45px hsl(var(--primary) / 0.2);
+  }
+
+  .neon-glow:hover {
+    box-shadow: 
+      0 0 20px hsl(var(--primary) / 0.7),
+      0 0 40px hsl(var(--primary) / 0.5),
+      0 0 60px hsl(var(--primary) / 0.3);
   }
 
   /* React Flow overrides for dark mode */
