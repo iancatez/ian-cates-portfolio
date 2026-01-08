@@ -10,30 +10,49 @@ Features must be organized into logical **Task Groups** in `AGENT_TASKS.md`. Thi
 
 ### Task Group Structure
 Each task group MUST include:
-- **Header**: `## Task Group [N]: [Name]`
+- **Header**: `## Feature #[N]: [Name]` or `## Task Group [N]: [Name]` (for legacy compatibility)
+- **Feature Number**: Sequential numbering starting from 1
 - **Metadata Block**:
+  - `Feature #`: Sequential feature number
   - `Status`: Pending | In Progress | Completed | Blocked
-  - `Dependencies`: List of required Task Groups or "None"
+  - `Dependencies`: List of required Feature/Task Group numbers or "None"
   - `Can Run In Parallel`: Yes/No (and conditions)
   - `Estimated Time`: Time estimate in minutes/hours
-- **Tasks List**: Numbered list of specific, actionable items
+- **Requirements**: Explicit, well-defined requirements for the feature (what it should do, not how)
+- **Tasks List**: Numbered list of specific, actionable implementation items
 - **Acceptance Criteria**: Checklist of requirements for completion
 
 ### Example
 ```markdown
-## Task Group 1: Core Animation Setup
+## Feature #1: Hero Button Transition Enhancement
+**Feature #**: 1
 **Status**: Pending
 **Dependencies**: None
 **Can Run In Parallel**: Yes
 **Estimated Time**: 30-45 minutes
 
+### Requirements:
+- Hero section buttons ("View Projects" and "About Me") must have smooth, polished transitions when clicked/selected
+- Transitions should feel responsive and provide clear visual feedback
+- No jarring or abrupt state changes
+- Transitions should work consistently across all button variants
+
 ### Tasks:
-1. **Install Framer Motion**
-   - Run: `npm install framer-motion`
-   - Verify: Check package.json
+1. **Analyze current button transition behavior**
+   - Review `components/hero-section.tsx` button implementation
+   - Identify current transition gaps or issues
+   - Document desired transition behavior
+
+2. **Enhance button transitions**
+   - Add smooth state transitions for active/focus states
+   - Implement click feedback animations
+   - Ensure transitions respect `prefers-reduced-motion`
 
 **Acceptance Criteria**:
-- [ ] Framer Motion installed
+- [ ] Button transitions are smooth and polished
+- [ ] Visual feedback is clear on interaction
+- [ ] No jarring state changes
+- [ ] Respects accessibility preferences
 - [ ] Build succeeds
 ```
 
@@ -42,15 +61,21 @@ Each task group MUST include:
 Before starting any new major feature or refactor:
 
 1.  **Check `AGENT_TASKS.md`**: Verify if the work is already defined.
-2.  **Define New Task Group**: If not defined, create a new Task Group following the structure above.
-3.  **Identify Dependencies**: Clearly state what must be done before this work can start.
-4.  **Estimate Effort**: Provide a realistic time estimate.
-5.  **Review**: Ensure the new group fits logically into the Execution Order Summary.
+2.  **Define New Feature/Task Group**: If not defined, create a new entry following the structure above.
+   - Use `Feature #[N]` format for new features (preferred)
+   - Use `Task Group [N]` format for legacy compatibility
+   - Assign the next sequential number
+3.  **Define Explicit Requirements**: Clearly state WHAT the feature should do (requirements), not HOW (implementation details).
+4.  **Identify Dependencies**: Clearly state what must be done before this work can start (by Feature/Task Group number).
+5.  **Estimate Effort**: Provide a realistic time estimate.
+6.  **Review**: Ensure the new feature fits logically into the Execution Order Summary.
 
 ## 3. Progress Tracking
 
-- **Status Updates**: Update the `Status` field in `AGENT_TASKS.md` as work progresses.
+- **Status Updates**: Update the `Status` field in `AGENT_TASKS.md` as work progresses (Pending → In Progress → Completed).
+- **Feature Numbers**: Use sequential Feature # numbering. Track the highest number to assign the next one.
 - **Checklists**: Mark acceptance criteria as completed `[x]` only when verified.
+- **Requirements Documentation**: Keep requirements explicit and well-defined. Update if scope changes.
 - **Current Status**: Keep the "Current Status" section at the bottom of `AGENT_TASKS.md` updated with the high-level state of the project.
 
 ## 4. Execution Order Summary
@@ -70,9 +95,11 @@ Maintain a high-level `Execution Order Summary` in `AGENT_TASKS.md` to visualize
 
 ## 5. Branching Strategy Integration
 
-- **One Branch Per Task Group**: As defined in `git-workflow.mdc`, create a dedicated branch for each Task Group.
-- **Naming**: `task-group-[number]-[kebab-case-name]`
-- **Completion**: A Task Group is complete only when its branch is merged.
+- **One Branch Per Feature/Task Group**: As defined in `git-workflow.mdc`, create a dedicated branch for each Feature or Task Group.
+- **Naming**: 
+  - For Features: `feature-[number]-[kebab-case-name]` (e.g., `feature-13-hero-button-transitions`)
+  - For Task Groups: `task-group-[number]-[kebab-case-name]` (legacy format)
+- **Completion**: A Feature/Task Group is complete only when its branch is merged.
 
 ## 6. Anti-Patterns (What NOT to do)
 
