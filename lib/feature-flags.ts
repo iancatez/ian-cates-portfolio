@@ -11,7 +11,7 @@ export const featureFlags = {
    * When true: Shows the WebGL fluid cursor trail and custom white dot cursor
    * When false: Uses the browser's default cursor
    */
-  enableCustomCursor: true,
+  enableCustomCursor: false,
 } as const;
 
 // Type for feature flag keys
