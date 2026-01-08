@@ -4,6 +4,7 @@ import "./globals.css";
 import { Footer } from "@/components/footer";
 import { NeonTopBar } from "@/components/neon-top-bar";
 import { FluidCursor } from "@/components/fluid-cursor";
+import { featureFlags } from "@/lib/feature-flags";
 // import { NeonCursor } from "@/components/neon-cursor"; // Sidelined for now
 
 const geistSans = Geist({
@@ -26,18 +27,24 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const customCursorEnabled = featureFlags.enableCustomCursor;
+  
   return (
     <html lang="en" className="bg-background">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-background text-foreground`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-background text-foreground ${customCursorEnabled ? 'custom-cursor-enabled' : ''}`}
       >
         <NeonTopBar />
-        <FluidCursor />
-        {/* Semi-transparent overlay - sandwiches fluid between solid bg and content */}
-        <div 
-          className="fixed inset-0 z-[5] pointer-events-none bg-background/90"
-          aria-hidden="true"
-        />
+        {customCursorEnabled && (
+          <>
+            <FluidCursor />
+            {/* Semi-transparent overlay - sandwiches fluid between solid bg and content */}
+            <div 
+              className="fixed inset-0 z-[5] pointer-events-none bg-background/90"
+              aria-hidden="true"
+            />
+          </>
+        )}
         <main className="flex-1 relative z-10">{children}</main>
         <Footer />
       </body>

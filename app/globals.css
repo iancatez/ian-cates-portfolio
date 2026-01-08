@@ -283,9 +283,10 @@
   }
 }
 
-/* Hide default cursor - must be outside layers for highest priority */
+/* Hide default cursor - only when custom cursor is enabled via feature flag */
 @media (hover: hover) {
-  html, body, * {
+  body.custom-cursor-enabled,
+  body.custom-cursor-enabled * {
     cursor: none !important;
   }
 }
