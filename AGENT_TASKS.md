@@ -940,7 +940,7 @@ This file defines tasks that can be executed in parallel by Cursor agents. Each 
 
 ## Feature #20: Hero Section Text Animation
 **Feature #**: 20
-**Status**: Pending
+**Status**: Completed
 **Dependencies**: None
 **Can Run In Parallel**: Yes
 **Estimated Time**: 45-60 minutes
@@ -976,14 +976,14 @@ This file defines tasks that can be executed in parallel by Cursor agents. Each 
    - Verify no layout shift during animations
 
 **Acceptance Criteria**:
-- [ ] "Ian Cates" heading animates in with neon glow effect
-- [ ] "Data Engineer" subtitle animates in after heading
-- [ ] Description text animates in with staggered timing
-- [ ] Animations respect `prefers-reduced-motion`
-- [ ] Animations feel polished and match site aesthetic
-- [ ] No layout shift or janky animations
-- [ ] Build succeeds
-- [ ] No TypeScript errors
+- [x] "Ian Cates" heading animates in with neon glow effect
+- [x] "Data Engineer" subtitle animates in after heading
+- [x] Description text animates in with staggered timing
+- [x] Animations respect `prefers-reduced-motion`
+- [x] Animations feel polished and match site aesthetic
+- [x] No layout shift or janky animations
+- [x] Build succeeds
+- [x] No TypeScript errors
 
 ---
 

@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useState, useRef } from "react";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { useCallback, useEffect, useState, useRef, useMemo } from "react";
+import { motion, useScroll, useMotionValueEvent, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { staggerContainer, staggerItem } from "@/lib/animations";
 import { ChevronDown } from "lucide-react";
+import { prefersReducedMotion } from "@/lib/animation-config";
 
 // Intensity levels for realistic neon flicker
 const INTENSITY_LEVELS = {
@@ -15,6 +15,46 @@ const INTENSITY_LEVELS = {
   full: 1.0,
   surge: 1.15,
 }
+
+// Custom stagger container with longer delays for hero impact
+const heroStaggerContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.25, // Longer stagger for dramatic effect
+      delayChildren: 0.3,
+    },
+  },
+};
+
+// Custom stagger item with slide-up and scale
+const heroStaggerItem: Variants = {
+  hidden: { opacity: 0, y: 30, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.8,
+      ease: [0.25, 0.46, 0.45, 0.94], // Custom easing for smooth reveal
+    },
+  },
+};
+
+// Special variant for the name heading - no opacity/y animation, just fade in
+// The neon glow will handle the visual drama
+const nameHeadingVariant: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  },
+};
 
 // Generate a random micro-flicker cluster
 function generateFlickerCluster(): { intensity: number; duration: number }[] {
@@ -65,9 +105,19 @@ function generateStartupSequence(): { intensity: number; duration: number }[] {
 export function HeroSection() {
   const [showChevron, setShowChevron] = useState(true);
   const [chevronIntensity, setChevronIntensity] = useState(0);
+  const [headingIntensity, setHeadingIntensity] = useState(0);
+  const [isHeadingReady, setIsHeadingReady] = useState(false);
   const { scrollY } = useScroll();
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+  const headingTimeoutsRef = useRef<NodeJS.Timeout[]>([]);
   const isActiveRef = useRef(false);
+  const isHeadingActiveRef = useRef(false);
+  
+  // Check for reduced motion preference
+  const reducedMotion = useMemo(() => {
+    if (typeof window === "undefined") return false;
+    return prefersReducedMotion();
+  }, []);
 
   // Clear all pending timeouts
   const clearAllTimeouts = useCallback(() => {
@@ -75,7 +125,13 @@ export function HeroSection() {
     timeoutsRef.current = [];
   }, []);
 
-  // Execute a flicker sequence
+  // Clear heading timeouts
+  const clearHeadingTimeouts = useCallback(() => {
+    headingTimeoutsRef.current.forEach(clearTimeout);
+    headingTimeoutsRef.current = [];
+  }, []);
+
+  // Execute a flicker sequence for chevron
   const executeSequence = useCallback((
     sequence: { intensity: number; duration: number }[],
     onComplete?: () => void
@@ -104,7 +160,36 @@ export function HeroSection() {
     return totalDelay;
   }, []);
 
-  // Schedule random flicker clusters
+  // Execute a flicker sequence for heading
+  const executeHeadingSequence = useCallback((
+    sequence: { intensity: number; duration: number }[],
+    onComplete?: () => void
+  ) => {
+    let totalDelay = 0;
+    
+    sequence.forEach((step) => {
+      const timeout = setTimeout(() => {
+        if (isHeadingActiveRef.current) {
+          setHeadingIntensity(step.intensity);
+        }
+      }, totalDelay);
+      headingTimeoutsRef.current.push(timeout);
+      totalDelay += step.duration;
+    });
+    
+    if (onComplete) {
+      const completeTimeout = setTimeout(() => {
+        if (isHeadingActiveRef.current) {
+          onComplete();
+        }
+      }, totalDelay);
+      headingTimeoutsRef.current.push(completeTimeout);
+    }
+    
+    return totalDelay;
+  }, []);
+
+  // Schedule random flicker clusters for chevron
   const scheduleNextFlicker = useCallback(() => {
     if (!isActiveRef.current) return;
     
@@ -124,8 +209,63 @@ export function HeroSection() {
     timeoutsRef.current.push(timeout);
   }, [executeSequence]);
 
-  // Start chevron flicker on mount
+  // Schedule random flicker clusters for heading (less frequent)
+  const scheduleNextHeadingFlicker = useCallback(() => {
+    if (!isHeadingActiveRef.current) return;
+    
+    // Heading flickers less often than chevron for subtlety
+    const baseDelay = 4000 + Math.random() * 6000;
+    const extraDelay = Math.random() < 0.2 ? Math.random() * 3000 : 0;
+    const delay = baseDelay + extraDelay;
+    
+    const timeout = setTimeout(() => {
+      if (isHeadingActiveRef.current) {
+        const cluster = generateFlickerCluster();
+        executeHeadingSequence(cluster, () => {
+          setHeadingIntensity(INTENSITY_LEVELS.full);
+          scheduleNextHeadingFlicker();
+        });
+      }
+    }, delay);
+    headingTimeoutsRef.current.push(timeout);
+  }, [executeHeadingSequence]);
+
+  // Start heading neon effect on mount (before chevron)
   useEffect(() => {
+    if (reducedMotion) {
+      // Skip animations for reduced motion preference
+      setHeadingIntensity(INTENSITY_LEVELS.full);
+      setIsHeadingReady(true);
+      return;
+    }
+
+    isHeadingActiveRef.current = true;
+
+    // Start heading glow with startup sequence - kicks off quickly
+    const headingStartDelay = setTimeout(() => {
+      const startupSequence = generateStartupSequence();
+      executeHeadingSequence(startupSequence, () => {
+        setHeadingIntensity(INTENSITY_LEVELS.full);
+        setIsHeadingReady(true);
+        scheduleNextHeadingFlicker();
+      });
+    }, 400); // Start shortly after initial fade-in begins
+
+    return () => {
+      clearTimeout(headingStartDelay);
+      isHeadingActiveRef.current = false;
+      clearHeadingTimeouts();
+    };
+  }, [executeHeadingSequence, scheduleNextHeadingFlicker, clearHeadingTimeouts, reducedMotion]);
+
+  // Start chevron flicker on mount (after heading settles)
+  useEffect(() => {
+    if (reducedMotion) {
+      // Skip animations for reduced motion preference
+      setChevronIntensity(INTENSITY_LEVELS.full);
+      return;
+    }
+
     isActiveRef.current = true;
 
     const startDelay = setTimeout(() => {
@@ -134,14 +274,14 @@ export function HeroSection() {
         setChevronIntensity(INTENSITY_LEVELS.full);
         scheduleNextFlicker();
       });
-    }, 1500); // Delay startup to after hero content animates in
+    }, 1800); // Delay startup to after hero content animates in
 
     return () => {
       clearTimeout(startDelay);
       isActiveRef.current = false;
       clearAllTimeouts();
     };
-  }, [executeSequence, scheduleNextFlicker, clearAllTimeouts]);
+  }, [executeSequence, scheduleNextFlicker, clearAllTimeouts, reducedMotion]);
 
   // Hide chevron when scrolled past ~20% of viewport height
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -165,41 +305,77 @@ export function HeroSection() {
     scrollToSection("about");
   }, [scrollToSection]);
 
+  // Compute heading glow styles based on intensity
+  const headingGlowStyles = useMemo(() => {
+    if (reducedMotion) {
+      // Simple static glow for reduced motion
+      return {
+        textShadow: `
+          0 0 10px hsl(var(--primary) / 0.5),
+          0 0 20px hsl(var(--primary) / 0.3),
+          0 0 40px hsl(var(--primary) / 0.2)
+        `,
+      };
+    }
+
+    const i = headingIntensity;
+    const glowOpacity1 = 0.8 * i;
+    const glowOpacity2 = 0.5 * i;
+    const glowOpacity3 = 0.3 * i;
+    const glowSize1 = 10 * i;
+    const glowSize2 = 25 * i;
+    const glowSize3 = 50 * i;
+    
+    return {
+      textShadow: `
+        0 0 ${glowSize1}px hsl(var(--primary) / ${glowOpacity1}),
+        0 0 ${glowSize2}px hsl(var(--primary) / ${glowOpacity2}),
+        0 0 ${glowSize3}px hsl(var(--primary) / ${glowOpacity3})
+      `,
+      transition: 'text-shadow 0.05s ease',
+    };
+  }, [headingIntensity, reducedMotion]);
+
   return (
     <section
       id="home"
       className="relative flex min-h-screen flex-col items-center justify-center px-4 py-20 text-center"
     >
       <motion.div
-        variants={staggerContainer}
-        initial="hidden"
+        variants={reducedMotion ? undefined : heroStaggerContainer}
+        initial={reducedMotion ? { opacity: 1 } : "hidden"}
         animate="visible"
         className="max-w-4xl space-y-6"
       >
+        {/* Name heading with neon glow effect */}
         <motion.h1
-          variants={staggerItem}
-          className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
+          variants={reducedMotion ? undefined : nameHeadingVariant}
+          className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl text-primary"
+          style={headingGlowStyles}
         >
           Ian Cates
         </motion.h1>
         
+        {/* Subtitle with staggered reveal */}
         <motion.p
-          variants={staggerItem}
+          variants={reducedMotion ? undefined : heroStaggerItem}
           className="text-xl text-muted-foreground sm:text-2xl md:text-3xl"
         >
           Data Engineer
         </motion.p>
         
+        {/* Description with staggered reveal */}
         <motion.p
-          variants={staggerItem}
+          variants={reducedMotion ? undefined : heroStaggerItem}
           className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg"
         >
           Building production data systems at enterprise scale. Turning messy data into 
           reliable, actionable insights.
         </motion.p>
 
+        {/* Buttons with staggered reveal */}
         <motion.div
-          variants={staggerItem}
+          variants={reducedMotion ? undefined : heroStaggerItem}
           className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
         >
           <Button size="lg" onClick={scrollToProjects}>
