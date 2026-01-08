@@ -4,6 +4,7 @@ import { AnimatedSection } from "@/components/animated-section";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { NeonGlowWrapper } from "@/components/neon-glow-wrapper";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 import { motion } from "framer-motion";
 import { skills } from "@/lib/data";
@@ -57,8 +58,8 @@ export function AboutSection() {
           viewport={{ once: true, amount: 0.2 }}
           className="flex-shrink-0 mx-auto md:mx-0"
         >
-          {/* Neon border wrapper */}
-          <div className="relative p-[4px] rounded-full bg-primary neon-glow transition-shadow duration-500">
+          {/* Neon border wrapper with flickering effect */}
+          <NeonGlowWrapper borderWidth={1} rounded>
             <Avatar className="w-48 h-48 md:w-64 md:h-64">
               <AvatarImage
                 src="/profile_pic.jpg"
@@ -67,7 +68,7 @@ export function AboutSection() {
               />
               <AvatarFallback>IC</AvatarFallback>
             </Avatar>
-          </div>
+          </NeonGlowWrapper>
         </motion.div>
 
         <Card className="flex-1">
