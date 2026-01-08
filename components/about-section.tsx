@@ -103,38 +103,26 @@ export function AboutSection() {
 
         <div className="space-y-6">
           <h3 className="text-2xl font-semibold">Skills</h3>
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Object.entries(skillsByCategory).map(([category, categorySkills]) => (
-              <motion.div key={category} variants={staggerItem}>
-                <Card className="h-full hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 hover:scale-[1.02]">
-                  <CardHeader>
-                    <CardTitle className="text-lg">
-                      {skillCategories[category as keyof typeof skillCategories] || category}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                      {categorySkills.map((skill) => (
-                        <Badge
-                          key={skill.name}
-                          variant="secondary"
-                          className="transition-colors duration-300"
-                        >
-                          {skill.name}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+              <Card key={category} className="h-full">
+                <CardHeader>
+                  <CardTitle className="text-lg">
+                    {skillCategories[category as keyof typeof skillCategories] || category}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {categorySkills.map((skill) => (
+                      <Badge key={skill.name} variant="secondary">
+                        {skill.name}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
     </AnimatedSection>
