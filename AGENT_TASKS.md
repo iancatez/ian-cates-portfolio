@@ -451,6 +451,9 @@ This file defines tasks that can be executed in parallel by Cursor agents. Each 
 - Feature #17: Project 3 - Natural Disaster Event Alerting System
 - Feature #18: Project 4 - CloudWatch Log Monitoring & Aggregation System
 
+### Phase 7: New Sections (Sequential)
+- Feature #19: Interactive Roadmap-Resume Section
+
 ---
 
 ## Notes for Agents
@@ -863,6 +866,74 @@ This file defines tasks that can be executed in parallel by Cursor agents. Each 
 - [ ] Real-time streaming and aggregation capabilities are highlighted
 - [ ] Tech stack accurately reflects AWS services used
 - [ ] Build succeeds
+
+---
+
+## Feature #19: Interactive Roadmap-Resume Section
+**Feature #**: 19
+**Status**: Pending
+**Dependencies**: None
+**Can Run In Parallel**: Yes
+**Estimated Time**: 90-120 minutes
+
+### Requirements:
+- Create an interactive timeline/roadmap-style resume section for the portfolio
+- Resume data must be defined in a configuration file (JSON/TypeScript) for easy editing
+- Timeline should display career milestones, roles, achievements chronologically
+- Support for different entry types (jobs, education, certifications, milestones)
+- Interactive elements: expandable details, hover effects, scroll animations
+- Easy to add new entries without touching component code
+- Responsive design for all screen sizes
+- Neon visual effects consistent with site theme
+
+### Tasks:
+1. **Create resume configuration schema**
+   - File: `lib/resume-data.ts` or `config/resume.json`
+   - Define TypeScript interfaces for resume entries
+   - Support fields: title, company, date range, description, skills, achievements, type
+   - Include entry types: `job`, `education`, `certification`, `milestone`
+
+2. **Create RoadmapResume component**
+   - File: `components/roadmap-resume.tsx`
+   - Render timeline from configuration data
+   - Vertical timeline layout with alternating left/right entries (desktop)
+   - Single column on mobile
+   - Animated entry cards with neon glow effects
+
+3. **Add interactive features**
+   - Expandable/collapsible entry details
+   - Scroll-triggered animations for each entry
+   - Hover effects on timeline nodes and cards
+   - Optional: filter by entry type
+
+4. **Create timeline visual elements**
+   - Vertical line with neon glow
+   - Timeline nodes/markers for each entry
+   - Connecting lines between entries
+   - Date markers along timeline
+
+5. **Integrate into portfolio**
+   - Add section to main page between About and Projects (or configurable position)
+   - Add navigation link if applicable
+   - Ensure smooth scroll integration
+
+6. **Style with site theme**
+   - Apply neon glow effects to timeline and cards
+   - Use existing color variables (--primary, etc.)
+   - Add flicker effects to timeline elements
+   - Ensure dark theme consistency
+
+**Acceptance Criteria**:
+- [ ] Resume data is fully configurable via external file
+- [ ] Adding new entries requires only config file changes
+- [ ] Timeline renders chronologically with clear visual hierarchy
+- [ ] Interactive expand/collapse works smoothly
+- [ ] Scroll animations trigger appropriately
+- [ ] Neon visual effects match site aesthetic
+- [ ] Responsive design works on mobile/tablet/desktop
+- [ ] TypeScript types are properly defined
+- [ ] Build succeeds
+- [ ] No performance issues with animations
 
 ---
 
