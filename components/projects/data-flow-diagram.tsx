@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useRef, useState, useCallback } from "react";
 import {
   ReactFlow,
   Node,
@@ -37,9 +37,12 @@ import {
   ZoomIn,
   ZoomOut,
   Maximize2,
+  Copy,
+  Check,
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toPng } from "html-to-image";
 
 interface DataFlowDiagramProps {
   className?: string;
@@ -712,9 +715,50 @@ function DataFlowDiagramInner({
   className?: string;
 }) {
   const { zoomIn, zoomOut, fitView } = useReactFlow();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyToClipboard = useCallback(async () => {
+    if (!containerRef.current) return;
+
+    try {
+      // Capture the diagram as PNG
+      const dataUrl = await toPng(containerRef.current, {
+        backgroundColor: '#0a0a0a', // Match dark theme background
+        pixelRatio: 2, // Higher quality
+        filter: (node) => {
+          // Exclude the control panel buttons from the screenshot
+          if (node.classList?.contains('react-flow__panel')) {
+            return false;
+          }
+          return true;
+        },
+      });
+
+      // Convert data URL to blob
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+
+      // Copy to clipboard
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          'image/png': blob,
+        }),
+      ]);
+
+      // Show success feedback
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy diagram:', error);
+    }
+  }, []);
 
   return (
-    <div className={cn("w-full h-[1325px] rounded-xl overflow-hidden border border-border/30", className)}>
+    <div 
+      ref={containerRef}
+      className={cn("w-full h-[1325px] rounded-xl overflow-hidden border border-border/30", className)}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -737,6 +781,19 @@ function DataFlowDiagramInner({
         style={{ background: 'transparent' }}
       >
         <Panel position="top-right" className="flex gap-1 m-2">
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-8 w-8 bg-black/80 border-white/20 hover:bg-white/10"
+            onClick={handleCopyToClipboard}
+            title="Copy diagram to clipboard"
+          >
+            {copied ? (
+              <Check className="h-4 w-4 text-green-400" />
+            ) : (
+              <Copy className="h-4 w-4 text-white" />
+            )}
+          </Button>
           <Button
             variant="outline"
             size="icon"
