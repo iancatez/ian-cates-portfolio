@@ -12,6 +12,13 @@ export const featureFlags = {
    * When false: Uses the browser's default cursor
    */
   enableCustomCursor: false,
+
+  /**
+   * Enable neon glow effect on hero section name
+   * When true: "Ian Cates" has animated neon glow with flicker effects
+   * When false: Standard white text without glow effects
+   */
+  enableHeroNeonName: false,
 } as const;
 
 // Type for feature flag keys
