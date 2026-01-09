@@ -107,16 +107,17 @@ export function HeroSection() {
   const [showChevron, setShowChevron] = useState(true);
   const [chevronIntensity, setChevronIntensity] = useState(0);
   const [headingIntensity, setHeadingIntensity] = useState(0);
+  // Start with false to match server render, update after hydration
+  const [reducedMotion, setReducedMotion] = useState(false);
   const { scrollY } = useScroll();
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
   const headingTimeoutsRef = useRef<NodeJS.Timeout[]>([]);
   const isActiveRef = useRef(false);
   const isHeadingActiveRef = useRef(false);
   
-  // Check for reduced motion preference
-  const reducedMotion = useMemo(() => {
-    if (typeof window === "undefined") return false;
-    return prefersReducedMotion();
+  // Check for reduced motion preference after hydration to avoid SSR mismatch
+  useEffect(() => {
+    setReducedMotion(prefersReducedMotion());
   }, []);
 
   // Clear all pending timeouts
