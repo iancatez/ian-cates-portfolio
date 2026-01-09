@@ -18,7 +18,7 @@ export const featureFlags = {
    * When true: "Ian Cates" has animated neon glow with flicker effects
    * When false: Standard white text without glow effects
    */
-  enableHeroNeonName: true,
+  enableHeroNeonName: false,
 } as const;
 
 // Type for feature flag keys
