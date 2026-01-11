@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin } from "lucide-react";
+import { motion } from "framer-motion";
 
 // Gmail icon
 function GmailIcon({ className }: { className?: string }) {
@@ -62,30 +63,79 @@ const contactLinks = [
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+};
+
 export function ContactSection() {
   return (
-    <div className="fixed left-4 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col gap-3">
-      {contactLinks.map((link) => {
-        const Icon = link.icon;
-        return (
-          <Button
-            key={link.name}
-            asChild
-            neonColor={link.neonColor}
-            size="icon"
-            className="h-10 w-10 rounded-full"
-            aria-label={link.label}
-          >
-            <a
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Icon className="h-5 w-5" />
-            </a>
-          </Button>
-        );
-      })}
-    </div>
+    <section id="contact" className="py-16 px-4">
+      <div className="container mx-auto max-w-4xl">
+        <motion.div
+          className="text-center mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.5 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h2 className="text-2xl font-bold text-foreground mb-2">
+            Let&apos;s Connect
+          </h2>
+          <p className="text-muted-foreground">
+            Find me on these platforms
+          </p>
+        </motion.div>
+
+        <motion.div
+          className="flex flex-wrap justify-center gap-4"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.5 }}
+        >
+          {contactLinks.map((link) => {
+            const Icon = link.icon;
+            return (
+              <motion.div key={link.name} variants={itemVariants}>
+                <Button
+                  asChild
+                  neonColor={link.neonColor}
+                  size="icon"
+                  className="h-12 w-12 rounded-full"
+                  aria-label={link.label}
+                >
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon className="h-6 w-6" />
+                  </a>
+                </Button>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </div>
+    </section>
   );
 }

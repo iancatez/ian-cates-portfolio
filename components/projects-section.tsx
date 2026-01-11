@@ -124,8 +124,8 @@ export function ProjectsSection() {
           <div className="text-center space-y-3">
             <motion.h2 
               variants={staggerItem}
-              initial="hidden"
-              whileInView="visible"
+          initial="hidden"
+          whileInView="visible"
               viewport={{ 
                 once: false, // Enable reverse animations when scrolling past
                 amount: 0.1, // Appear at 10% visibility
@@ -133,10 +133,10 @@ export function ProjectsSection() {
               }}
               className="text-3xl md:text-4xl font-bold"
             >
-              Projects
-            </motion.h2>
-            <motion.p
-              variants={staggerItem}
+            Projects
+          </motion.h2>
+          <motion.p
+            variants={staggerItem}
               initial="hidden"
               whileInView="visible"
               viewport={{ 
@@ -145,9 +145,9 @@ export function ProjectsSection() {
                 margin: "0px", // No margin - stay visible longer
               }}
               className="text-lg text-muted-foreground max-w-xl mx-auto"
-            >
-              A collection of my work and side projects
-            </motion.p>
+          >
+            A collection of my work and side projects
+          </motion.p>
           </div>
 
           {/* Organic Bento Grid - explicit positioning for asymmetric look */}
@@ -164,12 +164,12 @@ export function ProjectsSection() {
               const isTopCard = project.id === "1" || project.id === "2";
               
               return (
-              <motion.div
+        <motion.div
                 key={project.id}
                 custom={index}
                 variants={selectedVariants}
-                initial="hidden"
-                whileInView="visible"
+          initial="hidden"
+          whileInView="visible"
                 viewport={{ 
                   once: false, // Enable reverse animations when scrolling past
                   amount: isTopCard ? 0.05 : 0.1, // Top cards appear at 5%, others at 10%
@@ -186,12 +186,12 @@ export function ProjectsSection() {
                   hasInteractiveDemo={project.id === "1"}
                   onInteractiveClick={project.id === "1" ? () => setIsProject1ModalOpen(true) : undefined}
                 />
-              </motion.div>
+            </motion.div>
               );
             })}
           </div>
-        </div>
-      </AnimatedSection>
+      </div>
+    </AnimatedSection>
 
       {/* Project 1 Interactive Modal */}
       <DataTransformationModal 

@@ -37,8 +37,8 @@ export function AboutSection() {
         <div className="text-center space-y-4">
           <motion.h2 
             variants={staggerItem}
-            initial="hidden"
-            whileInView="visible"
+          initial="hidden"
+          whileInView="visible"
             viewport={{ 
               once: false, // Enable reverse animations when scrolling past
               amount: 0.1, // Appear at 10% visibility
@@ -147,11 +147,11 @@ export function AboutSection() {
           </motion.h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Object.entries(skillsByCategory).map(([category, categorySkills]) => (
-              <motion.div
+          <motion.div
                 key={category}
                 variants={staggerItem}
-                initial="hidden"
-                whileInView="visible"
+            initial="hidden"
+            whileInView="visible"
                 viewport={{ 
                   once: false, // Enable reverse animations when scrolling past
                   amount: 0.1, // Appear at 10% visibility
@@ -159,21 +159,21 @@ export function AboutSection() {
                 }}
               >
                 <Card className="h-full">
-                <CardHeader>
-                  <CardTitle className="text-lg">
-                    {skillCategories[category as keyof typeof skillCategories] || category}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {categorySkills.map((skill) => (
+                  <CardHeader>
+                    <CardTitle className="text-lg">
+                      {skillCategories[category as keyof typeof skillCategories] || category}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      {categorySkills.map((skill) => (
                       <Badge key={skill.name} variant="secondary">
-                        {skill.name}
+                          {skill.name}
                       </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
               </motion.div>
             ))}
           </div>
