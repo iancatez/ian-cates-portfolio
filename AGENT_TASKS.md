@@ -987,6 +987,55 @@ This file defines tasks that can be executed in parallel by Cursor agents. Each 
 
 ---
 
+## Feature #21: Move Social Links to Bottom of Page
+**Feature #**: 21
+**Status**: In Progress
+**Dependencies**: None
+**Can Run In Parallel**: Yes
+**Estimated Time**: 20-30 minutes
+
+### Requirements:
+- Move social media/contact links from fixed left-side position to the bottom of the page
+- Links should NOT be sticky - they should be at the natural bottom of the page content
+- Maintain the neon glow styling and visual aesthetic of the buttons
+- Links should be visible on all screen sizes (currently hidden on mobile)
+- Should appear in a horizontal layout at the bottom
+- Must maintain accessibility (proper labels, keyboard navigation)
+
+### Tasks:
+1. **Update ContactSection positioning**
+   - Remove `fixed` positioning from `components/contact-section.tsx`
+   - Change layout from vertical sidebar to horizontal bottom section
+   - Place at the bottom of the page content (before or as part of footer)
+
+2. **Update responsive design**
+   - Make links visible on mobile (remove `hidden md:flex`)
+   - Adjust spacing and sizing for different screen sizes
+   - Center links horizontally on all viewports
+
+3. **Integrate with page layout**
+   - Ensure proper placement in `app/page.tsx` or footer
+   - Add appropriate spacing/margin from content above
+   - Consider adding subtle divider or section styling
+
+4. **Maintain styling**
+   - Keep neon glow effects on buttons
+   - Ensure buttons remain visually consistent
+   - Add scroll animation if desired
+
+**Acceptance Criteria**:
+- [ ] Social links appear at bottom of page content
+- [ ] Links are NOT sticky/fixed
+- [ ] Horizontal layout on all screen sizes
+- [ ] Visible on mobile and desktop
+- [ ] Neon glow styling preserved
+- [ ] Proper spacing from content above
+- [ ] Accessible (keyboard navigation, proper labels)
+- [ ] Build succeeds
+- [ ] No TypeScript errors
+
+---
+
 **Last Updated**: [Date]
 **Current Status**: Ready for agent execution
 
