@@ -8,6 +8,8 @@ import { projects } from "@/lib/data";
 import { motion } from "framer-motion";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 import { ANIMATION_TRIGGER_CONFIG, EARLY_ANIMATION_TRIGGER_CONFIG } from "@/lib/animation-config";
+import { AnimatedText } from "@/components/typewriter-text";
+import { featureFlags } from "@/lib/feature-flags";
 
 // ============================================
 // ANIMATION STYLE OPTIONS - Change this to try different effects!
@@ -122,21 +124,8 @@ export function ProjectsSection() {
         <div className="max-w-5xl mx-auto space-y-8">
           {/* Header - each element animates independently */}
           <div className="text-center space-y-3">
-            <motion.h2 
+            <motion.div
               variants={staggerItem}
-          initial="hidden"
-          whileInView="visible"
-              viewport={{ 
-                once: false, // Enable reverse animations when scrolling past
-                amount: 0.1, // Appear at 10% visibility
-                margin: "0px", // No margin - stay visible longer
-              }}
-              className="text-3xl md:text-4xl font-bold"
-            >
-            Projects
-          </motion.h2>
-          <motion.p
-            variants={staggerItem}
               initial="hidden"
               whileInView="visible"
               viewport={{ 
@@ -144,10 +133,44 @@ export function ProjectsSection() {
                 amount: 0.1, // Appear at 10% visibility
                 margin: "0px", // No margin - stay visible longer
               }}
-              className="text-lg text-muted-foreground max-w-xl mx-auto"
-          >
-            A collection of my work and side projects
-          </motion.p>
+            >
+              {featureFlags.enableTypewriterEffect ? (
+                <AnimatedText
+                  text="Projects"
+                  animation="blur"
+                  as="h2"
+                  className="text-3xl md:text-4xl font-bold"
+                />
+              ) : (
+                <h2 className="text-3xl md:text-4xl font-bold">
+                  Projects
+                </h2>
+              )}
+            </motion.div>
+            <motion.div
+              variants={staggerItem}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ 
+                once: false, // Enable reverse animations when scrolling past
+                amount: 0.1, // Appear at 10% visibility
+                margin: "0px", // No margin - stay visible longer
+              }}
+            >
+              {featureFlags.enableTypewriterEffect ? (
+                <AnimatedText
+                  text="A collection of my work and side projects"
+                  delay={200}
+                  animation="words"
+                  as="p"
+                  className="text-lg text-muted-foreground max-w-xl mx-auto"
+                />
+              ) : (
+                <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+                  A collection of my work and side projects
+                </p>
+              )}
+            </motion.div>
           </div>
 
           {/* Organic Bento Grid - explicit positioning for asymmetric look */}

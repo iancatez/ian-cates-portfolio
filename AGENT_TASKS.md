@@ -1036,6 +1036,66 @@ This file defines tasks that can be executed in parallel by Cursor agents. Each 
 
 ---
 
+## Feature #22: Typewriter Effect for Page Text
+**Feature #**: 22
+**Status**: Pending
+**Dependencies**: None
+**Can Run In Parallel**: Yes
+**Estimated Time**: 45-60 minutes
+
+### Requirements:
+- Add a subtle typewriter effect to all text elements on the page
+- Effect should be simple and not overbearing
+- Should work with existing scroll-triggered animations
+- Must respect `prefers-reduced-motion` accessibility preference
+- Effect should feel polished and professional
+- Should apply to headings, paragraphs, and other text content across all sections
+
+### Tasks:
+1. **Create reusable Typewriter component/hook**
+   - File: `components/typewriter-text.tsx` or `hooks/use-typewriter.ts`
+   - Props: `text`, `speed?`, `delay?`, `onComplete?`
+   - Features: Character-by-character reveal with configurable speed
+   - Support for multiple text elements
+
+2. **Integrate with existing sections**
+   - Update `components/hero-section.tsx` to use typewriter effect
+   - Update `components/about-section.tsx` for text content
+   - Update `components/projects-section.tsx` for project descriptions
+   - Update `components/contact-section.tsx` for section text
+   - Consider which text elements should have the effect (headings, descriptions, etc.)
+
+3. **Configure timing and behavior**
+   - Set appropriate typing speed (not too fast, not too slow)
+   - Add stagger delays for multiple text elements
+   - Ensure effect completes before scroll animations trigger
+   - Add optional cursor blink effect (if desired)
+
+4. **Accessibility and performance**
+   - Respect `prefers-reduced-motion` (skip effect if enabled)
+   - Ensure text is still readable during animation
+   - Optimize for performance (avoid re-renders)
+   - Test with screen readers
+
+5. **Polish and refinement**
+   - Fine-tune timing for optimal feel
+   - Ensure effect doesn't interfere with existing animations
+   - Test across different screen sizes
+   - Verify no layout shift during animation
+
+**Acceptance Criteria**:
+- [ ] Typewriter effect applied to text elements across all sections
+- [ ] Effect is subtle and not distracting
+- [ ] Works seamlessly with existing scroll animations
+- [ ] Respects `prefers-reduced-motion` preference
+- [ ] Typing speed is appropriate and feels natural
+- [ ] No performance issues or layout shifts
+- [ ] Accessible (screen readers, keyboard navigation)
+- [ ] Build succeeds
+- [ ] No TypeScript errors
+
+---
+
 **Last Updated**: [Date]
 **Current Status**: Ready for agent execution
 

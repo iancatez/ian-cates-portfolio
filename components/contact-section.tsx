@@ -3,6 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
+import { AnimatedText } from "@/components/typewriter-text";
+import { featureFlags } from "@/lib/feature-flags";
 
 // Gmail icon
 function GmailIcon({ className }: { className?: string }) {
@@ -97,12 +99,32 @@ export function ContactSection() {
           viewport={{ once: false, amount: 0.5 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-2xl font-bold text-foreground mb-2">
-            Let&apos;s Connect
-          </h2>
-          <p className="text-muted-foreground">
-            Find me on these platforms
-          </p>
+          {featureFlags.enableTypewriterEffect ? (
+            <>
+              <AnimatedText
+                text="Let's Connect"
+                animation="blur"
+                as="h2"
+                className="text-2xl font-bold text-foreground mb-2"
+              />
+              <AnimatedText
+                text="Find me on these platforms"
+                delay={200}
+                animation="fade"
+                as="p"
+                className="text-muted-foreground"
+              />
+            </>
+          ) : (
+            <>
+              <h2 className="text-2xl font-bold text-foreground mb-2">
+                Let&apos;s Connect
+              </h2>
+              <p className="text-muted-foreground">
+                Find me on these platforms
+              </p>
+            </>
+          )}
         </motion.div>
 
         <motion.div

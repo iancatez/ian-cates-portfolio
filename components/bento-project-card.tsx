@@ -14,6 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { Github, ExternalLink, Expand } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/lib/data";
+import { AnimatedText } from "@/components/typewriter-text";
+import { featureFlags } from "@/lib/feature-flags";
 
 interface BentoProjectCardProps extends Project {
   className?: string;
@@ -52,16 +54,38 @@ export function BentoProjectCard({
           </Badge>
         )}
         
-        <CardTitle className={cn(
-          "leading-tight",
-          isLarge ? "text-xl" : "text-base"
-        )}>
-          {title}
-        </CardTitle>
+        {featureFlags.enableTypewriterEffect ? (
+          <AnimatedText
+            text={title}
+            animation="blur"
+            as="div"
+            className={cn(
+              "font-semibold leading-tight tracking-tight",
+              isLarge ? "text-xl" : "text-base"
+            )}
+          />
+        ) : (
+          <CardTitle className={cn(
+            "leading-tight",
+            isLarge ? "text-xl" : "text-base"
+          )}>
+            {title}
+          </CardTitle>
+        )}
         
-        <CardDescription className="text-sm leading-snug line-clamp-2">
-          {description}
-        </CardDescription>
+        {featureFlags.enableTypewriterEffect ? (
+          <AnimatedText
+            text={description}
+            animation="fade"
+            delay={100}
+            as="div"
+            className="text-sm text-muted-foreground leading-snug line-clamp-2"
+          />
+        ) : (
+          <CardDescription className="text-sm leading-snug line-clamp-2">
+            {description}
+          </CardDescription>
+        )}
       </CardHeader>
       
       {technologies.length > 0 && (

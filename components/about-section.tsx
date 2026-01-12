@@ -10,6 +10,8 @@ import { ANIMATION_TRIGGER_CONFIG } from "@/lib/animation-config";
 import { motion } from "framer-motion";
 import { skills } from "@/lib/data";
 import type { Skill } from "@/lib/data";
+import { AnimatedText, AnimatedParagraphs } from "@/components/typewriter-text";
+import { featureFlags } from "@/lib/feature-flags";
 
 const skillCategories = {
   frontend: "Frontend",
@@ -35,20 +37,7 @@ export function AboutSection() {
       <div className="max-w-4xl mx-auto space-y-12">
         {/* Header - each element animates independently */}
         <div className="text-center space-y-4">
-          <motion.h2 
-            variants={staggerItem}
-          initial="hidden"
-          whileInView="visible"
-            viewport={{ 
-              once: false, // Enable reverse animations when scrolling past
-              amount: 0.1, // Appear at 10% visibility
-              margin: "0px", // No margin - stay visible longer
-            }}
-            className="text-4xl md:text-5xl font-bold"
-          >
-            About Me
-          </motion.h2>
-          <motion.p
+          <motion.div
             variants={staggerItem}
             initial="hidden"
             whileInView="visible"
@@ -57,10 +46,44 @@ export function AboutSection() {
               amount: 0.1, // Appear at 10% visibility
               margin: "0px", // No margin - stay visible longer
             }}
-            className="text-xl text-muted-foreground max-w-2xl mx-auto"
           >
-            Learn more about my background and experience
-          </motion.p>
+            {featureFlags.enableTypewriterEffect ? (
+              <AnimatedText
+                text="About Me"
+                animation="blur"
+                as="h2"
+                className="text-4xl md:text-5xl font-bold"
+              />
+            ) : (
+              <h2 className="text-4xl md:text-5xl font-bold">
+                About Me
+              </h2>
+            )}
+          </motion.div>
+          <motion.div
+            variants={staggerItem}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ 
+              once: false, // Enable reverse animations when scrolling past
+              amount: 0.1, // Appear at 10% visibility
+              margin: "0px", // No margin - stay visible longer
+            }}
+          >
+            {featureFlags.enableTypewriterEffect ? (
+              <AnimatedText
+                text="Learn more about my background and experience"
+                delay={200}
+                animation="words"
+                as="p"
+                className="text-xl text-muted-foreground max-w-2xl mx-auto"
+              />
+            ) : (
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Learn more about my background and experience
+              </p>
+            )}
+          </motion.div>
         </div>
 
       <div className="flex flex-col md:flex-row gap-8 items-start">
@@ -101,38 +124,85 @@ export function AboutSection() {
         >
         <Card className="h-full" alwaysGlow>
           <CardHeader>
-            <CardTitle>Background</CardTitle>
-            <CardDescription>My journey in data engineering</CardDescription>
+            {featureFlags.enableTypewriterEffect ? (
+              <>
+                <AnimatedText
+                  text="Background"
+                  animation="blur"
+                  as="div"
+                  className="text-lg font-semibold leading-none tracking-tight"
+                />
+                <AnimatedText
+                  text="My journey in data engineering"
+                  animation="fade"
+                  delay={100}
+                  as="div"
+                  className="text-sm text-muted-foreground"
+                />
+              </>
+            ) : (
+              <>
+                <CardTitle>Background</CardTitle>
+                <CardDescription>My journey in data engineering</CardDescription>
+              </>
+            )}
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-muted-foreground">
-              Data Engineer with 4+ years of experience building, developing, and automating production data systems 
-              at enterprise scale. Since 2021, I've specialized in designing end-to-end pipelines, automating manual 
-              workflows, and delivering dashboards that drive business decisions.
-            </p>
-            <p className="text-muted-foreground">
-              I've built comprehensive end-to-end data pipelines leveraging Apache Spark for distributed processing, 
-              AWS Lambda for serverless compute, AWS SageMaker for ML model deployment, and AWS Glue for ETL workflows. 
-              My pipelines integrate with data lakehouses using S3, query engines like AWS Athena and Apache Hive, 
-              and data warehouses including AWS Redshift. These systems deliver insights through automated reporting 
-              and ML-driven anomaly detection.
-            </p>
-            <p className="text-muted-foreground">
-              I'm comfortable working across AWS, Azure, and GCP with a focus on turning messy data into reliable, 
-              actionable reporting. My work spans from building React dashboards to deploying ML models, always 
-              with an eye toward automation, scalability, and efficiency.
-            </p>
-            <p className="text-muted-foreground text-sm pt-2">
-              <strong>Education:</strong> B.S. in Cybersecurity from Thomas College (2021) | 
-              AWS Certified Data Engineer (2024) | AWS Certified DevOps Engineer Professional (2025)
-            </p>
+            {featureFlags.enableTypewriterEffect ? (
+              <AnimatedParagraphs
+                delay={150}
+                animation="fade"
+                paragraphs={[
+                  {
+                    text: "Data Engineer with 4+ years of experience building, developing, and automating production data systems at enterprise scale. Since 2021, I've specialized in designing end-to-end pipelines, automating manual workflows, and delivering dashboards that drive business decisions.",
+                    className: "text-muted-foreground",
+                  },
+                  {
+                    text: "I've built comprehensive end-to-end data pipelines leveraging Apache Spark for distributed processing, AWS Lambda for serverless compute, AWS SageMaker for ML model deployment, and AWS Glue for ETL workflows. My pipelines integrate with data lakehouses using S3, query engines like AWS Athena and Apache Hive, and data warehouses including AWS Redshift. These systems deliver insights through automated reporting and ML-driven anomaly detection.",
+                    className: "text-muted-foreground",
+                  },
+                  {
+                    text: "I'm comfortable working across AWS, Azure, and GCP with a focus on turning messy data into reliable, actionable reporting. My work spans from building React dashboards to deploying ML models, always with an eye toward automation, scalability, and efficiency.",
+                    className: "text-muted-foreground",
+                  },
+                  {
+                    text: "Education: B.S. in Cybersecurity from Thomas College (2021) | AWS Certified Data Engineer (2024) | AWS Certified DevOps Engineer Professional (2025)",
+                    className: "text-muted-foreground text-sm pt-2",
+                  },
+                ]}
+              />
+            ) : (
+              <>
+                <p className="text-muted-foreground">
+                  Data Engineer with 4+ years of experience building, developing, and automating production data systems 
+                  at enterprise scale. Since 2021, I've specialized in designing end-to-end pipelines, automating manual 
+                  workflows, and delivering dashboards that drive business decisions.
+                </p>
+                <p className="text-muted-foreground">
+                  I've built comprehensive end-to-end data pipelines leveraging Apache Spark for distributed processing, 
+                  AWS Lambda for serverless compute, AWS SageMaker for ML model deployment, and AWS Glue for ETL workflows. 
+                  My pipelines integrate with data lakehouses using S3, query engines like AWS Athena and Apache Hive, 
+                  and data warehouses including AWS Redshift. These systems deliver insights through automated reporting 
+                  and ML-driven anomaly detection.
+                </p>
+                <p className="text-muted-foreground">
+                  I'm comfortable working across AWS, Azure, and GCP with a focus on turning messy data into reliable, 
+                  actionable reporting. My work spans from building React dashboards to deploying ML models, always 
+                  with an eye toward automation, scalability, and efficiency.
+                </p>
+                <p className="text-muted-foreground text-sm pt-2">
+                  <strong>Education:</strong> B.S. in Cybersecurity from Thomas College (2021) | 
+                  AWS Certified Data Engineer (2024) | AWS Certified DevOps Engineer Professional (2025)
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
         </motion.div>
       </div>
 
         <div className="space-y-6">
-          <motion.h3 
+          <motion.div 
             variants={staggerItem}
             initial="hidden"
             whileInView="visible"
@@ -141,10 +211,18 @@ export function AboutSection() {
               amount: 0.1, // Appear at 10% visibility
               margin: "0px", // No margin - stay visible longer
             }}
-            className="text-2xl font-semibold"
           >
-            Skills
-          </motion.h3>
+            {featureFlags.enableTypewriterEffect ? (
+              <AnimatedText
+                text="Skills"
+                animation="blur"
+                as="h3"
+                className="text-2xl font-semibold"
+              />
+            ) : (
+              <h3 className="text-2xl font-semibold">Skills</h3>
+            )}
+          </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Object.entries(skillsByCategory).map(([category, categorySkills]) => (
           <motion.div
@@ -160,9 +238,18 @@ export function AboutSection() {
               >
                 <Card className="h-full">
                   <CardHeader>
-                    <CardTitle className="text-lg">
-                      {skillCategories[category as keyof typeof skillCategories] || category}
-                    </CardTitle>
+                    {featureFlags.enableTypewriterEffect ? (
+                      <AnimatedText
+                        text={skillCategories[category as keyof typeof skillCategories] || category}
+                        animation="blur"
+                        as="div"
+                        className="text-lg font-semibold leading-none tracking-tight"
+                      />
+                    ) : (
+                      <CardTitle className="text-lg">
+                        {skillCategories[category as keyof typeof skillCategories] || category}
+                      </CardTitle>
+                    )}
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-wrap gap-2">
