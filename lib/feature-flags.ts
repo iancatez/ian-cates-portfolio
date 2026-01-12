@@ -19,6 +19,13 @@ export const featureFlags = {
    * When false: Standard white text without glow effects
    */
   enableHeroNeonName: false,
+
+  /**
+   * Enable animated text effects on page headings and descriptions
+   * When true: Text elements animate word-by-word with blur/slide/fade effects
+   * When false: Text appears normally without animation effects
+   */
+  enableTypewriterEffect: true,
 } as const;
 
 // Type for feature flag keys
