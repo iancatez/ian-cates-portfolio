@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { prefersReducedMotion } from "@/lib/animation-config";
 import { featureFlags } from "@/lib/feature-flags";
+import { AnimatedText } from "@/components/typewriter-text";
 
 // Intensity levels for realistic neon flicker
 const INTENSITY_LEVELS = {
@@ -357,32 +358,70 @@ export function HeroSection() {
         className="max-w-4xl space-y-6"
       >
         {/* Name heading - with neon glow effect when feature flag is enabled */}
-        <motion.h1
+        <motion.div
           variants={reducedMotion ? undefined : nameHeadingVariant}
-          className={`text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl ${
-            featureFlags.enableHeroNeonName ? 'text-primary' : 'text-foreground'
-          }`}
           style={headingGlowStyles}
         >
-          Ian Cates
-        </motion.h1>
+          {featureFlags.enableTypewriterEffect ? (
+            <AnimatedText
+              text="Ian Cates"
+              delay={300}
+              animation="blur"
+              viewportTriggered={false}
+              as="h1"
+              className={`text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl ${
+                featureFlags.enableHeroNeonName ? 'text-primary' : 'text-foreground'
+              }`}
+            />
+          ) : (
+            <h1 className={`text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl ${
+              featureFlags.enableHeroNeonName ? 'text-primary' : 'text-foreground'
+            }`}>
+              Ian Cates
+            </h1>
+          )}
+        </motion.div>
         
         {/* Subtitle with staggered reveal */}
-        <motion.p
+        <motion.div
           variants={reducedMotion ? undefined : heroStaggerItem}
-          className="text-xl text-muted-foreground sm:text-2xl md:text-3xl"
         >
-          Data Engineer
-        </motion.p>
+          {featureFlags.enableTypewriterEffect ? (
+            <AnimatedText
+              text="Data Engineer"
+              delay={600}
+              animation="slide"
+              viewportTriggered={false}
+              as="p"
+              className="text-xl text-muted-foreground sm:text-2xl md:text-3xl"
+            />
+          ) : (
+            <p className="text-xl text-muted-foreground sm:text-2xl md:text-3xl">
+              Data Engineer
+            </p>
+          )}
+        </motion.div>
         
         {/* Description with staggered reveal */}
-        <motion.p
+        <motion.div
           variants={reducedMotion ? undefined : heroStaggerItem}
-          className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg"
         >
-          Building production data systems at enterprise scale. Turning messy data into 
-          reliable, actionable insights.
-        </motion.p>
+          {featureFlags.enableTypewriterEffect ? (
+            <AnimatedText
+              text="Building production data systems at enterprise scale. Turning messy data into reliable, actionable insights."
+              delay={900}
+              animation="words"
+              viewportTriggered={false}
+              as="p"
+              className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg"
+            />
+          ) : (
+            <p className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg">
+              Building production data systems at enterprise scale. Turning messy data into 
+              reliable, actionable insights.
+            </p>
+          )}
+        </motion.div>
 
         {/* Buttons with staggered reveal */}
         <motion.div
