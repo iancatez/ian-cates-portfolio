@@ -11,6 +11,7 @@ interface AnimatedTextProps {
   text: string;
   delay?: number; // Delay before starting (ms)
   className?: string;
+  style?: React.CSSProperties; // Custom inline styles (e.g., textShadow for glow effects)
   as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "span" | "div";
   animation?: AnimationStyle;
   staggerDelay?: number; // Delay between words (ms)
@@ -96,6 +97,7 @@ export function AnimatedText({
   text,
   delay = 0,
   className = "",
+  style,
   as: Component = "p",
   animation = "words",
   staggerDelay,
@@ -111,7 +113,7 @@ export function AnimatedText({
 
   // If reduced motion, render text without animation
   if (reducedMotion) {
-    return <Component className={className}>{text}</Component>;
+    return <Component className={className} style={style}>{text}</Component>;
   }
 
   // Split text into words for word-by-word animation
@@ -153,7 +155,7 @@ export function AnimatedText({
   const needsInlineBlock = animation === "blur" || animation === "slide" || animation === "words";
 
   return (
-    <Component className={className}>
+    <Component className={className} style={style}>
       {words.map((word, index) => (
         <span key={index} style={{ display: "inline" }}>
           <motion.span
