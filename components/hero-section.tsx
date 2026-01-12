@@ -360,7 +360,6 @@ export function HeroSection() {
         {/* Name heading - with neon glow effect when feature flag is enabled */}
         <motion.div
           variants={reducedMotion ? undefined : nameHeadingVariant}
-          style={headingGlowStyles}
         >
           {featureFlags.enableTypewriterEffect ? (
             <AnimatedText
@@ -372,11 +371,15 @@ export function HeroSection() {
               className={`text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl ${
                 featureFlags.enableHeroNeonName ? 'text-primary' : 'text-foreground'
               }`}
+              style={headingGlowStyles}
             />
           ) : (
-            <h1 className={`text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl ${
-              featureFlags.enableHeroNeonName ? 'text-primary' : 'text-foreground'
-            }`}>
+            <h1 
+              className={`text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl ${
+                featureFlags.enableHeroNeonName ? 'text-primary' : 'text-foreground'
+              }`}
+              style={headingGlowStyles}
+            >
               Ian Cates
             </h1>
           )}
