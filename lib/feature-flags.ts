@@ -25,7 +25,7 @@ export const featureFlags = {
    * When true: Text elements animate word-by-word with blur/slide/fade effects
    * When false: Text appears normally without animation effects
    */
-  enableTypewriterEffect: false,
+  enableTypewriterEffect: true,
 } as const;
 
 // Type for feature flag keys
