@@ -23,15 +23,6 @@ This portfolio features a sleek, dark-themed design with neon green accents and 
 - Framer Motion
 - ShadCN UI
 
-## Getting Started
-
-```bash
-npm install
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) to view the site.
-
 ## Contact
 
 Feel free to reach out through the contact section on the portfolio or connect with me on LinkedIn.
