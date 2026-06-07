@@ -72,10 +72,15 @@
        (mousewheel, trackpad) which feels laggy. Click-to-scroll still smooth-
        scrolls because the JS calls explicitly pass `behavior: "smooth"`. */
     scroll-padding-top: 84px;
+    /* Cap horizontal overflow at the viewport edge so a single misbehaving
+       element (long code block, wide diagram, etc.) can't push the page
+       wider than the screen and clip the fixed nav controls off the right. */
+    overflow-x: clip;
   }
   body {
     background-color: hsl(var(--background)) !important;
     color: hsl(var(--foreground)) !important;
+    overflow-x: clip;
   }
 
   /* Same offset applied per-section for scrollIntoView() calls */

@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SectionNavProps {
@@ -18,15 +19,17 @@ const SECTIONS = [
 
 type SectionId = (typeof SECTIONS)[number]["id"];
 
+const NAV_HEIGHT = 56; // matches h-14 on the container
+
 export function SectionNav({ className }: SectionNavProps) {
   const [scrolled, setScrolled] = React.useState(false);
   const [activeId, setActiveId] = React.useState<SectionId>("home");
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const navRef = React.useRef<HTMLElement | null>(null);
 
-  // When the user CLICKS a nav item, we kick off a smooth scroll. While that
-  // scroll is in flight, the page passes through intermediate sections — and
-  // without a lock the scroll listener would fire activeId updates for each
-  // one, making the pill ping-pong. The lock holds activeId at the clicked
-  // target until the page settles.
+  // Lock so a click-initiated smooth scroll doesn't get its activeId
+  // re-computed by the scroll listener as the page passes through intermediate
+  // sections.
   const lockRef = React.useRef(false);
   const lockTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(
     null
@@ -40,15 +43,11 @@ export function SectionNav({ className }: SectionNavProps) {
   }, []);
 
   React.useEffect(() => {
-    // A section is "active" when its top has scrolled into the upper portion
-    // of the viewport. Using ~2/3 down so the next section lights up as soon
-    // as its heading is clearly visible at the bottom of the screen — not
-    // only after it's all the way at the top under the nav.
+    // Active when its top has scrolled into the upper 2/3 of the viewport —
+    // so the next section lights up when its heading is clearly visible.
     const VIEWPORT_FOCUS_RATIO = 0.66;
     const ids = SECTIONS.map((s) => s.id);
 
-    // Walk offsetParent chain so framer-motion's `y` transforms (which warp
-    // getBoundingClientRect) don't break detection. offsetTop is layout-pure.
     const getAbsoluteTop = (el: HTMLElement) => {
       let y = 0;
       let cur: HTMLElement | null = el;
@@ -60,8 +59,6 @@ export function SectionNav({ className }: SectionNavProps) {
     };
 
     const recompute = () => {
-      // If a click-initiated smooth scroll is in flight, leave the activeId
-      // alone — the click already pinned it to the intended target.
       if (lockRef.current) return;
 
       const threshold =
@@ -94,30 +91,66 @@ export function SectionNav({ className }: SectionNavProps) {
     const el = document.getElementById(id);
     if (!el) return;
 
-    // Pin the pill to the clicked target. Without this lock, the scroll
-    // listener would re-compute activeId for every intermediate section the
-    // smooth scroll passes through, causing the pill to ping-pong.
     setActiveId(id);
     lockRef.current = true;
     if (lockTimeoutRef.current) clearTimeout(lockTimeoutRef.current);
-    // Smooth-scroll usually finishes in ~500ms; give the lock a generous
-    // window so the recompute only re-engages once the page has settled.
     lockTimeoutRef.current = setTimeout(() => {
       lockRef.current = false;
     }, 900);
 
-    // Use offsetTop-based scroll math instead of scrollIntoView so framer-
-    // motion's `y: 30` transform on AnimatedSection doesn't shift the
-    // destination and leave the scroll landing short of the section heading.
     let y = 0;
     let cur: HTMLElement | null = el;
     while (cur) {
       y += cur.offsetTop;
       cur = cur.offsetParent as HTMLElement | null;
     }
-    const NAV_HEIGHT = 56; // h-14
     window.scrollTo({ top: y - NAV_HEIGHT, behavior: "smooth" });
   }, []);
+
+  const scrollToAndClose = React.useCallback(
+    (id: SectionId) => {
+      setMobileOpen(false);
+      scrollTo(id);
+    },
+    [scrollTo]
+  );
+
+  // Close the mobile menu if the viewport grows past `sm`. Avoids the dropdown
+  // staying open after rotating a phone to landscape (or resizing on dev).
+  React.useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth >= 640 && mobileOpen) setMobileOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [mobileOpen]);
+
+  // Close the mobile menu when the user taps anywhere outside the nav, or
+  // presses Escape. Only listens while the menu is open.
+  React.useEffect(() => {
+    if (!mobileOpen) return;
+
+    const onPointerDown = (e: PointerEvent) => {
+      if (
+        navRef.current &&
+        e.target instanceof Node &&
+        !navRef.current.contains(e.target)
+      ) {
+        setMobileOpen(false);
+      }
+    };
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [mobileOpen]);
 
   React.useEffect(() => {
     return () => {
@@ -125,20 +158,22 @@ export function SectionNav({ className }: SectionNavProps) {
     };
   }, []);
 
+  const visibleNavItems = SECTIONS.filter((s) => s.id !== "home");
+
   return (
     <nav
+      ref={navRef}
       aria-label="Primary"
       className={cn(
         "fixed inset-x-0 top-0 z-40 transition-colors duration-200",
-        scrolled
-          ? "border-b border-border/40 bg-background/80 backdrop-blur-md"
+        scrolled || mobileOpen
+          ? "border-b border-border/40 bg-background/85 backdrop-blur-md"
           : "bg-transparent",
         className
       )}
     >
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-3 sm:px-6">
-        {/* Brand — same hover/active treatment as the nav items.
-            Acts as the "Home" indicator: underline lights up when activeId === "home". */}
+        {/* Brand — desktop pill underline + mobile-friendly press target */}
         <button
           type="button"
           onClick={() => scrollTo("home")}
@@ -156,7 +191,7 @@ export function SectionNav({ className }: SectionNavProps) {
           {activeId === "home" && (
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 -bottom-1 flex justify-center"
+              className="pointer-events-none absolute inset-x-0 -bottom-1 hidden justify-center sm:flex"
             >
               <motion.span
                 layoutId="nav-active-pill"
@@ -175,8 +210,9 @@ export function SectionNav({ className }: SectionNavProps) {
           )}
         </button>
 
-        <div className="flex items-center gap-0 sm:gap-3">
-          {SECTIONS.filter((s) => s.id !== "home").map(({ id, label }) => {
+        {/* Desktop inline nav items */}
+        <div className="hidden items-center gap-3 sm:flex">
+          {visibleNavItems.map(({ id, label }) => {
             const isActive = activeId === id;
             return (
               <button
@@ -185,8 +221,8 @@ export function SectionNav({ className }: SectionNavProps) {
                 onClick={() => scrollTo(id)}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "group relative inline-flex shrink-0 items-center justify-center rounded px-2 py-1 text-xs sm:text-sm sm:px-3 font-medium transition-colors duration-200",
-                  "sm:min-w-[72px] text-center",
+                  "group relative inline-flex shrink-0 items-center justify-center rounded px-3 py-1 text-sm font-medium transition-colors duration-200",
+                  "min-w-[72px] text-center",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60",
                   isActive
                     ? "text-foreground"
@@ -201,7 +237,7 @@ export function SectionNav({ className }: SectionNavProps) {
                   >
                     <motion.span
                       layoutId="nav-active-pill"
-                      className="h-[3px] w-12 rounded-full bg-primary sm:w-16"
+                      className="h-[3px] w-16 rounded-full bg-primary"
                       style={{
                         boxShadow:
                           "0 0 10px hsl(var(--primary) / 0.7), 0 0 20px hsl(var(--primary) / 0.45)",
@@ -218,7 +254,76 @@ export function SectionNav({ className }: SectionNavProps) {
             );
           })}
         </div>
+
+        {/* Mobile hamburger */}
+        <button
+          type="button"
+          onClick={() => setMobileOpen((v) => !v)}
+          aria-expanded={mobileOpen}
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          className={cn(
+            "-mr-1 inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors sm:hidden",
+            "hover:bg-muted/40 hover:text-foreground",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+          )}
+        >
+          <span className="sr-only">
+            {mobileOpen ? "Close menu" : "Open menu"}
+          </span>
+          {mobileOpen ? (
+            <X className="h-5 w-5" aria-hidden="true" />
+          ) : (
+            <Menu className="h-5 w-5" aria-hidden="true" />
+          )}
+        </button>
       </div>
+
+      {/* Mobile dropdown */}
+      <AnimatePresence initial={false}>
+        {mobileOpen && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22, ease: [0, 0, 0.2, 1] }}
+            className="overflow-hidden border-t border-border/40 bg-background/95 backdrop-blur-md sm:hidden"
+          >
+            <ul className="flex flex-col gap-1 px-3 py-3">
+              {visibleNavItems.map(({ id, label }) => {
+                const isActive = activeId === id;
+                return (
+                  <li key={id}>
+                    <button
+                      type="button"
+                      onClick={() => scrollToAndClose(id)}
+                      aria-current={isActive ? "page" : undefined}
+                      className={cn(
+                        "flex w-full items-center justify-between rounded-md px-3 py-3 text-sm font-medium transition-colors",
+                        isActive
+                          ? "bg-primary/10 text-primary"
+                          : "text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+                      )}
+                    >
+                      <span>{label}</span>
+                      {isActive && (
+                        <span
+                          aria-hidden="true"
+                          className="h-2 w-2 rounded-full bg-primary"
+                          style={{
+                            boxShadow:
+                              "0 0 8px hsl(var(--primary) / 0.7), 0 0 14px hsl(var(--primary) / 0.35)",
+                          }}
+                        />
+                      )}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
