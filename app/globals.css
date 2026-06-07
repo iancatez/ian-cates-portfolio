@@ -67,9 +67,11 @@
   html {
     background-color: hsl(var(--background)) !important;
     color: hsl(var(--foreground));
-    /* Anchor scrolling must clear the sticky pill nav and the neon top bar */
+    /* Anchor scrolling must clear the sticky pill nav and the neon top bar.
+       Note: no `scroll-behavior: smooth` here — that animates ALL scrolling
+       (mousewheel, trackpad) which feels laggy. Click-to-scroll still smooth-
+       scrolls because the JS calls explicitly pass `behavior: "smooth"`. */
     scroll-padding-top: 84px;
-    scroll-behavior: smooth;
   }
   body {
     background-color: hsl(var(--background)) !important;
