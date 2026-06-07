@@ -155,14 +155,6 @@ export function HeroSection() {
           Data engineer building and integrating serverless data platforms on the cloud.
         </motion.p>
 
-        <motion.p
-          variants={reduced ? undefined : heroItem}
-          className="mx-auto max-w-xl text-sm text-muted-foreground/80 sm:text-base"
-        >
-          Ingestion pipelines, internal APIs, operator portals, and the
-          Terraform that ships them all.
-        </motion.p>
-
         <motion.div
           variants={reduced ? undefined : heroItem}
           className="flex flex-col items-center justify-center gap-3 pt-2 sm:flex-row"
