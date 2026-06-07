@@ -19,8 +19,8 @@ export function AboutSection() {
             About Me
           </h2>
           <p className="max-w-2xl text-base md:text-lg text-muted-foreground">
-            Data engineer, full-stack engineer, lifelong tinkerer — building
-            production data systems end-to-end.
+            Data engineer, full-stack engineer, and guitarist. Passionate
+            about the depth of learning and growth.
           </p>
         </motion.header>
 
