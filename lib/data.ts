@@ -272,9 +272,9 @@ export const projects: Project[] = [
     id: "7",
     title: "QuickSight Automation",
     description:
-      "API-driven backup, restore, author provisioning, and security-group sync.",
+      "API-driven backup, restore, author provisioning, and event-driven Active Directory → QuickSight RBAC sync.",
     longDescription:
-      "Set of Lambda-backed APIs that automate everything QuickSight's console can't: nightly asset bundle exports to S3, restore submission and status APIs, automatic author provisioning from uploaded rosters, and continuous reconciliation of QuickSight security groups against AWS IAM groups. Fronted by API Gateway with usage-plan keys for programmatic access.",
+      "Set of Lambda-backed APIs that automate everything QuickSight's console can't: nightly asset bundle exports to S3, restore submission and status APIs, automatic author provisioning from uploaded rosters, and event-driven syncing of Active Directory security groups into QuickSight so RBAC stays consistent the moment AD membership changes. Fronted by API Gateway with usage-plan keys for programmatic access.",
     technologies: [
       "Rust",
       "AWS Lambda",
@@ -290,9 +290,10 @@ export const projects: Project[] = [
       {
         label: "Capabilities",
         items: [
+          "Event-driven syncing of Active Directory security groups into QuickSight, so RBAC reflects AD membership changes within seconds instead of nightly batch drift.",
           "Nightly asset bundle exports to S3 with metadata indexed in DynamoDB for fast restore lookups.",
           "Restore submission + status APIs replace manual console clicks during recovery.",
-          "Continuous reconciliation of QuickSight security groups against AWS IAM, with full audit log.",
+          "Full audit log of every sync action with success/failure breakdown surfaced to operators.",
         ],
       },
     ],
