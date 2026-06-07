@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Ian Cates — Data Engineer",
   description:
-    "Portfolio of Ian Cates: serverless data platforms, FinOps pipelines, and the APIs and portals that put that data to work.",
+    "Portfolio of Ian Cates: serverless data platforms, data pipelines, and the APIs and portals that put that data to work.",
 };
 
 export default function RootLayout({
