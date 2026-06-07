@@ -619,10 +619,10 @@ export function DataFlowDiagram({ className }: DataFlowDiagramProps) {
   const initialNodes: Node[] = useMemo(() => [
     // === ROW 1: DATA SOURCES (symmetric around CENTER_X, all same teal color) ===
     { id: "src-cloud", type: "source", position: { x: sourceX[0], y: ROW_Y.SOURCES }, data: { label: "Cloud", description: "AWS, Azure, GCP", badge: "Multi-cloud", icon: Cloud, color: "#14B8A6" }, draggable: false },
-    { id: "src-monitoring", type: "source", position: { x: sourceX[1], y: ROW_Y.SOURCES }, data: { label: "Monitoring", description: "Datadog metrics", badge: "API", icon: BarChart3, color: "#14B8A6" }, draggable: false },
-    { id: "src-integration", type: "source", position: { x: sourceX[2], y: ROW_Y.SOURCES }, data: { label: "Integration", description: "SnapLogic, Kong", badge: "iPaaS", icon: Workflow, color: "#14B8A6" }, draggable: false },
-    { id: "src-aiml", type: "source", position: { x: sourceX[3], y: ROW_Y.SOURCES }, data: { label: "AI/ML", description: "OpenAI, Anthropic", badge: "Usage", icon: Cpu, color: "#14B8A6" }, draggable: false },
-    { id: "src-security", type: "source", position: { x: sourceX[4], y: ROW_Y.SOURCES }, data: { label: "Security", description: "Tenable, PagerDuty", badge: "Security", icon: Shield, color: "#14B8A6" }, draggable: false },
+    { id: "src-monitoring", type: "source", position: { x: sourceX[1], y: ROW_Y.SOURCES }, data: { label: "Monitoring", description: "Metrics & APM", badge: "API", icon: BarChart3, color: "#14B8A6" }, draggable: false },
+    { id: "src-integration", type: "source", position: { x: sourceX[2], y: ROW_Y.SOURCES }, data: { label: "Integration", description: "iPaaS & API gateways", badge: "iPaaS", icon: Workflow, color: "#14B8A6" }, draggable: false },
+    { id: "src-aiml", type: "source", position: { x: sourceX[3], y: ROW_Y.SOURCES }, data: { label: "AI/ML", description: "LLM providers", badge: "Usage", icon: Cpu, color: "#14B8A6" }, draggable: false },
+    { id: "src-security", type: "source", position: { x: sourceX[4], y: ROW_Y.SOURCES }, data: { label: "Security", description: "Scanners & on-call", badge: "Security", icon: Shield, color: "#14B8A6" }, draggable: false },
     { id: "src-marketplace", type: "source", position: { x: sourceX[5], y: ROW_Y.SOURCES }, data: { label: "Marketplace", description: "Subscriptions", badge: "Direct", icon: Cloud, color: "#14B8A6" }, draggable: false },
     { id: "src-contracts", type: "source", position: { x: sourceX[6], y: ROW_Y.SOURCES }, data: { label: "Contracts", description: "Manual pricing", badge: "Config", icon: FolderOpen, color: "#14B8A6" }, draggable: false },
 

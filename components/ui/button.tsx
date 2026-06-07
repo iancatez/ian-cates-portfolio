@@ -310,18 +310,42 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // Check if this is a light color (needs dark text when lit)
     const isLight = React.useMemo(() => isLightColor(hslColor), [hslColor])
     
-    // Calculate styles based on intensity and color
-    const neonStyles = React.useMemo(() => {
-      if (!isHovered && intensity === 0) {
-        return {
-          borderColor: `hsl(${hslColor})`,
-          backgroundColor: 'transparent',
-          color: `hsl(${hslColor})`,
-          boxShadow: '0 0 0px transparent',
-          transition: 'all 0.5s ease-out',
-        }
+    // Calculate styles based on intensity and color.
+    // Resting state = liquid glass (translucent fill + backdrop blur + inset
+    // highlight), then transitions to the neon glow on hover/flicker.
+    const neonStyles = React.useMemo<React.CSSProperties>(() => {
+      // Light colors (e.g., white "X" button) need a neutral fill so the
+      // glass tint stays subtle. Saturated colors get a stronger neon-tinted
+      // fill + inner glow so the button keeps its hue even when a vivid
+      // background (like the hero's green scan beam) shows through the blur.
+      const restingFill = isLight
+        ? 'hsl(0 0% 100% / 0.05)'
+        : `hsl(${hslColor} / 0.16)`
+
+      const restingGlass: React.CSSProperties = {
+        borderColor: `hsl(${hslColor} / 0.4)`,
+        backgroundColor: restingFill,
+        backdropFilter: 'blur(14px) saturate(140%)',
+        WebkitBackdropFilter: 'blur(14px) saturate(140%)',
+        color: `hsl(${hslColor})`,
+        boxShadow: [
+          // Colored inner glow — reinforces the button's hue when something
+          // brightly colored is passing behind the glass.
+          isLight ? '' : `inset 0 0 22px hsl(${hslColor} / 0.18)`,
+          'inset 0 1px 0 0 hsl(0 0% 100% / 0.14)',
+          'inset 0 -1px 0 0 hsl(0 0% 0% / 0.18)',
+          '0 1px 2px hsl(0 0% 0% / 0.35)',
+          '0 8px 24px -14px hsl(0 0% 0% / 0.55)',
+        ]
+          .filter(Boolean)
+          .join(', '),
+        transition: 'all 0.5s ease-out',
       }
-      
+
+      if (!isHovered && intensity === 0) {
+        return restingGlass
+      }
+
       const i = intensity
       const glowOpacity1 = 0.7 * i
       const glowOpacity2 = 0.5 * i
@@ -329,16 +353,28 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       const glowSize1 = 15 * i
       const glowSize2 = 30 * i
       const glowSize3 = 45 * i
-      
-      // For light colors (like white), use dark text when lit
-      // For dark colors, use white text when lit
+
       const litTextColor = isLight ? 'black' : 'white'
-      
+
+      // Blend glass + neon: keep the inset highlight + neon-tinted glass while
+      // the neon fill rises with intensity.
+      const blendedBg = i < 0.05
+        ? restingFill
+        : `hsl(${hslColor} / ${i})`
+
+      // Inner colored glow fades out as the full neon fill takes over.
+      const innerGlowOpacity = isLight ? 0 : Math.max(0, 0.18 - 0.18 * i)
+
       return {
         borderColor: `hsl(${hslColor})`,
-        backgroundColor: `hsl(${hslColor} / ${i})`,
+        backgroundColor: blendedBg,
+        backdropFilter: 'blur(14px) saturate(140%)',
+        WebkitBackdropFilter: 'blur(14px) saturate(140%)',
         color: i > 0.5 ? litTextColor : `hsl(${hslColor})`,
         boxShadow: `
+          inset 0 0 22px hsl(${hslColor} / ${innerGlowOpacity}),
+          inset 0 1px 0 0 hsl(0 0% 100% / ${0.14 + 0.16 * i}),
+          inset 0 -1px 0 0 hsl(0 0% 0% / 0.18),
           0 0 ${glowSize1}px hsl(${hslColor} / ${glowOpacity1}),
           0 0 ${glowSize2}px hsl(${hslColor} / ${glowOpacity2}),
           0 0 ${glowSize3}px hsl(${hslColor} / ${glowOpacity3})

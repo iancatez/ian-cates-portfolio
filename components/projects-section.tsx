@@ -1,13 +1,23 @@
 "use client";
 
+import * as React from "react";
 import { useState } from "react";
 import { AnimatedSection } from "@/components/animated-section";
 import { BentoProjectCard } from "@/components/bento-project-card";
 import { DataTransformationModal } from "@/components/projects/data-transformation-modal";
-import { projects } from "@/lib/data";
+import { ProjectDetailModal } from "@/components/projects/project-detail-modal";
+import { AiAgentWorkflowDiagram } from "@/components/projects/ai-agent-workflow-diagram";
+import { CloudDeploymentDiagram } from "@/components/projects/cloud-deployment-diagram";
+import { OperationalInsightsDiagram } from "@/components/projects/operational-insights-diagram";
+import { IngestionMeshBody } from "@/components/projects/bodies/ingestion-mesh-body";
+import { IngestionRuntimeBody } from "@/components/projects/bodies/ingestion-runtime-body";
+import { DagLiteBody } from "@/components/projects/bodies/dag-lite-body";
+import { AiCodingBody } from "@/components/projects/bodies/ai-coding-body";
+import { TerraformModulesBody } from "@/components/projects/bodies/terraform-modules-body";
+import { QuicksightBody } from "@/components/projects/bodies/quicksight-body";
+import { projects, type Project } from "@/lib/data";
 import { motion } from "framer-motion";
-import { staggerContainer, staggerItem } from "@/lib/animations";
-import { ANIMATION_TRIGGER_CONFIG, EARLY_ANIMATION_TRIGGER_CONFIG } from "@/lib/animation-config";
+import { staggerItem } from "@/lib/animations";
 import { AnimatedText } from "@/components/typewriter-text";
 import { featureFlags } from "@/lib/feature-flags";
 
@@ -17,7 +27,6 @@ import { featureFlags } from "@/lib/feature-flags";
 // ============================================
 const ANIMATION_STYLE: "stagger" | "scatter" | "spiral" | "cascade" | "scale" = "scatter";
 
-// Animation variants for different styles
 const animationVariants = {
   stagger: {
     hidden: { opacity: 0, y: 30 },
@@ -31,17 +40,17 @@ const animationVariants = {
       },
     }),
   },
-  
+
   scatter: {
     hidden: (i: number) => {
       const directions = [
-        { x: -80, y: -40 },  // 0 - Project 1
-        { x: 80, y: -60 },   // 1 - Project 2
-        { x: -60, y: 40 },   // 2 - Project 3
-        { x: -80, y: 0 },    // 3 - Project 4 (moves in from LEFT)
-        { x: 80, y: 0 },     // 4 - Project 5 (moves in from RIGHT)
-        { x: -40, y: 40 },   // 5 - Project 6
-        { x: 40, y: 40 },    // 6 - Project 7
+        { x: -80, y: -40 },
+        { x: 80, y: -60 },
+        { x: -60, y: 40 },
+        { x: -80, y: 0 },
+        { x: 80, y: 0 },
+        { x: -40, y: 40 },
+        { x: 40, y: 40 },
       ];
       const dir = directions[i % directions.length];
       return { opacity: 0, x: dir.x, y: dir.y, scale: 0.85 };
@@ -58,7 +67,7 @@ const animationVariants = {
       },
     }),
   },
-  
+
   spiral: {
     hidden: { opacity: 0, scale: 0.5, rotate: -10 },
     visible: (i: number) => ({
@@ -72,7 +81,7 @@ const animationVariants = {
       },
     }),
   },
-  
+
   cascade: {
     hidden: { opacity: 0, x: -30, y: -30 },
     visible: (i: number) => ({
@@ -86,7 +95,7 @@ const animationVariants = {
       },
     }),
   },
-  
+
   scale: {
     hidden: { opacity: 0, scale: 0 },
     visible: (i: number) => ({
@@ -103,46 +112,78 @@ const animationVariants = {
   },
 };
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.1,
-    },
-  },
-};
+function renderDiagram(key: Project["diagramKey"]) {
+  switch (key) {
+    case "ai-agent-workflow":
+      return <AiAgentWorkflowDiagram />;
+    case "cloud-deployment":
+      return <CloudDeploymentDiagram />;
+    case "operational-insights":
+      return <OperationalInsightsDiagram />;
+    // "data-flow" is the React Flow diagram embedded inside the dedicated
+    // DataTransformationModal — handled separately
+    case "data-flow":
+    default:
+      return null;
+  }
+}
+
+/**
+ * Each project gets a bespoke modal body so they don't all read the same.
+ * Project 1 has its own DataTransformationModal entirely; the rest map here.
+ */
+function renderProjectBody(projectId: string): React.ReactNode {
+  switch (projectId) {
+    case "2":
+      return <IngestionMeshBody />;
+    case "3":
+      return <IngestionRuntimeBody />;
+    case "4":
+      return <DagLiteBody />;
+    case "5":
+      return <AiCodingBody />;
+    case "6":
+      return <TerraformModulesBody />;
+    case "7":
+      return <QuicksightBody />;
+    default:
+      return null;
+  }
+}
 
 export function ProjectsSection() {
   const selectedVariants = animationVariants[ANIMATION_STYLE];
-  const [isProject1ModalOpen, setIsProject1ModalOpen] = useState(false);
-  
+  const [isFinopsModalOpen, setIsFinopsModalOpen] = useState(false);
+  const [detailProject, setDetailProject] = useState<Project | null>(null);
+
+  const openProject = (project: Project) => {
+    if (project.id === "1") {
+      setIsFinopsModalOpen(true);
+      return;
+    }
+    setDetailProject(project);
+  };
+
   return (
     <>
       <AnimatedSection id="projects" className="container mx-auto px-4 py-16">
         <div className="max-w-5xl mx-auto space-y-8">
-          {/* Header - each element animates independently */}
-          <div className="text-center space-y-3">
+          <div className="space-y-3">
             <motion.div
               variants={staggerItem}
               initial="hidden"
               whileInView="visible"
-              viewport={{ 
-                once: false, // Enable reverse animations when scrolling past
-                amount: 0.1, // Appear at 10% visibility
-                margin: "0px", // No margin - stay visible longer
-              }}
+              viewport={{ once: false, amount: 0.1, margin: "0px" }}
             >
               {featureFlags.enableTypewriterEffect ? (
                 <AnimatedText
                   text="Projects"
                   animation="blur"
                   as="h2"
-                  className="text-3xl md:text-4xl font-bold"
+                  className="text-3xl md:text-4xl font-bold tracking-tight"
                 />
               ) : (
-                <h2 className="text-3xl md:text-4xl font-bold">
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
                   Projects
                 </h2>
               )}
@@ -151,76 +192,82 @@ export function ProjectsSection() {
               variants={staggerItem}
               initial="hidden"
               whileInView="visible"
-              viewport={{ 
-                once: false, // Enable reverse animations when scrolling past
-                amount: 0.1, // Appear at 10% visibility
-                margin: "0px", // No margin - stay visible longer
-              }}
+              viewport={{ once: false, amount: 0.1, margin: "0px" }}
             >
               {featureFlags.enableTypewriterEffect ? (
                 <AnimatedText
-                  text="A collection of my work and side projects"
+                  text="Real systems shipped to production."
                   delay={200}
                   animation="words"
                   as="p"
-                  className="text-lg text-muted-foreground max-w-xl mx-auto"
+                  className="max-w-2xl text-base md:text-lg text-muted-foreground"
                 />
               ) : (
-                <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-                  A collection of my work and side projects
+                <p className="max-w-2xl text-base md:text-lg text-muted-foreground">
+                  Real systems shipped to production.
                 </p>
               )}
             </motion.div>
           </div>
 
-          {/* Organic Bento Grid - explicit positioning for asymmetric look */}
-          {/* Each card animates individually as it enters viewport */}
-          <div
-            className="grid gap-4"
-            style={{
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gridTemplateRows: "180px 160px 180px 180px",
-            }}
-          >
+          <div className="bento-grid grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             {projects.map((project, index) => {
-              // Top 2 cards (id "1" and "2") should appear sooner
               const isTopCard = project.id === "1" || project.id === "2";
-              
+              const desktopGridArea = project.gridArea;
+
               return (
-        <motion.div
-                key={project.id}
-                custom={index}
-                variants={selectedVariants}
-          initial="hidden"
-          whileInView="visible"
-                viewport={{ 
-                  once: false, // Enable reverse animations when scrolling past
-                  amount: isTopCard ? 0.05 : 0.1, // Top cards appear at 5%, others at 10%
-                  margin: "0px", // No margin - stay visible longer, allow animations to complete
-                }}
-                style={{
-                  gridArea: project.gridArea,
-                }}
-              >
-                <BentoProjectCard 
-                  {...project} 
-                  className="h-full"
-                  // Project 1 has an interactive demo modal
-                  hasInteractiveDemo={project.id === "1"}
-                  onInteractiveClick={project.id === "1" ? () => setIsProject1ModalOpen(true) : undefined}
-                />
-            </motion.div>
+                <motion.div
+                  key={project.id}
+                  custom={index}
+                  variants={selectedVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{
+                    once: false,
+                    amount: isTopCard ? 0.05 : 0.1,
+                    margin: "0px",
+                  }}
+                  className="bento-item min-h-[180px]"
+                  style={
+                    {
+                      "--bento-area": desktopGridArea,
+                    } as React.CSSProperties
+                  }
+                >
+                  <BentoProjectCard
+                    {...project}
+                    className="h-full"
+                    hasInteractiveDemo
+                    onInteractiveClick={() => openProject(project)}
+                    interactiveLabel={
+                      project.id === "1" ? "Explore" : "Details"
+                    }
+                  />
+                </motion.div>
               );
             })}
           </div>
-      </div>
-    </AnimatedSection>
+        </div>
+      </AnimatedSection>
 
-      {/* Project 1 Interactive Modal */}
-      <DataTransformationModal 
-        open={isProject1ModalOpen} 
-        onOpenChange={setIsProject1ModalOpen} 
+      <DataTransformationModal
+        open={isFinopsModalOpen}
+        onOpenChange={setIsFinopsModalOpen}
+      />
+
+      <ProjectDetailModal
+        project={detailProject}
+        open={!!detailProject}
+        onOpenChange={(open) => {
+          if (!open) setDetailProject(null);
+        }}
+        diagram={detailProject ? renderDiagram(detailProject.diagramKey) : null}
+        highlights={detailProject?.highlights}
+        customBody={
+          detailProject ? renderProjectBody(detailProject.id) : null
+        }
       />
     </>
   );
 }
+

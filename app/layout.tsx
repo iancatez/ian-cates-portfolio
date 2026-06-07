@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/footer";
-import { NeonTopBar } from "@/components/neon-top-bar";
+import { SectionNav } from "@/components/section-nav";
 import { FluidCursor } from "@/components/fluid-cursor";
 import { featureFlags } from "@/lib/feature-flags";
 // import { NeonCursor } from "@/components/neon-cursor"; // Sidelined for now
@@ -18,8 +18,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ian Cates - Portfolio",
-  description: "Portfolio showcasing my projects and experience",
+  title: "Ian Cates — Data Engineer",
+  description:
+    "Portfolio of Ian Cates: serverless data platforms, FinOps pipelines, and the APIs and portals that put that data to work.",
 };
 
 export default function RootLayout({
@@ -34,7 +35,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-background text-foreground ${customCursorEnabled ? 'custom-cursor-enabled' : ''}`}
       >
-        <NeonTopBar />
+        <SectionNav />
         {customCursorEnabled && (
           <>
             <FluidCursor />

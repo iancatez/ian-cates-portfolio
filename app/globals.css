@@ -67,10 +67,18 @@
   html {
     background-color: hsl(var(--background)) !important;
     color: hsl(var(--foreground));
+    /* Anchor scrolling must clear the sticky pill nav and the neon top bar */
+    scroll-padding-top: 84px;
+    scroll-behavior: smooth;
   }
   body {
     background-color: hsl(var(--background)) !important;
     color: hsl(var(--foreground)) !important;
+  }
+
+  /* Same offset applied per-section for scrollIntoView() calls */
+  section[id] {
+    scroll-margin-top: 84px;
   }
 }
 
@@ -264,6 +272,22 @@
 
   .react-flow__controls-button:hover svg {
     fill: white !important;
+  }
+
+  /* Bento grid: explicit rows + grid-area positioning only kick in at md breakpoint.
+     minmax(floor, auto) lets each row grow when a card's content needs more
+     room than the floor, so cards never overlap each other. */
+  @media (min-width: 768px) {
+    .bento-grid {
+      grid-template-rows:
+        minmax(170px, auto)
+        minmax(150px, auto)
+        minmax(170px, auto)
+        minmax(170px, auto);
+    }
+    .bento-item {
+      grid-area: var(--bento-area);
+    }
   }
 
   /* Neon top bar glow reflection */
