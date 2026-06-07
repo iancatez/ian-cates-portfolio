@@ -152,7 +152,7 @@ export function HeroSection() {
           variants={reduced ? undefined : heroItem}
           className="text-lg text-muted-foreground sm:text-xl"
         >
-          Data engineer building serverless data platforms on the cloud.
+          Data engineer building and integrating serverless data platforms on the cloud.
         </motion.p>
 
         <motion.p

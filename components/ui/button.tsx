@@ -206,6 +206,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const [isStartingUp, setIsStartingUp] = React.useState(false)
     const timeoutsRef = React.useRef<NodeJS.Timeout[]>([])
     const isActiveRef = React.useRef(false)
+    // A pointerdown (mouse click or touch) instantly jumps the neon to full.
+    // We set this ref so the hover-startup handler doesn't restart the flicker
+    // from off when the synthetic mouseenter fires right after pointerdown.
+    const pointerLitRef = React.useRef(false)
     
     // Parse the neon color to HSL format
     const hslColor = React.useMemo(() => parseColorToHSL(neonColor), [neonColor])
@@ -271,10 +275,18 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     // Handle hover start - startup sequence
     const handleMouseEnter = React.useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+      // If a pointer-down already lit the button (touch tap or click), skip the
+      // startup flicker — restarting from off would create a visible flash.
+      if (pointerLitRef.current) {
+        setIsHovered(true)
+        props.onMouseEnter?.(e)
+        return
+      }
+
       setIsHovered(true)
       isActiveRef.current = true
       setIsStartingUp(true)
-      
+
       // Execute startup struggle sequence
       const startupSequence = generateStartupSequence()
       executeSequence(startupSequence, () => {
@@ -283,20 +295,37 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         // Start scheduling random flickers
         scheduleNextFlicker()
       })
-      
+
       props.onMouseEnter?.(e)
     }, [executeSequence, scheduleNextFlicker, props])
+
+    // Pointer-down (click/tap) — jump straight to full intensity. Mobile users
+    // don't get the hover startup, so this is their primary "press feedback".
+    const handlePointerDown = React.useCallback(
+      (e: React.PointerEvent<HTMLButtonElement>) => {
+        pointerLitRef.current = true
+        isActiveRef.current = true
+        setIsHovered(true)
+        setIsStartingUp(false)
+        clearAllTimeouts()
+        setIntensity(INTENSITY_LEVELS.full)
+        scheduleNextFlicker()
+        props.onPointerDown?.(e)
+      },
+      [clearAllTimeouts, scheduleNextFlicker, props]
+    )
 
     // Handle hover end - fade out with glow persistence
     const handleMouseLeave = React.useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
       setIsHovered(false)
       isActiveRef.current = false
       setIsStartingUp(false)
+      pointerLitRef.current = false
       clearAllTimeouts()
-      
+
       // Smooth fade out
       setIntensity(0)
-      
+
       props.onMouseLeave?.(e)
     }, [clearAllTimeouts, props])
 
@@ -395,6 +424,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         onMouseEnter={isDefaultVariant ? handleMouseEnter : props.onMouseEnter}
         onMouseLeave={isDefaultVariant ? handleMouseLeave : props.onMouseLeave}
+        onPointerDown={
+          isDefaultVariant ? handlePointerDown : props.onPointerDown
+        }
         style={{
           backfaceVisibility: "hidden",
           WebkitFontSmoothing: "antialiased",

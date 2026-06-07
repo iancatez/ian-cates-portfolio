@@ -19,8 +19,8 @@ export function AboutSection() {
             About Me
           </h2>
           <p className="max-w-2xl text-base md:text-lg text-muted-foreground">
-            Data engineer, full-stack engineer, and guitarist. Passionate
-            about the depth of learning and growth.
+            Data engineer, full-stack engineer, guitarist, and traveler.
+            Passionate about the depth of learning and growth.
           </p>
         </motion.header>
 
@@ -65,7 +65,7 @@ export function AboutSection() {
               <span className="font-semibold text-foreground">
                 data engineer and full-stack engineer
               </span>{" "}
-              with 4+ years building serverless data platforms on the cloud. My
+              with 4+ years building and integrating serverless data platforms on the cloud. My
               passions live at the intersection of three things:{" "}
               <span className="text-foreground">data</span>,{" "}
               <span className="text-foreground">full-stack development</span>,
