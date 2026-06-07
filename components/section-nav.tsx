@@ -106,7 +106,17 @@ export function SectionNav({ className }: SectionNavProps) {
       lockRef.current = false;
     }, 900);
 
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    // Use offsetTop-based scroll math instead of scrollIntoView so framer-
+    // motion's `y: 30` transform on AnimatedSection doesn't shift the
+    // destination and leave the scroll landing short of the section heading.
+    let y = 0;
+    let cur: HTMLElement | null = el;
+    while (cur) {
+      y += cur.offsetTop;
+      cur = cur.offsetParent as HTMLElement | null;
+    }
+    const NAV_HEIGHT = 56; // h-14
+    window.scrollTo({ top: y - NAV_HEIGHT, behavior: "smooth" });
   }, []);
 
   React.useEffect(() => {

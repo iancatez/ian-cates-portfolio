@@ -1,11 +1,29 @@
 "use client";
 
+import * as React from "react";
 import { useCallback } from "react";
 import { motion, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { prefersReducedMotion } from "@/lib/animation-config";
 import GridScan from "@/components/grid-scan";
+
+/**
+ * Walk offsetParent chain so framer-motion `y` transforms (which warp
+ * getBoundingClientRect) don't break scroll-to-section math. offsetTop is
+ * layout-pure.
+ */
+function getAbsoluteTop(el: HTMLElement): number {
+  let y = 0;
+  let cur: HTMLElement | null = el;
+  while (cur) {
+    y += cur.offsetTop;
+    cur = cur.offsetParent as HTMLElement | null;
+  }
+  return y;
+}
+
+const NAV_HEIGHT = 56; // h-14
 
 const heroContainer: Variants = {
   hidden: { opacity: 0 },
@@ -29,10 +47,27 @@ const heroItem: Variants = {
 
 export function HeroSection() {
   const reduced = typeof window !== "undefined" && prefersReducedMotion();
+  const [showChevron, setShowChevron] = React.useState(true);
 
+  // Hide the chevron once the user has scrolled past a chunk of the hero so
+  // it doesn't linger over the next section after the scroll lands.
+  React.useEffect(() => {
+    const onScroll = () => {
+      setShowChevron(window.scrollY < window.innerHeight * 0.2);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Use layout-pure offsetTop instead of scrollIntoView's bounding-rect math,
+  // so framer-motion's `y: 30` transform on AnimatedSection doesn't cause the
+  // scroll to land short of the target.
   const scrollTo = useCallback((id: string) => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (!el) return;
+    const top = getAbsoluteTop(el) - NAV_HEIGHT;
+    window.scrollTo({ top, behavior: "smooth" });
   }, []);
 
   return (
@@ -146,8 +181,12 @@ export function HeroSection() {
         onClick={() => scrollTo("about")}
         aria-label="Scroll to about section"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.6 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
+        animate={{ opacity: showChevron ? 0.6 : 0 }}
+        transition={{
+          delay: showChevron ? 1.2 : 0,
+          duration: showChevron ? 0.6 : 0.25,
+        }}
+        style={{ pointerEvents: showChevron ? "auto" : "none" }}
         className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-muted-foreground transition-colors hover:text-foreground"
       >
         <ChevronDown className="h-6 w-6 animate-bounce" />
