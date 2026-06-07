@@ -276,11 +276,12 @@ export const projects: Project[] = [
     longDescription:
       "Set of Lambda-backed APIs that automate everything QuickSight's console can't: nightly asset bundle exports to S3, restore submission and status APIs, automatic author provisioning from uploaded rosters, and continuous reconciliation of QuickSight security groups against AWS IAM groups. Fronted by API Gateway with usage-plan keys for programmatic access.",
     technologies: [
+      "Rust",
       "AWS Lambda",
       "API Gateway",
       "QuickSight",
       "DynamoDB",
-      "Python",
+      "cargo-lambda",
     ],
     featured: false,
     bentoSize: "normal",

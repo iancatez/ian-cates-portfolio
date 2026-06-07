@@ -65,35 +65,38 @@ export function AboutSection() {
               <span className="font-semibold text-foreground">
                 data engineer and full-stack engineer
               </span>{" "}
-              with 4+ years building serverless data platforms on AWS. The
-              shape of my work is intentionally end-to-end — ingestion DAGs,
-              FastAPI services, React admin portals, and the Terraform that
-              ships them all. Same engineer who designs the pipeline writes the
-              dashboard the data lands in.
+              with 4+ years building serverless data platforms on the cloud. My
+              passions live at the intersection of three things:{" "}
+              <span className="text-foreground">data</span>,{" "}
+              <span className="text-foreground">full-stack development</span>,
+              and <span className="text-foreground">security</span>. Most of
+              the work ends up touching all three at once.
             </p>
             <p>
-              Day-to-day I mix Lambda, Step Functions, EventBridge, and SQS for
-              ingestion; Redshift Serverless, Athena, and Glue for the
-              warehouse and lakehouse; DynamoDB and S3 for application state;
-              and TypeScript, React, and Tailwind for the operator surfaces.
-              Everything ships as small, atomic Terraform PRs.
+              The shape of what I build is intentionally end-to-end. ELT/ETL
+              processes and DAG platforms, API services, operator portals, and
+              the infrastructure-as-code that ships them all sit on the same
+              canvas. The engineer who designs the pipeline writes the
+              dashboard the data lands in. I enjoy impactful work: the kind
+              that gets noticed and makes meaningful changes.
             </p>
             <p>
-              Beyond the stack, I&apos;m genuinely fascinated by how the
-              practice of building software is changing. The pre-AI discipline
-              I came up on — careful modules, slow-and-correct review, deep
-              observability — still grounds the work. I also treat agentic
+              Beyond any specific stack, I&apos;m genuinely fascinated by how
+              the practice of building software is changing. The pre-AI
+              discipline I came up on still grounds the work: careful modules,
+              slow-and-correct review, deep observability. I treat agentic
               coding workflows as a first-class production system in their own
-              right: prompts, evals, telemetry, and review held to the same bar
-              as everything else. The before and after of AI tooling both
-              belong in the toolbox.
+              right, with prompts, evals, telemetry, and review held to the
+              same bar as everything else. Knowing when to lean on these tools
+              and when to slow down is its own challenge, and one that only matters
+              more as the field continues to shift.
             </p>
             <p>
               My cybersecurity background never stopped influencing how I
-              build. Least-privilege IAM, federated SSO, secret rotation, KMS
-              everywhere — reflexes, not checklist items. That security lens
-              shapes every design choice in the data work: who can read this,
-              how does it rotate, what&apos;s the blast radius.
+              build. Least-privilege access, federated SSO, secret rotation,
+              and encryption everywhere are second nature at this point. That
+              security lens shapes every design choice in the data work: who
+              can read this, how does it rotate, what&apos;s the blast radius.
             </p>
             <p className="text-sm">
               B.S. Cybersecurity (2021) · AWS Certified Data Engineer (2024) ·
