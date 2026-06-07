@@ -184,7 +184,7 @@ export function SectionNav({ className }: SectionNavProps) {
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
           )}
         >
-          ian_cates
+          iancates
           <span className="text-muted-foreground transition-colors duration-200 group-hover:text-primary">
             .dev
           </span>
