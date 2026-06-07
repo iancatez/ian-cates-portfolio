@@ -38,7 +38,7 @@ function XIcon({ className }: { className?: string }) {
 interface ContactLink {
   name: string;
   href: string;
-  icon: (props: { className?: string }) => React.ReactElement;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   display: string;
   neonColor: string;

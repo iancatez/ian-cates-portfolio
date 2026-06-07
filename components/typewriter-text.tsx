@@ -125,17 +125,18 @@ export function AnimatedText({
     return {
       hidden: selectedVariants.hidden,
       visible: (i: number) => {
-        const baseVisible = typeof selectedVariants.visible === "function" 
-          ? selectedVariants.visible(i)
-          : selectedVariants.visible;
-        const baseTransition = (baseVisible as { transition?: { delay?: number } }).transition || {};
-        const baseDelay = baseTransition.delay || 0;
-        const customStagger = staggerDelay ? (i * (staggerDelay / 1000)) : baseDelay;
+        const baseVisible = (typeof selectedVariants.visible === "function"
+          ? (selectedVariants.visible as (i: number) => unknown)(i)
+          : selectedVariants.visible) as Record<string, unknown>;
+        const baseTransition =
+          ((baseVisible as { transition?: { delay?: number } }).transition ?? {}) as Record<string, unknown>;
+        const baseDelay = (baseTransition.delay as number | undefined) ?? 0;
+        const customStagger = staggerDelay ? i * (staggerDelay / 1000) : baseDelay;
         return {
           ...baseVisible,
           transition: {
             ...baseTransition,
-            delay: (delay / 1000) + customStagger,
+            delay: delay / 1000 + customStagger,
           },
         };
       },
@@ -247,15 +248,16 @@ export function AnimatedParagraphs({
     return {
       hidden: selectedVariants.hidden,
       visible: (i: number) => {
-        const baseVisible = typeof selectedVariants.visible === "function" 
-          ? selectedVariants.visible(i)
-          : selectedVariants.visible;
-        const baseTransition = (baseVisible as { transition?: { delay?: number } }).transition || {};
+        const baseVisible = (typeof selectedVariants.visible === "function"
+          ? (selectedVariants.visible as (i: number) => unknown)(i)
+          : selectedVariants.visible) as Record<string, unknown>;
+        const baseTransition =
+          ((baseVisible as { transition?: { delay?: number } }).transition ?? {}) as Record<string, unknown>;
         return {
           ...baseVisible,
           transition: {
             ...baseTransition,
-            delay: (delay / 1000) + (i * 0.02), // Faster stagger for long text
+            delay: delay / 1000 + i * 0.02, // Faster stagger for long text
           },
         };
       },
