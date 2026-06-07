@@ -7,11 +7,10 @@ export function Footer() {
     <footer className="mt-auto relative z-10">
       <Separator />
       <div className="container mx-auto px-4 py-6">
-        <p className="text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Portfolio. All rights reserved.
+        <p className="text-center text-xs text-muted-foreground">
+          © {new Date().getFullYear()} Ian Cates · Data Engineer
         </p>
       </div>
     </footer>
   );
 }
-

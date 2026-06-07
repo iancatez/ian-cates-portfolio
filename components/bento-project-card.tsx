@@ -23,6 +23,8 @@ interface BentoProjectCardProps extends Project {
   hasInteractiveDemo?: boolean;
   /** Click handler for interactive demo */
   onInteractiveClick?: () => void;
+  /** Button label for the interactive trigger (default: "Details") */
+  interactiveLabel?: string;
 }
 
 export function BentoProjectCard({
@@ -35,21 +37,29 @@ export function BentoProjectCard({
   className,
   hasInteractiveDemo,
   onInteractiveClick,
+  interactiveLabel = "Details",
 }: BentoProjectCardProps) {
   const hasFooter = liveUrl || githubUrl || hasInteractiveDemo;
   const isLarge = bentoSize === "large";
   
   return (
     <Card
+      noGlow
+      onClick={hasInteractiveDemo ? onInteractiveClick : undefined}
       className={cn(
-        "flex flex-col overflow-hidden",
-        "border-border/50 bg-card/80 backdrop-blur-sm",
+        "group relative flex h-full flex-col overflow-hidden transition-colors duration-200",
+        "border-border/60 bg-card/40",
+        "hover:border-border hover:bg-card/60",
+        hasInteractiveDemo && "cursor-pointer",
         className
       )}
     >
-      <CardHeader className="p-4 pb-2">
+      <CardHeader className="p-3 pb-1.5">
         {isLarge && (
-          <Badge variant="secondary" className="w-fit text-[10px] mb-1">
+          <Badge
+            variant="outline"
+            className="mb-1 w-fit border-border/60 bg-background/40 text-[10px] font-normal text-muted-foreground"
+          >
             Featured
           </Badge>
         )}
@@ -61,13 +71,13 @@ export function BentoProjectCard({
             as="div"
             className={cn(
               "font-semibold leading-tight tracking-tight",
-              isLarge ? "text-xl" : "text-base"
+              isLarge ? "text-lg" : "text-sm"
             )}
           />
         ) : (
           <CardTitle className={cn(
             "leading-tight",
-            isLarge ? "text-xl" : "text-base"
+            isLarge ? "text-lg" : "text-sm"
           )}>
             {title}
           </CardTitle>
@@ -79,60 +89,77 @@ export function BentoProjectCard({
             animation="fade"
             delay={100}
             as="div"
-            className="text-sm text-muted-foreground leading-snug line-clamp-2"
+            className="text-xs text-muted-foreground leading-snug line-clamp-3"
           />
         ) : (
-          <CardDescription className="text-sm leading-snug line-clamp-2">
+          <CardDescription className="text-xs leading-snug line-clamp-3">
             {description}
           </CardDescription>
         )}
       </CardHeader>
       
       {technologies.length > 0 && (
-        <CardContent className="p-4 pt-0 pb-2">
-          <div className="flex flex-wrap gap-1.5">
+        <CardContent className="p-3 pt-0 pb-1.5">
+          <div className="flex flex-wrap gap-1">
             {technologies.slice(0, 3).map((tech) => (
               <Badge
                 key={tech}
                 variant="outline"
-                className="text-[10px] px-2 py-0.5 bg-background/50"
+                className="text-[10px] px-1.5 py-0.5 bg-background/50"
               >
                 {tech}
               </Badge>
             ))}
             {technologies.length > 3 && (
-              <Badge variant="outline" className="text-[10px] px-2 py-0.5 bg-background/50">
+              <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 bg-background/50">
                 +{technologies.length - 3}
               </Badge>
             )}
           </div>
         </CardContent>
       )}
-      
+
       {hasFooter && (
-        <CardFooter className="p-4 pt-2 mt-auto gap-2">
+        <CardFooter className="p-3 pt-1.5 mt-auto gap-2">
           {hasInteractiveDemo && (
-            <Button 
-              size="sm" 
+            <Button
+              size="sm"
               className="h-7 text-xs px-3"
-              onClick={onInteractiveClick}
-              neonColor="#3b82f6"
+              onClick={(e) => {
+                e.stopPropagation();
+                onInteractiveClick?.();
+              }}
             >
               <Expand className="h-3 w-3 mr-1" />
-              Explore
+              {interactiveLabel}
             </Button>
           )}
           {liveUrl && !hasInteractiveDemo && (
             <Button asChild size="sm" className="h-7 text-xs px-3">
-              <Link href={liveUrl} target="_blank" rel="noopener noreferrer">
+              <Link
+                href={liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <ExternalLink className="h-3 w-3 mr-1" />
                 View
               </Link>
             </Button>
           )}
           {githubUrl && (
-            <Button asChild size="sm" neonColor="#6e7681" className="h-7 text-xs px-3">
-              <Link href={githubUrl} target="_blank" rel="noopener noreferrer">
+            <Button
+              asChild
+              size="sm"
+              neonColor="#6e7681"
+              className="h-7 text-xs px-3"
+            >
+              <Link
+                href={githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <Github className="h-3 w-3 mr-1" />
                 GitHub
               </Link>

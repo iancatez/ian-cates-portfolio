@@ -3,24 +3,25 @@
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
-import { AnimatedText } from "@/components/typewriter-text";
-import { featureFlags } from "@/lib/feature-flags";
 
-// Gmail icon
-function GmailIcon({ className }: { className?: string }) {
+function MailIcon({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
-      fill="currentColor"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       className={className}
       aria-hidden="true"
     >
-      <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" />
+      <rect x="2" y="4" width="20" height="16" rx="2" />
+      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
     </svg>
   );
 }
 
-// X (formerly Twitter) icon
 function XIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -34,33 +35,46 @@ function XIcon({ className }: { className?: string }) {
   );
 }
 
-const contactLinks = [
+interface ContactLink {
+  name: string;
+  href: string;
+  icon: (props: { className?: string }) => React.ReactElement;
+  label: string;
+  display: string;
+  neonColor: string;
+}
+
+const CONTACT_LINKS: ContactLink[] = [
   {
     name: "Email",
-    href: "mailto:your.email@example.com",
-    icon: GmailIcon,
+    href: "mailto:contact@example.com",
+    icon: MailIcon,
     label: "Send an email",
+    display: "Email",
     neonColor: "#ea4335",
   },
   {
     name: "GitHub",
-    href: "https://github.com/yourusername",
+    href: "https://github.com/iancatez",
     icon: Github,
     label: "View GitHub profile",
-    neonColor: "#6e7681",
+    display: "GitHub",
+    neonColor: "#9ca3af",
   },
   {
     name: "LinkedIn",
-    href: "https://linkedin.com/in/yourusername",
+    href: "https://linkedin.com",
     icon: Linkedin,
     label: "View LinkedIn profile",
-    neonColor: "#0077b5",
+    display: "LinkedIn",
+    neonColor: "#0a66c2",
   },
   {
     name: "X",
-    href: "https://x.com/yourusername",
+    href: "https://x.com",
     icon: XIcon,
     label: "View X profile",
+    display: "X",
     neonColor: "#ffffff",
   },
 ];
@@ -70,8 +84,8 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
+      staggerChildren: 0.08,
+      delayChildren: 0.1,
     },
   },
 };
@@ -81,83 +95,61 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: {
-      duration: 0.5,
-      ease: "easeOut",
-    },
+    transition: { duration: 0.5, ease: "easeOut" as const },
   },
 };
 
 export function ContactSection() {
   return (
-    <section id="contact" className="py-16 px-4">
-      <div className="container mx-auto max-w-4xl">
-        <motion.div
-          className="text-center mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.5 }}
-          transition={{ duration: 0.5 }}
-        >
-          {featureFlags.enableTypewriterEffect ? (
-            <>
-              <AnimatedText
-                text="Let's Connect"
-                animation="blur"
-                as="h2"
-                className="text-2xl font-bold text-foreground mb-2"
-              />
-              <AnimatedText
-                text="Find me on these platforms"
-                delay={200}
-                animation="fade"
-                as="p"
-                className="text-muted-foreground"
-              />
-            </>
-          ) : (
-            <>
-              <h2 className="text-2xl font-bold text-foreground mb-2">
-                Let&apos;s Connect
-              </h2>
-              <p className="text-muted-foreground">
-                Find me on these platforms
-              </p>
-            </>
-          )}
-        </motion.div>
+    <section id="contact" className="px-4 py-16">
+      <motion.div
+        className="container mx-auto flex max-w-3xl flex-col gap-6"
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.4 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="space-y-3">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+            Contact me
+          </h2>
+          <p className="max-w-2xl text-base md:text-lg text-muted-foreground">
+            Open to interesting problems. Reach out about engineering roles,
+            consulting, or anything you want a second pair of eyes on.
+          </p>
+        </div>
 
         <motion.div
-          className="flex flex-wrap justify-center gap-4"
+          className="flex flex-wrap gap-2"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.5 }}
+          viewport={{ once: false, amount: 0.4 }}
         >
-          {contactLinks.map((link) => {
+          {CONTACT_LINKS.map((link) => {
             const Icon = link.icon;
             return (
               <motion.div key={link.name} variants={itemVariants}>
                 <Button
                   asChild
                   neonColor={link.neonColor}
-                  size="icon"
-                  className="h-12 w-12 rounded-full"
                   aria-label={link.label}
+                  className="h-10 gap-2 px-4 text-sm font-normal"
                 >
                   <a
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Icon className="h-6 w-6" />
+                    <Icon className="h-4 w-4" />
+                    <span>{link.display}</span>
                   </a>
                 </Button>
               </motion.div>
             );
           })}
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

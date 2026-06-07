@@ -90,10 +90,29 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
    * Default: false
    */
   alwaysGlow?: boolean
+  /**
+   * Skip the neon glow effect entirely (no border tint, no shadow, no flicker).
+   * Use for plain, personal-portfolio-style cards.
+   */
+  noGlow?: boolean
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, neonColor = DEFAULT_NEON_COLOR, disableFlicker = false, alwaysGlow = false, onMouseEnter, onMouseLeave, ...props }, ref) => {
+  ({ className, neonColor = DEFAULT_NEON_COLOR, disableFlicker = false, alwaysGlow = false, noGlow = false, onMouseEnter, onMouseLeave, ...props }, ref) => {
+    if (noGlow) {
+      return (
+        <div
+          ref={ref}
+          className={cn(
+            "rounded-lg border bg-card text-card-foreground shadow-sm",
+            className
+          )}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+          {...props}
+        />
+      )
+    }
     const [intensity, setIntensity] = React.useState(alwaysGlow ? INTENSITY_LEVELS.full : 0)
     const [isHovered, setIsHovered] = React.useState(false)
     const [isStartingUp, setIsStartingUp] = React.useState(false)

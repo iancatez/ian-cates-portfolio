@@ -92,16 +92,16 @@ export const rawVendorData: RawVendorData[] = [
     vendorName: "Integration Platform C",
     columns: ["tenant_id", "period_start", "period_end", "service_tier", "resource_name", "work_units", "amount_usd"],
     sampleData: [
-      { tenant_id: "TENANT-001", period_start: "2024-01-01", period_end: "2024-01-31", service_tier: "Enterprise", resource_name: "Prod-Snaplex-01", work_units: 150000, amount_usd: 4500.00 },
-      { tenant_id: "TENANT-001", period_start: "2024-01-01", period_end: "2024-01-31", service_tier: "Enterprise", resource_name: "Dev-Snaplex-01", work_units: 25000, amount_usd: 750.00 },
+      { tenant_id: "TENANT-001", period_start: "2024-01-01", period_end: "2024-01-31", service_tier: "Enterprise", resource_name: "Prod-Integration-Node-01", work_units: 150000, amount_usd: 4500.00 },
+      { tenant_id: "TENANT-001", period_start: "2024-01-01", period_end: "2024-01-31", service_tier: "Enterprise", resource_name: "Dev-Integration-Node-01", work_units: 25000, amount_usd: 750.00 },
     ],
   },
   {
     vendorName: "AI/ML Service D",
     columns: ["customer_id", "invoice_date", "model_name", "input_tokens", "output_tokens", "total_cost_usd"],
     sampleData: [
-      { customer_id: "CUST-2024-001", invoice_date: "2024-01-31", model_name: "claude-3-opus", input_tokens: 1250000, output_tokens: 450000, total_cost_usd: 87.50 },
-      { customer_id: "CUST-2024-001", invoice_date: "2024-01-31", model_name: "claude-3-sonnet", input_tokens: 5000000, output_tokens: 1200000, total_cost_usd: 42.00 },
+      { customer_id: "CUST-2024-001", invoice_date: "2024-01-31", model_name: "frontier-large", input_tokens: 1250000, output_tokens: 450000, total_cost_usd: 87.50 },
+      { customer_id: "CUST-2024-001", invoice_date: "2024-01-31", model_name: "frontier-mid", input_tokens: 5000000, output_tokens: 1200000, total_cost_usd: 42.00 },
     ],
   },
 ];
@@ -213,7 +213,7 @@ export const normalizedSampleData = [
     ProviderName: "Integration Platform C",
     ServiceCategory: "Integration",
     ServiceName: "Data Integration",
-    ResourceName: "Prod-Snaplex-01",
+    ResourceName: "Prod-Integration-Node-01",
     EffectiveCost: 4500.00,
     x_Division: "Data Engineering",
     x_TaggedCost: 4500.00,
@@ -228,7 +228,7 @@ export const normalizedSampleData = [
     ProviderName: "AI/ML Service D",
     ServiceCategory: "AI and Machine Learning",
     ServiceName: "Language Models",
-    ResourceName: "claude-3-opus",
+    ResourceName: "frontier-large",
     EffectiveCost: 87.50,
     x_Division: "Product",
     x_TaggedCost: 70.00,

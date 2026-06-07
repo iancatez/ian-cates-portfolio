@@ -1,272 +1,132 @@
 "use client";
 
 import { AnimatedSection } from "@/components/animated-section";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { NeonGlowWrapper } from "@/components/neon-glow-wrapper";
-import { staggerContainer, staggerItem } from "@/lib/animations";
-import { ANIMATION_TRIGGER_CONFIG } from "@/lib/animation-config";
+import { staggerItem } from "@/lib/animations";
 import { motion } from "framer-motion";
-import { skills } from "@/lib/data";
-import type { Skill } from "@/lib/data";
-import { AnimatedText, AnimatedParagraphs } from "@/components/typewriter-text";
-import { featureFlags } from "@/lib/feature-flags";
-
-const skillCategories = {
-  frontend: "Frontend",
-  backend: "Backend",
-  tools: "Tools",
-  other: "Other",
-} as const;
 
 export function AboutSection() {
-  const skillsByCategory = skills.reduce(
-    (acc, skill) => {
-      if (!acc[skill.category]) {
-        acc[skill.category] = [];
-      }
-      acc[skill.category].push(skill);
-      return acc;
-    },
-    {} as Record<string, Skill[]>
-  );
-
   return (
-    <AnimatedSection id="about" className="container mx-auto px-4 py-20">
-      <div className="max-w-4xl mx-auto space-y-12">
-        {/* Header - each element animates independently */}
-        <div className="text-center space-y-4">
-          <motion.div
-            variants={staggerItem}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ 
-              once: false, // Enable reverse animations when scrolling past
-              amount: 0.1, // Appear at 10% visibility
-              margin: "0px", // No margin - stay visible longer
-            }}
-          >
-            {featureFlags.enableTypewriterEffect ? (
-              <AnimatedText
-                text="About Me"
-                animation="blur"
-                as="h2"
-                className="text-4xl md:text-5xl font-bold"
-              />
-            ) : (
-              <h2 className="text-4xl md:text-5xl font-bold">
-                About Me
-              </h2>
-            )}
-          </motion.div>
-          <motion.div
-            variants={staggerItem}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ 
-              once: false, // Enable reverse animations when scrolling past
-              amount: 0.1, // Appear at 10% visibility
-              margin: "0px", // No margin - stay visible longer
-            }}
-          >
-            {featureFlags.enableTypewriterEffect ? (
-              <AnimatedText
-                text="Learn more about my background and experience"
-                delay={200}
-                animation="words"
-                as="p"
-                className="text-xl text-muted-foreground max-w-2xl mx-auto"
-              />
-            ) : (
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Learn more about my background and experience
-              </p>
-            )}
-          </motion.div>
-        </div>
-
-      <div className="flex flex-col md:flex-row gap-8 items-start">
-        <motion.div
+    <AnimatedSection id="about" className="container mx-auto px-4 py-16">
+      <div className="mx-auto max-w-3xl space-y-12">
+        <motion.header
           variants={staggerItem}
           initial="hidden"
           whileInView="visible"
-          viewport={{ 
-            once: false, // Enable reverse animations when scrolling past
-            amount: 0.1, // Appear at 10% visibility
-            margin: "0px", // No margin - stay visible longer
-          }}
-          className="flex-shrink-0 mx-auto md:mx-0"
+          viewport={{ once: false, amount: 0.2 }}
+          className="space-y-3"
         >
-          {/* Neon border wrapper with flickering effect */}
-          <NeonGlowWrapper borderWidth={1} rounded>
-            <Avatar className="w-48 h-48 md:w-64 md:h-64">
-              <AvatarImage
-                src="/profile_pic.jpg"
-                alt="Ian Cates - Data Engineer"
-                className="object-cover"
-              />
-              <AvatarFallback>IC</AvatarFallback>
-            </Avatar>
-          </NeonGlowWrapper>
-        </motion.div>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+            About Me
+          </h2>
+          <p className="max-w-2xl text-base md:text-lg text-muted-foreground">
+            Data engineer, full-stack engineer, lifelong tinkerer — building
+            production data systems end-to-end.
+          </p>
+        </motion.header>
 
-        <motion.div
-          variants={staggerItem}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ 
-            once: false, // Enable reverse animations when scrolling past
-            amount: 0.1, // Appear at 10% visibility
-            margin: "0px", // No margin - stay visible longer
-          }}
-          className="flex-1"
-        >
-        <Card className="h-full" alwaysGlow>
-          <CardHeader>
-            {featureFlags.enableTypewriterEffect ? (
-              <>
-                <AnimatedText
-                  text="Background"
-                  animation="blur"
-                  as="div"
-                  className="text-lg font-semibold leading-none tracking-tight"
-                />
-                <AnimatedText
-                  text="My journey in data engineering"
-                  animation="fade"
-                  delay={100}
-                  as="div"
-                  className="text-sm text-muted-foreground"
-                />
-              </>
-            ) : (
-              <>
-                <CardTitle>Background</CardTitle>
-                <CardDescription>My journey in data engineering</CardDescription>
-              </>
-            )}
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {featureFlags.enableTypewriterEffect ? (
-              <AnimatedParagraphs
-                delay={150}
-                animation="fade"
-                paragraphs={[
-                  {
-                    text: "Data Engineer with 4+ years of experience building, developing, and automating production data systems at enterprise scale. Since 2021, I've specialized in designing end-to-end pipelines, automating manual workflows, and delivering dashboards that drive business decisions.",
-                    className: "text-muted-foreground",
-                  },
-                  {
-                    text: "I've built comprehensive end-to-end data pipelines leveraging Apache Spark for distributed processing, AWS Lambda for serverless compute, AWS SageMaker for ML model deployment, and AWS Glue for ETL workflows. My pipelines integrate with data lakehouses using S3, query engines like AWS Athena and Apache Hive, and data warehouses including AWS Redshift. These systems deliver insights through automated reporting and ML-driven anomaly detection.",
-                    className: "text-muted-foreground",
-                  },
-                  {
-                    text: "I'm comfortable working across AWS, Azure, and GCP with a focus on turning messy data into reliable, actionable reporting. My work spans from building React dashboards to deploying ML models, always with an eye toward automation, scalability, and efficiency.",
-                    className: "text-muted-foreground",
-                  },
-                  {
-                    text: "Education: B.S. in Cybersecurity from Thomas College (2021) | AWS Certified Data Engineer (2024) | AWS Certified DevOps Engineer Professional (2025)",
-                    className: "text-muted-foreground text-sm pt-2",
-                  },
-                ]}
-              />
-            ) : (
-              <>
-                <p className="text-muted-foreground">
-                  Data Engineer with 4+ years of experience building, developing, and automating production data systems 
-                  at enterprise scale. Since 2021, I've specialized in designing end-to-end pipelines, automating manual 
-                  workflows, and delivering dashboards that drive business decisions.
-                </p>
-                <p className="text-muted-foreground">
-                  I've built comprehensive end-to-end data pipelines leveraging Apache Spark for distributed processing, 
-                  AWS Lambda for serverless compute, AWS SageMaker for ML model deployment, and AWS Glue for ETL workflows. 
-                  My pipelines integrate with data lakehouses using S3, query engines like AWS Athena and Apache Hive, 
-                  and data warehouses including AWS Redshift. These systems deliver insights through automated reporting 
-                  and ML-driven anomaly detection.
-                </p>
-                <p className="text-muted-foreground">
-                  I'm comfortable working across AWS, Azure, and GCP with a focus on turning messy data into reliable, 
-                  actionable reporting. My work spans from building React dashboards to deploying ML models, always 
-                  with an eye toward automation, scalability, and efficiency.
-                </p>
-                <p className="text-muted-foreground text-sm pt-2">
-                  <strong>Education:</strong> B.S. in Cybersecurity from Thomas College (2021) | 
-                  AWS Certified Data Engineer (2024) | AWS Certified DevOps Engineer Professional (2025)
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
-        </motion.div>
-      </div>
-
-        <div className="space-y-6">
-          <motion.div 
+        <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:gap-10">
+          {/* Photo group — horizontal strip on mobile, vertical stack on desktop */}
+          <motion.div
             variants={staggerItem}
             initial="hidden"
             whileInView="visible"
-            viewport={{ 
-              once: false, // Enable reverse animations when scrolling past
-              amount: 0.1, // Appear at 10% visibility
-              margin: "0px", // No margin - stay visible longer
-            }}
+            viewport={{ once: false, amount: 0.2 }}
+            className="shrink-0"
           >
-            {featureFlags.enableTypewriterEffect ? (
-              <AnimatedText
-                text="Skills"
-                animation="blur"
-                as="h3"
-                className="text-2xl font-semibold"
+            <div className="flex gap-3 sm:flex-col">
+              <PhotoTile
+                src="/profile_pic.png"
+                alt="Ian Cates"
+                objectPosition="65% 30%"
               />
-            ) : (
-              <h3 className="text-2xl font-semibold">Skills</h3>
-            )}
+              <PhotoTile
+                src="/profile_pic_2.png"
+                alt="Ian in Japan"
+                objectPosition="50% 62%"
+              />
+              <PhotoTile
+                src="/profile_pic_3.png"
+                alt="Pointing across a mountain valley in Japan"
+                objectPosition="20% 92%"
+              />
+            </div>
           </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {Object.entries(skillsByCategory).map(([category, categorySkills]) => (
+
+          {/* Text — simple, no card, just paragraphs aligned to the photo */}
           <motion.div
-                key={category}
-                variants={staggerItem}
+            variants={staggerItem}
             initial="hidden"
             whileInView="visible"
-                viewport={{ 
-                  once: false, // Enable reverse animations when scrolling past
-                  amount: 0.1, // Appear at 10% visibility
-                  margin: "0px", // No margin - stay visible longer
-                }}
-              >
-                <Card className="h-full">
-                  <CardHeader>
-                    {featureFlags.enableTypewriterEffect ? (
-                      <AnimatedText
-                        text={skillCategories[category as keyof typeof skillCategories] || category}
-                        animation="blur"
-                        as="div"
-                        className="text-lg font-semibold leading-none tracking-tight"
-                      />
-                    ) : (
-                      <CardTitle className="text-lg">
-                        {skillCategories[category as keyof typeof skillCategories] || category}
-                      </CardTitle>
-                    )}
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                      {categorySkills.map((skill) => (
-                      <Badge key={skill.name} variant="secondary">
-                          {skill.name}
-                      </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+            viewport={{ once: false, amount: 0.2 }}
+            className="space-y-4 text-[15px] leading-relaxed text-muted-foreground"
+          >
+            <p>
+              I&apos;m a{" "}
+              <span className="font-semibold text-foreground">
+                data engineer and full-stack engineer
+              </span>{" "}
+              with 4+ years building serverless data platforms on AWS. The
+              shape of my work is intentionally end-to-end — ingestion DAGs,
+              FastAPI services, React admin portals, and the Terraform that
+              ships them all. Same engineer who designs the pipeline writes the
+              dashboard the data lands in.
+            </p>
+            <p>
+              Day-to-day I mix Lambda, Step Functions, EventBridge, and SQS for
+              ingestion; Redshift Serverless, Athena, and Glue for the
+              warehouse and lakehouse; DynamoDB and S3 for application state;
+              and TypeScript, React, and Tailwind for the operator surfaces.
+              Everything ships as small, atomic Terraform PRs.
+            </p>
+            <p>
+              Beyond the stack, I&apos;m genuinely fascinated by how the
+              practice of building software is changing. The pre-AI discipline
+              I came up on — careful modules, slow-and-correct review, deep
+              observability — still grounds the work. I also treat agentic
+              coding workflows as a first-class production system in their own
+              right: prompts, evals, telemetry, and review held to the same bar
+              as everything else. The before and after of AI tooling both
+              belong in the toolbox.
+            </p>
+            <p>
+              My cybersecurity background never stopped influencing how I
+              build. Least-privilege IAM, federated SSO, secret rotation, KMS
+              everywhere — reflexes, not checklist items. That security lens
+              shapes every design choice in the data work: who can read this,
+              how does it rotate, what&apos;s the blast radius.
+            </p>
+            <p className="text-sm">
+              B.S. Cybersecurity (2021) · AWS Certified Data Engineer (2024) ·
+              AWS Certified DevOps Engineer Professional (2025)
+            </p>
+          </motion.div>
         </div>
       </div>
     </AnimatedSection>
   );
 }
 
+function PhotoTile({
+  src,
+  alt,
+  objectPosition,
+}: {
+  src: string;
+  alt: string;
+  objectPosition: string;
+}) {
+  return (
+    <div className="relative h-24 w-24 overflow-hidden rounded-2xl border border-border/50 shadow-[0_14px_30px_-16px_rgba(0,0,0,0.6)] sm:h-52 sm:w-52">
+      <img
+        src={src}
+        alt={alt}
+        className="h-full w-full object-cover"
+        style={{ objectPosition }}
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/5"
+      />
+    </div>
+  );
+}
