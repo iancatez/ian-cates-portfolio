@@ -7,14 +7,14 @@ const ENDPOINTS = [
   { method: "POST", path: "/restore", desc: "Submit a restore job for a snapshot" },
   { method: "GET", path: "/restore/{id}", desc: "Poll restore job status" },
   { method: "POST", path: "/authors", desc: "Provision QuickSight authors from a roster" },
-  { method: "POST", path: "/security-sync", desc: "Force-reconcile a QuickSight security group" },
+  { method: "POST", path: "/security-sync", desc: "Force-reconcile an AD → QuickSight group mapping" },
 ];
 
 const NIGHTLY = [
   { Icon: Moon, label: "00:00", title: "EventBridge fires" },
   { Icon: FileArchive, label: "00:05", title: "Asset bundle export to S3" },
   { Icon: Clock, label: "00:08", title: "Metadata indexed in DynamoDB" },
-  { Icon: Shield, label: "Continuous", title: "Security group reconciler runs" },
+  { Icon: Shield, label: "Event-driven", title: "AD → QuickSight RBAC sync" },
 ];
 
 const METHOD_COLOR: Record<string, string> = {
@@ -26,7 +26,7 @@ const CAPABILITIES = [
   "Nightly asset bundle exports for every dashboard, analysis, and dataset.",
   "DynamoDB-indexed snapshot catalog — restores are a single API call away.",
   "Author provisioning from uploaded rosters; no console clicks.",
-  "Continuous reconciliation of QuickSight security groups against AWS IAM groups.",
+  "Event-driven syncing of Active Directory security groups into QuickSight — RBAC reflects AD membership changes within seconds instead of relying on nightly batch reconciliation.",
   "Audit trail of every sync, with success/failure breakdown surfaced to operators.",
 ];
 
