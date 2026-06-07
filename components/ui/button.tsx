@@ -7,7 +7,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.96] active:brightness-110 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -339,7 +339,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ]
           .filter(Boolean)
           .join(', '),
-        transition: 'all 0.5s ease-out',
+        transition:
+          'background-color 0.5s ease-out, border-color 0.5s ease-out, box-shadow 0.5s ease-out, color 0.5s ease-out, transform 0.12s ease-out',
       }
 
       if (!isHovered && intensity === 0) {
@@ -379,7 +380,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           0 0 ${glowSize2}px hsl(${hslColor} / ${glowOpacity2}),
           0 0 ${glowSize3}px hsl(${hslColor} / ${glowOpacity3})
         `,
-        transition: isStartingUp ? 'none' : 'color 0.1s ease',
+        transition: isStartingUp
+          ? 'none'
+          : 'color 0.1s ease, transform 0.12s ease-out',
       }
     }, [intensity, isHovered, isStartingUp, hslColor, isLight])
 
