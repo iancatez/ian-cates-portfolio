@@ -39,7 +39,10 @@ export function ProjectDetailModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[90vh] max-w-4xl flex-col overflow-hidden">
+      <DialogContent
+        className="flex max-h-[90vh] max-w-4xl flex-col overflow-hidden"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <DialogHeader className="space-y-2">
           <DialogTitle className="text-xl sm:text-2xl">
             {project.title}

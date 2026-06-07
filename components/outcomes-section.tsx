@@ -15,13 +15,13 @@ const STATS: Stat[] = [
     value: "5,000+",
     label: "internal users powered",
     detail:
-      "Dashboards and data products built on top of this platform serve 5,000+ internal users — Finance, Engineering, Product, and leadership read the same numbers instead of debating spreadsheets.",
+      "Dashboards and data products built on top of this platform serve 5,000+ internal users. Finance, Engineering, Product, and leadership read the same numbers instead of debating spreadsheets.",
   },
   {
     value: "40+",
     label: "interdependent ETL pipelines in production",
     detail:
-      "Designed and operate 40+ production data pipelines forming an interdependent DAG — ingestion, normalization, enrichment, allocation, and marts — converging heterogeneous source data into one queryable model behind analytics, ML, and finance reporting.",
+      "Designed and operate 40+ production data pipelines forming an interdependent DAG of ingestion, normalization, enrichment, allocation, and marts. Heterogeneous source data converges into one queryable model behind analytics, ML, and finance reporting.",
   },
   {
     value: "Hours, not weeks",
@@ -33,7 +33,7 @@ const STATS: Stat[] = [
     value: "100%",
     label: "infrastructure as code",
     detail:
-      "Every Lambda, IAM role, Athena view, Redshift schema, and schedule reviewed in atomic PRs and applied through Terraform Cloud — no click-ops drift between dev, stage, and prod.",
+      "Every Lambda, IAM role, Athena view, Redshift schema, and schedule reviewed in version-controlled Terraform and applied through Terraform Cloud. No click-ops drift between dev, stage, and prod.",
   },
 ];
 

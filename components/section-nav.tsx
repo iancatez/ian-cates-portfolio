@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface SectionNavProps {
@@ -20,6 +21,16 @@ type SectionId = (typeof SECTIONS)[number]["id"];
 export function SectionNav({ className }: SectionNavProps) {
   const [scrolled, setScrolled] = React.useState(false);
   const [activeId, setActiveId] = React.useState<SectionId>("home");
+
+  // When the user CLICKS a nav item, we kick off a smooth scroll. While that
+  // scroll is in flight, the page passes through intermediate sections — and
+  // without a lock the scroll listener would fire activeId updates for each
+  // one, making the pill ping-pong. The lock holds activeId at the clicked
+  // target until the page settles.
+  const lockRef = React.useRef(false);
+  const lockTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -49,6 +60,10 @@ export function SectionNav({ className }: SectionNavProps) {
     };
 
     const recompute = () => {
+      // If a click-initiated smooth scroll is in flight, leave the activeId
+      // alone — the click already pinned it to the intended target.
+      if (lockRef.current) return;
+
       const threshold =
         window.scrollY + window.innerHeight * VIEWPORT_FOCUS_RATIO;
       let bestId: SectionId = "home";
@@ -78,10 +93,26 @@ export function SectionNav({ className }: SectionNavProps) {
   const scrollTo = React.useCallback((id: SectionId) => {
     const el = document.getElementById(id);
     if (!el) return;
-    // Optimistic highlight on click — the scroll listener will keep it accurate
-    // as the smooth scroll progresses or the user scrolls further.
+
+    // Pin the pill to the clicked target. Without this lock, the scroll
+    // listener would re-compute activeId for every intermediate section the
+    // smooth scroll passes through, causing the pill to ping-pong.
     setActiveId(id);
+    lockRef.current = true;
+    if (lockTimeoutRef.current) clearTimeout(lockTimeoutRef.current);
+    // Smooth-scroll usually finishes in ~500ms; give the lock a generous
+    // window so the recompute only re-engages once the page has settled.
+    lockTimeoutRef.current = setTimeout(() => {
+      lockRef.current = false;
+    }, 900);
+
     el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
+  React.useEffect(() => {
+    return () => {
+      if (lockTimeoutRef.current) clearTimeout(lockTimeoutRef.current);
+    };
   }, []);
 
   return (
@@ -112,18 +143,26 @@ export function SectionNav({ className }: SectionNavProps) {
           <span className="text-muted-foreground transition-colors duration-200 group-hover:text-primary">
             .dev
           </span>
-          <span
-            aria-hidden="true"
-            className={cn(
-              "pointer-events-none absolute -bottom-1 left-1/2 h-[3px] w-12 sm:w-16 -translate-x-1/2 rounded-full bg-primary opacity-0 transition-opacity duration-200",
-              "group-hover:opacity-100",
-              activeId === "home" && "opacity-100"
-            )}
-            style={{
-              boxShadow:
-                "0 0 10px hsl(var(--primary) / 0.7), 0 0 20px hsl(var(--primary) / 0.45)",
-            }}
-          />
+          {activeId === "home" && (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 -bottom-1 flex justify-center"
+            >
+              <motion.span
+                layoutId="nav-active-pill"
+                className="h-[3px] w-12 rounded-full bg-primary sm:w-16"
+                style={{
+                  boxShadow:
+                    "0 0 10px hsl(var(--primary) / 0.7), 0 0 20px hsl(var(--primary) / 0.45)",
+                }}
+                transition={{
+                  type: "tween",
+                  duration: 0.35,
+                  ease: [0, 0, 0.2, 1],
+                }}
+              />
+            </span>
+          )}
         </button>
 
         <div className="flex items-center gap-0 sm:gap-3">
@@ -145,18 +184,26 @@ export function SectionNav({ className }: SectionNavProps) {
                 )}
               >
                 {label}
-                <span
-                  aria-hidden="true"
-                  className={cn(
-                    "pointer-events-none absolute -bottom-1 left-1/2 h-[3px] w-12 sm:w-16 -translate-x-1/2 rounded-full bg-primary opacity-0 transition-opacity duration-200",
-                    "group-hover:opacity-100",
-                    isActive && "opacity-100"
-                  )}
-                  style={{
-                    boxShadow:
-                      "0 0 10px hsl(var(--primary) / 0.7), 0 0 20px hsl(var(--primary) / 0.45)",
-                  }}
-                />
+                {isActive && (
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 -bottom-1 flex justify-center"
+                  >
+                    <motion.span
+                      layoutId="nav-active-pill"
+                      className="h-[3px] w-12 rounded-full bg-primary sm:w-16"
+                      style={{
+                        boxShadow:
+                          "0 0 10px hsl(var(--primary) / 0.7), 0 0 20px hsl(var(--primary) / 0.45)",
+                      }}
+                      transition={{
+                        type: "tween",
+                        duration: 0.35,
+                        ease: [0, 0, 0.2, 1],
+                      }}
+                    />
+                  </span>
+                )}
               </button>
             );
           })}

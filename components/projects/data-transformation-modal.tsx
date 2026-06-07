@@ -256,7 +256,10 @@ export function DataTransformationModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[92vh] max-w-5xl flex-col overflow-hidden">
+      <DialogContent
+        className="flex max-h-[92vh] max-w-5xl flex-col overflow-hidden"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <DialogHeader className="space-y-2">
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Database className="h-5 w-5 text-primary" />
